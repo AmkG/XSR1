@@ -1,0 +1,57 @@
+body {
+  position: absolute;
+  left: 0px; right: 0px; top: 0px; bottom: 0px;
+  background-color: black;
+  font-family: serif;
+  overflow: hidden;
+  cursor: none;
+  width: 100%;
+  height: 100%;
+}
+
+main#field {
+  z-index: -1;
+  display: block;
+  position: absolute;
+  left: 0px; right: 0px; top: 0px; bottom: 0px;
+  overflow: hidden;
+  cursor: none;
+}
+main#field span {
+  display: block;
+  position: absolute;
+  min-width: 1px;
+  min-height: 1px;
+  color: white;
+  cursor: none;
+}
+
+main#console {
+  z-index: 5;
+  font-family: "Courier New", Courier, monospace;
+  cursor: none;
+  position: absolute;
+  display: block;
+  left: 10%;
+  bottom: 25%;
+  width: 80%;
+  height: auto;
+}
+
+main#menu {
+  z-index: 6;
+  cursor: none;
+  position: absolute;
+  display: block;
+  left: 0px;
+  right: 0px;
+  text-align: center;
+  color: white;
+  font-family: sans-serif;
+}
+main#menu div.select:before {
+  content: '> ';
+}
+main#menu div.select:after {
+  content: ' <';
+}
