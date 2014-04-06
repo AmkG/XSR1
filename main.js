@@ -35,6 +35,7 @@ var menu = require('menu');
 var engines = require('engines');
 var panel = require('panel');
 var vars = require('vars');
+var label = require('label');
 
 var update;
 
@@ -89,6 +90,8 @@ function enterMainMenu() {
 
     vars.clear();
 
+    label('XSR1');
+
     update = mainMenuUpdate;
 }
 /* Update state.  */
@@ -121,6 +124,7 @@ function enterGameplay(ndifficulty) {
     console.clear().write('Greetings XSR1.');
     panel.show();
     vars.clear();
+    label('');
 }
 function gameplayUpdate(seconds) {
     engines.update(seconds);
@@ -189,9 +193,11 @@ function navigate() {
 /* Switch views.  */
 function playerView() {
     if (keys.key === 'a' || keys.key === 'A') {
+        label('AFT VIEW');
         panel.show();
         field.viewAft();
     } else if (keys.key === 'f' || keys.key === 'F') {
+        label('');
         panel.show();
         field.viewFront();
     }
@@ -204,6 +210,7 @@ function allRender() {
     console.render();
     menu.render();
     panel.render();
+    label.render();
 }
 
 function updateAll() {

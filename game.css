@@ -124,3 +124,17 @@ main#panel div span#panel_z_label {
 main#panel div span#panel_z_content {
   color: green;
 }
+
+/*-----------------------------------------------------------------------------
+Screen-top label
+-----------------------------------------------------------------------------*/
+main#label {
+  display: block;
+  position: absolute;
+  text-align: center;
+  font-family: sans-serif;
+  left: 0px;
+  right: 0px;
+  top: 5%;
+  color: white;
+}
