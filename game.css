@@ -9,6 +9,10 @@ body {
   height: 100%;
 }
 
+/*-----------------------------------------------------------------------------
+Starfield
+-----------------------------------------------------------------------------*/
+
 main#field {
   z-index: -1;
   display: block;
@@ -26,6 +30,10 @@ main#field span {
   cursor: none;
 }
 
+/*-----------------------------------------------------------------------------
+Console
+-----------------------------------------------------------------------------*/
+
 main#console {
   z-index: 5;
   font-family: "Courier New", Courier, monospace;
@@ -37,6 +45,10 @@ main#console {
   width: 80%;
   height: auto;
 }
+
+/*-----------------------------------------------------------------------------
+Menu
+-----------------------------------------------------------------------------*/
 
 main#menu {
   z-index: 6;
@@ -54,4 +66,61 @@ main#menu div.select:before {
 }
 main#menu div.select:after {
   content: ' <';
+}
+
+/*-----------------------------------------------------------------------------
+Panel
+-----------------------------------------------------------------------------*/
+
+main#panel {
+  z-index: 4;
+  font-family: serif;
+  position: absolute;
+  display: block;
+  text-align: center;
+  left: 0px;
+  right: 0px;
+  top: 76%;
+}
+main#panel div span#panel_v_label {
+  color: green;
+}
+main#panel div span#panel_v_content {
+  color: green;
+}
+main#panel div span#panel_k_label {
+  color: purple;
+}
+main#panel div span#panel_k_content {
+  color: purple;
+}
+main#panel div span#panel_e_label {
+  color: yellow;
+}
+main#panel div span#panel_e_content {
+  color: yellow;
+}
+main#panel div span#panel_t_label {
+  color: green;
+}
+main#panel div span#panel_t_content {
+  color: green;
+}
+main#panel div span#panel_y_label {
+  color: green;
+}
+main#panel div span#panel_y_content {
+  color: green;
+}
+main#panel div span#panel_x_label {
+  color: purple;
+}
+main#panel div span#panel_x_content {
+  color: green;
+}
+main#panel div span#panel_z_label {
+  color: yellow;
+}
+main#panel div span#panel_z_content {
+  color: green;
 }

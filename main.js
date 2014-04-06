@@ -25,8 +25,8 @@
  * for the JavaScript code in this page.
  *
  */
-define(  ['field', 'resize', 'console', 'keys', 'menu', 'engines'],
-function ( field ,  resize ,  console,   keys ,  menu ,  engines) {
+define(  ['field', 'resize', 'console', 'keys', 'menu', 'engines', 'panel'],
+function ( field ,  resize ,  console,   keys ,  menu ,  engines ,  panel) {
 
 var update;
 
@@ -76,6 +76,9 @@ function enterMainMenu() {
     field.viewFront();
 
     engines.initialize().setSpeed(6);
+
+    panel.hide();
+
     update = mainMenuUpdate;
 }
 /* Update state.  */
@@ -106,6 +109,7 @@ function enterGameplay(ndifficulty) {
     difficulty = ndifficulty;
     update = gameplayUpdate;
     console.clear().write('Greetings XSR1.');
+    panel.show();
 }
 function gameplayUpdate(seconds) {
     engines.update(seconds);
@@ -171,8 +175,10 @@ function navigate() {
 /* Switch views.  */
 function playerView() {
     if (keys.key === 'a' || keys.key === 'A') {
+        panel.show();
         field.viewAft();
     } else if (keys.key === 'f' || keys.key === 'F') {
+        panel.show();
         field.viewFront();
     }
     // TODO: LRS
@@ -183,6 +189,7 @@ function allRender() {
     field.render();
     console.render();
     menu.render();
+    panel.render();
 }
 
 function updateAll() {
