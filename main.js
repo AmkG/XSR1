@@ -34,6 +34,7 @@ var keys = require('keys');
 var menu = require('menu');
 var engines = require('engines');
 var panel = require('panel');
+var vars = require('vars');
 
 var update;
 
@@ -86,6 +87,8 @@ function enterMainMenu() {
 
     panel.hide();
 
+    vars.clear();
+
     update = mainMenuUpdate;
 }
 /* Update state.  */
@@ -117,6 +120,7 @@ function enterGameplay(ndifficulty) {
     update = gameplayUpdate;
     console.clear().write('Greetings XSR1.');
     panel.show();
+    vars.clear();
 }
 function gameplayUpdate(seconds) {
     engines.update(seconds);

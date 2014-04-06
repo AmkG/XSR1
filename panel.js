@@ -25,8 +25,8 @@
  * for the JavaScript code in this page.
  *
  */
-define( ['resize', 'engines'],
-function (resize ,  engines) {
+define( ['resize', 'engines', 'vars'],
+function (resize ,  engines ,  vars) {
 
 /*
 Panel layout:
@@ -84,6 +84,8 @@ Panel.prototype.render = function () {
         this._dom.style.fontSize = Math.floor(resize.height / 11) + 'px';
 
         this._v.innerHTML = engines;
+        this._k.innerHTML = vars.kills;
+        this._e.innerHTML = vars.energy;
 
         // TODO: refresh panel data.
     } else {
