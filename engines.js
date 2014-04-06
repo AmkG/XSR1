@@ -25,7 +25,7 @@
  * for the JavaScript code in this page.
  *
  */
-define(['field'], function (field) {
+define(['field', 'vars'], function (field, vars) {
 /*
 engines.initialize()
 - initialize the engines.
@@ -88,6 +88,18 @@ var speeds = [
     37.5,
     43.75
 ];
+var rates = [
+    0.0,
+    1.0,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    3.5,
+    7.5,
+    11.25,
+    15
+];
 
 var acceleration = 10.0;
 
@@ -105,6 +117,8 @@ Engines.prototype.initialize = function () {
     this._curspeed = 0.0;
     this._actualspeed = 0.0;
     this._targetspeed = 0.0;
+
+    this._enerate = 0.0;
 
     return this;
 };
@@ -131,6 +145,7 @@ Engines.prototype.colorState = function () {
 };
 Engines.prototype.setSpeed = function (n) {
     this._targetspeed = speeds[n];
+    this._enerate = rates[n];
     this._warping = false;
     this._warpcb = nullFun;
     return this;
@@ -183,6 +198,8 @@ Engines.prototype.update = function (seconds) {
     }
 
     field.speed = this._actualspeed;
+
+    vars.energy.consume(this._enerate * seconds);
 
     return this;
 };
