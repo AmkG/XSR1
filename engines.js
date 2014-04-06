@@ -101,7 +101,7 @@ var rates = [
     15
 ];
 
-var acceleration = 10.0;
+var acceleration = 15.0;
 
 function nullFun() { }
 
