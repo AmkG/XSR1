@@ -25,8 +25,15 @@
  * for the JavaScript code in this page.
  *
  */
-define(  ['field', 'resize', 'console', 'keys', 'menu', 'engines', 'panel'],
-function ( field ,  resize ,  console,   keys ,  menu ,  engines ,  panel) {
+define(function (require) {
+
+var field = require('field');
+var resize = require('resize');
+var console = require('console');
+var keys = require('keys');
+var menu = require('menu');
+var engines = require('engines');
+var panel = require('panel');
 
 var update;
 
