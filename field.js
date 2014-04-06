@@ -37,6 +37,15 @@ var turnSpeed = 0.4; // radians per second
 var missileSpeed = 62.5; // metrons per second
 var missileLifetime = 2.0; // seconds
 
+var speedFactor = 2.5; // multiplier for base speed.
+/* Note: Although the original game claims the velocity
+   setting is metrons per second, and the range is in
+   metrons, checking videos of the original game
+   suggests that there is a factor between 2 or 3 applied
+   to the velocity.  For instance, moving to a starbase
+   at 12.5 (engines key 6) removes about 50 to 60 metrons
+   from the range value in about 2 seconds.  */
+
 function nullFun() { }
 
 /* Location class.  */
@@ -307,7 +316,7 @@ Field.prototype.generateStars = function () {
     return this;
 };
 Field.prototype.update = function (seconds) {
-    var mov = this.speed * seconds * 2;
+    var mov = this.speed * seconds * speedFactor;
     var stars = this._stars;
     var missiles = this._missiles;
     var bogey = null;
