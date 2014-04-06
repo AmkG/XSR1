@@ -128,6 +128,9 @@ function gameplayUpdate(seconds) {
     console.update(seconds);
     keys.update();
 
+    // Life support energy consumption.
+    vars.energy.consume(0.25 * seconds);
+
     navigate();
     playerView();
     switch (keys.key) {
