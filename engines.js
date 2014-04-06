@@ -89,7 +89,7 @@ var speeds = [
     43.75
 ];
 
-var acceleration = 5.0;
+var acceleration = 10.0;
 
 function nullFun() { }
 
