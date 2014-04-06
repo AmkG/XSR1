@@ -73,7 +73,7 @@ function enterMainMenu() {
     ;
     menu.show(menuItems);
 
-    field.viewFront();
+    field.viewFront().generateStars();
 
     engines.initialize().setSpeed(6);
 
