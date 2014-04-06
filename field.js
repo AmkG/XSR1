@@ -66,6 +66,11 @@ function Missile(direction, enemy) {
     this.enemy = enemy;
 }
 
+/* View constants.  */
+var FRONT = 'front';
+var AFT = 'aft';
+var LRS = 'lrs';
+
 /* Fore-view projection.  */
 function fore(loc2d, loc) {
     var pos;
@@ -256,6 +261,9 @@ function Field() {
     /* Display by default.  */
     this.display = true;
 
+    /* Current view.  */
+    this._currentView = '';
+
     this.viewFront();
 }
 Field.prototype.viewFront = function () {
@@ -264,7 +272,10 @@ Field.prototype.viewFront = function () {
     this._size = foreSize;
     this._min = foreMin;
     this._max = foreMax;
-    this.generateStars();
+    if (this._currentView !== FRONT) {
+        this._currentView = FRONT;
+        this.generateStars();
+    }
     return this;
 };
 Field.prototype.viewAft = function () {
@@ -273,7 +284,10 @@ Field.prototype.viewAft = function () {
     this._size = aftSize;
     this._min = aftMin;
     this._max = aftMax;
-    this.generateStars();
+    if (this._currentView !== AFT) {
+        this._currentView = AFT;
+        this.generateStars();
+    }
     return this;
 }
 Field.prototype.generateStars = function () {
