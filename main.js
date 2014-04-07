@@ -36,6 +36,7 @@ var engines = require('engines');
 var panel = require('panel');
 var vars = require('vars');
 var label = require('label');
+var shield = require('shield');
 
 var update;
 
@@ -92,6 +93,8 @@ function enterMainMenu() {
 
     label('XSR1');
 
+    shield.disable();
+
     update = mainMenuUpdate;
 }
 /* Update state.  */
@@ -119,8 +122,11 @@ function mainMenuUpdate(seconds) {
 }
 
 function enterGameplay(ndifficulty) {
+    fixAll();
+
     difficulty = ndifficulty;
     update = gameplayUpdate;
+
     console.clear().write('Greetings XSR1.');
     panel.show();
     vars.clear();
@@ -131,19 +137,13 @@ function gameplayUpdate(seconds) {
     field.update(seconds);
     console.update(seconds);
     keys.update();
+    shield.update();
 
     // Life support energy consumption.
     vars.energy.consume(0.25 * seconds);
 
-    navigate();
-    playerView();
-    switch (keys.key) {
-    case '\e':
-    case 'p':
-    case 'P':
-        enterPause();
-        break;
-    }
+    // Player controls.
+    playerControl();
 }
 
 function enterPause() {
@@ -166,8 +166,14 @@ function pauseUpdate(seconds) {
     }
 }
 
-/* Convert keyboard controls to engine controls.  */
-function navigate() {
+/* Fix all problems of the ship.  */
+function fixAll() {
+    engines.fix();
+    shield.fix();
+}
+
+/* Player control.  */
+function playerControl() {
     var yaw = 0;
     var pitch = 0;
     if (keys.left) {
@@ -185,23 +191,47 @@ function navigate() {
     field.pitch = pitch;
     field.yaw = yaw;
 
-    if ('0' <= keys.key && keys.key <= '9') {
+    switch (keys.key) {
+    case '\e':
+    case 'p':
+    case 'P':
+        enterPause();
+        break;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
         engines.setSpeed(parseInt(keys.key));
-    }
-}
-
-/* Switch views.  */
-function playerView() {
-    if (keys.key === 'a' || keys.key === 'A') {
+        break;
+    case 'a':
+    case 'A':
         label('AFT VIEW');
         panel.show();
         field.viewAft();
-    } else if (keys.key === 'f' || keys.key === 'F') {
+        break;
+    case 'f':
+    case 'F':
         label('');
         panel.show();
         field.viewFront();
+        break;
+    case 's':
+    case 'S':
+        if (shield.isEnabled()) {
+            console.write('Shields Disabled.');
+            shield.disable();
+        } else {
+            console.write('Shields Enabled.');
+            shield.enable();
+        }
+        break;
     }
-    // TODO: LRS
 }
 
 /* Render.  */
@@ -211,6 +241,7 @@ function allRender() {
     menu.render();
     panel.render();
     label.render();
+    shield.render();
 }
 
 function updateAll() {
