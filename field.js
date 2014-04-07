@@ -46,6 +46,17 @@ var speedFactor = 2.5; // multiplier for base speed.
    at 12.5 (engines key 6) removes about 50 to 60 metrons
    from the range value in about 2 seconds.  */
 
+
+/* Observer distance factor.  Not in the original game.
+   (or, more properly, 1 in the original game, but not
+   added to the z-coordinate)
+   However, needed in order to reduce strange visual
+   effects of rotation in the original game.
+   In the original game, x2d and y2d are just (x3d / z3d)
+   and (y3d / z3d), respectively.  With observer distance,
+   it's (ez * xrd / (zrd + ez)), ditto with y.  */
+var ez = 2.0;
+
 function nullFun() { }
 
 /* Location class.  */
@@ -85,6 +96,7 @@ function fore(loc2d, loc) {
     var pos;
     var pos2d;
     var z;
+    var bz;
     if (!loc.display) {
         loc2d.display = false;
         return;
@@ -97,8 +109,9 @@ function fore(loc2d, loc) {
     }
     loc2d.display = true;
     pos2d = loc2d.pos;
-    pos2d[0] = pos[0] / z;
-    pos2d[1] = pos[1] / z;
+    bz = ez + z;
+    pos2d[0] = (ez * pos[0]) / bz;
+    pos2d[1] = (ez * pos[1]) / bz;
 }
 function foreSize(loc) {
     return sizeFactor / loc.pos[2];
@@ -111,6 +124,7 @@ function aft(loc2d, loc) {
     var pos;
     var pos2d;
     var z;
+    var bz;
     if (!loc.display) {
         loc2d.display = false;
         return;
@@ -123,8 +137,9 @@ function aft(loc2d, loc) {
     }
     loc2d.display = true;
     pos2d = loc2d.pos;
-    pos2d[0] = pos[0] / z;
-    pos2d[1] = pos[1] / z;
+    bz = z - ez;
+    pos2d[0] = (ez * pos[0]) / bz;
+    pos2d[1] = (ez * pos[1]) / bz;
 }
 function aftSize(loc) {
     return -sizeFactor / loc.pos[2];
