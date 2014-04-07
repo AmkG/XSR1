@@ -54,9 +54,9 @@ function makeLineDom(parent, html) {
     return rv;
 }
 
-/* Computes an brightness value into a green CSS color.  */
-function bright2color(bright) {
-    return 'rgb(0,' + Math.round(255 * bright) + ',0)';
+/* Computes an brightness value into a CSS opacity.  */
+function bright2opacity(bright) {
+    return bright.toString();
 }
 
 function Console() {
@@ -136,7 +136,7 @@ Console.prototype.render = function () {
                 if (!e.dom) {
                     e.dom = makeLineDom(this._dom, e.html);
                 }
-                e.dom.style.color = bright2color(e.bright);
+                e.dom.style.opacity = bright2opacity(e.bright);
             }
         }
     }

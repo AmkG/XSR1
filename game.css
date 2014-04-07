@@ -35,7 +35,7 @@ Console
 -----------------------------------------------------------------------------*/
 
 main#console {
-  z-index: 3;
+  z-index: 4;
   font-family: "Courier New", Courier, monospace;
   cursor: none;
   position: absolute;
@@ -44,6 +44,7 @@ main#console {
   bottom: 25%;
   width: 80%;
   height: auto;
+  color: rgb(0,255,0);
 }
 
 /*-----------------------------------------------------------------------------
@@ -80,7 +81,7 @@ main#panel {
   text-align: center;
   left: 0px;
   right: 0px;
-  top: 76%;
+  bottom: 0px;
 }
 main#panel div span#panel_v_label {
   color: green;
@@ -143,7 +144,7 @@ main#label {
 Shields
 -----------------------------------------------------------------------------*/
 main#shield {
-  z-index: 4;
+  z-index: 1;
   display: block;
   position: absolute;
   left: 0px;
