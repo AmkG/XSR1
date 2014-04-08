@@ -25,7 +25,7 @@
  * for the JavaScript code in this page.
  *
  */
-define(['resize'], function (resize) {
+define(['resize', 'signal'], function (resize, signal) {
 var dom = null;
 
 function label(s) {
@@ -41,6 +41,8 @@ label.render = function () {
         dom.style.fontSize = Math.floor(resize.height / 20) + 'px';
     }
 };
+
+signal('render', label.render.bind(label));
 
 return label;
 });

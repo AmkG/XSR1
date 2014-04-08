@@ -37,6 +37,7 @@ var panel = require('panel');
 var vars = require('vars');
 var label = require('label');
 var shield = require('shield');
+var signal = require('signal');
 
 var update;
 
@@ -133,11 +134,7 @@ function enterGameplay(ndifficulty) {
     label('');
 }
 function gameplayUpdate(seconds) {
-    engines.update(seconds);
-    field.update(seconds);
-    console.update(seconds);
-    keys.update();
-    shield.update();
+    signal.update(seconds);
 
     // Life support energy consumption.
     vars.energy.consume(0.25 * seconds);
@@ -236,12 +233,7 @@ function playerControl() {
 
 /* Render.  */
 function allRender() {
-    field.render();
-    console.render();
-    menu.render();
-    panel.render();
-    label.render();
-    shield.render();
+    signal.render();
 }
 
 function updateAll() {

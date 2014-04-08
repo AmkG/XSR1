@@ -25,7 +25,7 @@
  * for the JavaScript code in this page.
  *
  */
-define(['resize', 'keys', 'console'], function (resize, keys, console) {
+define(['resize', 'keys', 'signal'], function (resize, keys, signal) {
 
 /*
 menu.initialize()
@@ -76,6 +76,8 @@ function Menu() {
 
     /* Rendered state.  */
     this._dom = null;
+
+    signal('render', this.render.bind(this));
 }
 Menu.prototype.initialize = function () {
     /* Nothing!  */

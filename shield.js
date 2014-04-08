@@ -25,7 +25,7 @@
  * for the JavaScript code in this page.
  *
  */
-define(['vars'], function (vars) {
+define(['vars', 'signal'], function (vars, signal) {
 
 var FIXED = 0;
 var DAMAGED = 1;
@@ -45,6 +45,9 @@ function Shield() {
 
     this._dom = null;
     this._shown = false;
+
+    signal('update', this.update.bind(this));
+    signal('render', this.render.bind(this));
 }
 
 Shield.prototype.damage = function () {

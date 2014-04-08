@@ -25,7 +25,7 @@
  * for the JavaScript code in this page.
  *
  */
-define(['resize'], function (resize) {
+define(['resize', 'signal'], function (resize, signal) {
 
 var brightStep = 0.11;
 var betweenLines = 1.5;
@@ -65,6 +65,9 @@ function Console() {
     this._toshow = [];
     this._dom = null;
     this._time = 0.0;
+
+    signal('update', this.update.bind(this));
+    signal('render', this.render.bind(this));
 }
 Console.prototype.write = function (html) {
     this._toshow.push(html);

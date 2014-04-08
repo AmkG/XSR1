@@ -25,7 +25,7 @@
  * for the JavaScript code in this page.
  *
  */
-define(['field', 'vars'], function (field, vars) {
+define(['field', 'vars', 'signal'], function (field, vars, signal) {
 /*
 engines.initialize()
 - initialize the engines.
@@ -107,6 +107,7 @@ function nullFun() { }
 
 function Engines() {
     this.initialize();
+    signal('update', this.update.bind(this));
 }
 Engines.prototype.initialize = function () {
     this._state = FIXED;

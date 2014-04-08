@@ -25,8 +25,8 @@
  * for the JavaScript code in this page.
  *
  */
-define( ['resize', 'engines', 'vars'],
-function (resize ,  engines ,  vars) {
+define( ['resize', 'engines', 'vars', 'signal'],
+function (resize ,  engines ,  vars ,  signal) {
 
 /*
 Panel layout:
@@ -66,6 +66,8 @@ function Panel() {
     this._y = null;
     this._x = null;
     this._z = null;
+
+    signal('render', this.render.bind(this));
 }
 Panel.prototype.show = function () {
     this._display = true;

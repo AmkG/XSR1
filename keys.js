@@ -25,7 +25,7 @@
  * for the JavaScript code in this page.
  *
  */
-define(['console'], function (console) {
+define(['signal', 'console'], function (signal, console) {
 
 var keys = {
     up: false,
@@ -124,6 +124,8 @@ keys.initialize = function () {
     document.body.addEventListener('keyup', onkeyup, true);
     return this;
 };
+
+signal('update', keys.update.bind(keys));
 
 return keys;
 });

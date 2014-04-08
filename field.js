@@ -27,7 +27,7 @@
  * for the JavaScript code in this page.
  *
  */
-define(['resize'], function (resize) {
+define(['resize', 'signal'], function (resize, signal) {
 
 var numStars = 24; // number
 var sizeFactor = 4; // pixel factor
@@ -287,6 +287,10 @@ function Field() {
 
     /* Current view.  */
     this._currentView = '';
+
+    /* Register.  */
+    signal('update', this.update.bind(this));
+    signal('render', this.render.bind(this));
 
     this.viewFront();
 }
