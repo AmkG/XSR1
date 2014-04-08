@@ -69,8 +69,12 @@ function Console() {
     signal('update', this.update.bind(this));
     signal('render', this.render.bind(this));
 }
-Console.prototype.write = function (html) {
+Console.prototype.writeWait = function (html) {
     this._toshow.push(html);
+    return this;
+};
+Console.prototype.write = function (html) {
+    this._displayed.push(new Line(html));
     return this;
 };
 Console.prototype.update = function (seconds) {

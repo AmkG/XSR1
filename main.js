@@ -70,17 +70,17 @@ if (typeof process !== 'undefined') {
 function enterMainMenu() {
     console
     .clear()
-    .write('XSR1, an Atari Star Raiders Clone')
-    .write('Copyright &copy; 2014 Alan Manuel K. Gloria')
-    .write('License GPLv3+: GNU GPL version 3 or later')
-    .write('This game is free software: ' +
+    .writeWait('XSR1, an Atari Star Raiders Clone')
+    .writeWait('Copyright &copy; 2014 Alan Manuel K. Gloria')
+    .writeWait('License GPLv3+: GNU GPL version 3 or later')
+    .writeWait('This game is free software: ' +
         'you are free to change and redistribute it.'
     )
-    .write('There is NO WARRANTY, ' +
+    .writeWait('There is NO WARRANTY, ' +
         'to the extent permitted by law.'
     )
-    .write('&nbsp;')
-    .write('Written By Alan Manuel K. Gloria')
+    .writeWait('&nbsp;')
+    .writeWait('Written By Alan Manuel K. Gloria')
     ;
     menu.show(menuItems);
 
