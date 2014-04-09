@@ -40,7 +40,7 @@ function signal(name, fun) {
     } else if (name === 'render') {
         render.push(fun);
     } else {
-        arr = registry[name] || (registry[name] = {});
+        arr = registry[name] || (registry[name] = []);
         arr.push(fun);
     }
     return signal;
