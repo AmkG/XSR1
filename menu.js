@@ -149,8 +149,8 @@ Menu.prototype.render = function () {
         this._dom.style.fontSize = Math.floor(resize.height / 16) + 'px';
 
         // Center the menu
-        y = resize.ceny - (this._dom.offsetHeight / 2);
-        this._dom.style.top = Math.floor(y) + 'px';
+        this._dom.style.left = Math.floor(resize.cenx) + 'px';
+        this._dom.style.top = Math.floor(resize.ceny) + 'px';
 
         l = this._options.length;
         for (i = 0; i < l; ++i) {
