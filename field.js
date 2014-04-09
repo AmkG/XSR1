@@ -204,8 +204,8 @@ function project(field, loc, html) {
         }
         dom.style.fontSize = Math.floor(size) + 'px';
 
-        x = ar2d.pos[0] * scale + resize.cenx - (dom.offsetWidth / 2);
-        y = ar2d.pos[1] * scale + resize.ceny - (dom.offsetHeight / 2);
+        x = ar2d.pos[0] * scale + resize.cenx;
+        y = ar2d.pos[1] * scale + resize.ceny;
         dom.style.left = Math.floor(x) + 'px';
         dom.style.top = Math.floor(y) + 'px';
 

@@ -28,6 +28,9 @@ main#field span {
   min-height: 1px;
   color: white;
   cursor: none;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
 }
 
 /*-----------------------------------------------------------------------------
