@@ -432,6 +432,7 @@ Field.prototype.render = function () {
         if (this._dom) {
             this._dom.style.display = 'none';
         }
+        return this;
     }
 
     if (!this._dom) {
