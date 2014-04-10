@@ -38,6 +38,7 @@ var vars = require('vars');
 var label = require('label');
 var shield = require('shield');
 var signal = require('signal');
+var galaxy = require('galaxy');
 
 var update;
 
@@ -125,6 +126,8 @@ function mainMenuUpdate(seconds) {
 function enterGameplay(ndifficulty) {
     fixAll();
 
+    signal.raise('newGame', ndifficulty);
+
     difficulty = ndifficulty;
     update = gameplayUpdate;
 
@@ -211,12 +214,23 @@ function playerControl() {
         label('AFT VIEW');
         panel.show();
         field.viewAft();
+        field.display = true;
+        galaxy.chart.hide();
         break;
     case 'f':
     case 'F':
         label('');
         panel.show();
         field.viewFront();
+        field.display = true;
+        galaxy.chart.hide();
+        break;
+    case 'g':
+    case 'G':
+        label('GALACTIC CHART');
+        panel.hide();
+        field.display = false;
+        galaxy.chart.show();
         break;
     case 's':
     case 'S':

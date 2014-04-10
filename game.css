@@ -160,3 +160,12 @@ main#shield {
   background-color: blue;
   cursor: none;
 }
+
+/*-----------------------------------------------------------------------------
+Galactic Chart
+-----------------------------------------------------------------------------*/
+main#chart {
+  z-index: 3;
+  display: block;
+  position: absolute;
+}
