@@ -28,6 +28,7 @@
  *
  */
 define(['resize', 'signal'], function (resize, signal) {
+"use strict";
 
 var numStars = 24; // number
 var sizeFactor = 4; // pixel factor

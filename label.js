@@ -26,6 +26,8 @@
  *
  */
 define(['resize', 'signal'], function (resize, signal) {
+"use strict";
+
 var dom = null;
 
 function label(s) {

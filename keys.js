@@ -26,6 +26,7 @@
  *
  */
 define(['signal', 'console'], function (signal, console) {
+"use strict";
 
 var keys = {
     up: false,

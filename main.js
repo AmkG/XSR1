@@ -26,6 +26,7 @@
  *
  */
 define(function (require) {
+"use strict";
 
 var resize = require('resize');
 var keys = require('keys');

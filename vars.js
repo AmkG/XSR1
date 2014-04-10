@@ -26,6 +26,7 @@
  *
  */
 define(['signal'], function (signal) {
+"use strict";
 
 var e = 9999.0;
 var energy = {};

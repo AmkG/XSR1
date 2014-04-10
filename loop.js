@@ -110,8 +110,8 @@ Export Interface.
 -----------------------------------------------------------------------------*/
 
 function loop () {
-    setInterval(repeat, 40);
     loop.enterMainMenu();
+    setInterval(repeat, 40);
 }
 loop.enterMainMenu = function () {
     console

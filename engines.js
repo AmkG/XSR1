@@ -26,6 +26,7 @@
  *
  */
 define(['field', 'vars', 'signal'], function (field, vars, signal) {
+"use strict";
 /*
 engines.initialize()
 - initialize the engines.

@@ -26,6 +26,7 @@
  *
  */
 define([], function () {
+"use strict";
 
 var registry = {};
 var update = [];
@@ -46,7 +47,7 @@ function signal(name, fun) {
     return signal;
 }
 signal.raise = function (name, i1) {
-    var atgs;
+    var args;
     var i;
     var l;
     var arr;

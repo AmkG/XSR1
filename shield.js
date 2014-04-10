@@ -26,6 +26,7 @@
  *
  */
 define(['vars', 'signal'], function (vars, signal) {
+"use strict";
 
 var FIXED = 0;
 var DAMAGED = 1;

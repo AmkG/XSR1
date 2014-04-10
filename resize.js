@@ -26,6 +26,7 @@
  *
  */
 define([], function () {
+"use strict";
 var resize = {};
 resize.width = 0;
 resize.height = 0;

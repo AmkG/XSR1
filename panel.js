@@ -27,6 +27,7 @@
  */
 define( ['resize', 'engines', 'vars', 'signal'],
 function (resize ,  engines ,  vars ,  signal) {
+"use strict";
 
 /*
 Panel layout:

@@ -26,6 +26,7 @@
  *
  */
 define(['resize', 'signal'], function (resize, signal) {
+"use strict";
 
 var brightStep = 0.11;
 var betweenLines = 1.5;
