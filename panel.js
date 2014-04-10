@@ -68,6 +68,8 @@ function Panel() {
     this._z = null;
 
     signal('render', this.render.bind(this));
+    signal('mainMenu', this.hide.bind(this));
+    signal('newGame', this.show.bind(this));
 }
 Panel.prototype.show = function () {
     this._display = true;

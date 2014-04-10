@@ -291,6 +291,7 @@ function Field() {
     /* Register.  */
     signal('update', this.update.bind(this));
     signal('render', this.render.bind(this));
+    signal('mainMenu', this.generateStars.bind(this));
 
     this.viewFront();
 }

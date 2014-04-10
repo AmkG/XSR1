@@ -98,8 +98,9 @@ var rates = [
     3.5,
     7.5,
     11.25,
-    15
+    15.0
 ];
+var hyperwarprate = 18.0;
 
 var acceleration = 15.0;
 
@@ -108,6 +109,8 @@ function nullFun() { }
 function Engines() {
     this.initialize();
     signal('update', this.update.bind(this));
+    signal('mainMenu', this._onMainMenu.bind(this));
+    signal('newGame', this._onNewGame.bind(this));
 }
 Engines.prototype.initialize = function () {
     this._state = FIXED;
@@ -153,6 +156,7 @@ Engines.prototype.setSpeed = function (n) {
 };
 Engines.prototype.hyperwarp = function (f) {
     this._targetspeed = 100.0;
+    this._enerate = hyperwarprate;
     this._warping = true;
     this._warpcb = f;
     return this;
@@ -202,6 +206,19 @@ Engines.prototype.update = function (seconds) {
 
     vars.energy.consume(this._enerate * seconds);
 
+    return this;
+};
+Engines.prototype._onMainMenu = function () {
+    this._curspeed = 0.0;
+    this._targetspeed = speeds[6];
+    this._enerate = 0.0;
+    this._warping = false;
+    this._warpcb = nullFun;
+    this._state = FIXED;
+    return this;
+};
+Engines.prototype._onNewGame = function () {
+    this._enerate = rates[6];
     return this;
 };
 

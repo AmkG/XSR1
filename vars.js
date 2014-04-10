@@ -25,7 +25,7 @@
  * for the JavaScript code in this page.
  *
  */
-define([], function () {
+define(['signal'], function (signal) {
 
 var e = 9999.0;
 var energy = {};
@@ -87,6 +87,12 @@ vars.clear = function () {
     kills.clear();
     return vars;
 };
+vars.update = function (seconds) {
+    energy.consume(seconds * 0.25); // life support
+};
+
+signal('newGame', vars.clear);
+signal('update', vars.update);
 
 return vars;
 });

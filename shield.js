@@ -48,6 +48,8 @@ function Shield() {
 
     signal('update', this.update.bind(this));
     signal('render', this.render.bind(this));
+    signal('mainMenu', this._onMainMenu.bind(this));
+    signal('newGame', this._onNewGame.bind(this));
 }
 
 Shield.prototype.damage = function () {
@@ -116,6 +118,16 @@ Shield.prototype.render = function () {
             }
         }
     }
+    return this;
+};
+Shield.prototype._onMainMenu = function () {
+    this._on = false;
+    this._enabled = false;
+    return this;
+};
+Shield.prototype._onNewGame = function () {
+    this.fix();
+    this.disable();
     return this;
 };
 
