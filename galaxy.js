@@ -52,25 +52,11 @@ function asmModule(stdlib) {
         y = y|0;
         var sx = 0;
         var sy = 0;
-        var tmp = 0;
-        var rv = 0;
-        sx = ((s|0) % (16|0))|0;
-        sy = ((s|0) / (16|0))|0;
-        sx = (sx + x)|0;
-        sy = (sy + y)|0;
-        if ((sx|0) < 0) {
-            sx = (sx + 16)|0;
-        } else if ((sx|0) >= 16) {
-            sx = (sx - 16)|0;
-        }
-        if ((sy|0) < 0) {
-            sy = (sy + 8)|0;
-        } else if ((sy|0) >= 8) {
-            sy = (sy - 8)|0;
-        }
-        tmp = imul(sy, 16)|0;
-        rv = (tmp + sx)|0;
-        return rv|0;
+        sx = (s & 0xF);
+        sy = (s >> 4);
+        sx = (sx + x) & 0xF;
+        sy = (sy + y) & 0x7;
+        return ((sy << 4) + sx)|0;
     }
 
     return {sectorOffset: sectorOffset};
