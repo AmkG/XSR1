@@ -126,7 +126,61 @@ Model.prototype._enemyMove = function () {
 };
 /* Called at the start of the game.  */
 Model.prototype.newGame = function (difficulty) {
-    // TODO
+    /* Number of starbases.
+       This also indicates the number of 4-groups,
+       3-groups, and 2-groups at the start of
+       the game.  */
+    var sectors = this.sectors;
+    var number = 0;
+    var group = 0;
+    var s = 0;
+    var sx = 0;
+    var sy = 0;
+    var n = 0;
+    var valid = false;
+
+    switch (difficulty) {
+    case 'NOVICE':      number = 3; break;
+    case 'PILOT':       number = 4; break;
+    case 'WARRIOR':     number = 5; break;
+    case 'COMMANDER':   number = 6; break;
+    }
+
+    /* Clear map.  */
+    for (s = 0; s < 128; ++s) {
+        sectors[s] = 0;
+    }
+
+    /* Position each group size.  */
+    for (group = 2; group <= 4; ++group) {
+        for (n = 0; n < number; ++n) {
+            do {
+                s = Math.floor(Math.random() * 128);
+            } while (sectors[s] !== 0);
+            sectors[s] = group;
+        }
+    }
+    /* Position starbases.  Make sure they're not already
+       surrounded and not on a map edge.  */
+    for (n = 0; n < number; ++n) {
+        do {
+            s = Math.floor(Math.random() * 128);
+            valid = sectors[s] === 0;
+            if (valid) {
+                sy = s >>> 4;
+                sx = s & 0xF;
+                valid = !(sx === 0 || sx === 15 || sy === 0 || sy === 7);
+            }
+            if (valid) {
+                valid = (sectors[sectorOffset(s, -1,  0)] === 0) ||
+                        (sectors[sectorOffset(s,  1,  0)] === 0) ||
+                        (sectors[sectorOffset(s,  0, -1)] === 0) ||
+                        (sectors[sectorOffset(s,  0,  1)] === 0);
+            }
+        } while (!valid);
+        sectors[s] = -1;
+    }
+
     return this;
 };
 /* Called when the player destroys the starbase in the current
