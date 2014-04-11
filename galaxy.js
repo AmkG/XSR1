@@ -194,7 +194,7 @@ function Chart() {
     this.movey = 0;
 
     /* Reserve for initialization.  */
-    this.m = null;
+    this._m = null;
 }
 Chart.prototype.update = function (seconds) {
     /* TODO */
@@ -236,7 +236,7 @@ function Galaxy() {
     this.chart = new Chart();
     this._m = new Model();
     /* Tie them.  */
-    this.chart.m = this._m;
+    this.chart._m = this._m;
     this._m.chart = this.chart;
 
     /* Set up signals.  */
