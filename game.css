@@ -65,12 +65,21 @@ main#menu {
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   -webkit-transform: translate(-50%, -50%);
+  background-color: rgba(0,0,0,0.6);
+}
+main#menu div:before {
+  content: '> ';
+  color: transparent;
+}
+main#menu div:after {
+  content: ' <';
+  color: transparent;
 }
 main#menu div.select:before {
-  content: '> ';
+  color: white;
 }
 main#menu div.select:after {
-  content: ' <';
+  color: white;
 }
 
 /*-----------------------------------------------------------------------------
