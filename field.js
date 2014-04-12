@@ -292,7 +292,7 @@ function Field() {
     /* Register.  */
     signal('update', this.update.bind(this));
     signal('render', this.render.bind(this));
-    signal('mainMenu', this.generateStars.bind(this));
+    signal('mainMenu', this.mainMenu.bind(this));
 
     this.viewFront();
 }
@@ -447,6 +447,10 @@ Field.prototype.render = function () {
     }
     /* TODO: bogeys, missiles.  */
 
+    return this;
+};
+Field.prototype.mainMenu = function () {
+    this.generateStars().display = true;
     return this;
 };
 
