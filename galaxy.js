@@ -29,6 +29,9 @@
 define(['signal', 'resize'], function (signal, resize) {
 "use strict";
 
+/* Cursor movement speed, in sectors per second.  */
+var cursorSpeed = 2.0;
+
 /* The galaxy is 16x8.  Sectors are identified from 0 -> 127.  */
 /*
 The game model array is an array of signed integers.
@@ -85,6 +88,12 @@ function Model() {
         this.sectors[i] = 0;
     }
 
+    /* Player location in x and y coordinates of the map
+       as well as the player's sector.  */
+    this.px = 0.0;
+    this.py = 0.0;
+    this.ps = 0;
+
     /* Reserve for initialization.  */
     this.chart = null;
 }
@@ -137,21 +146,23 @@ Model.prototype.newGame = function (difficulty) {
         sectors[s] = 0;
     }
 
-    /* Position each group size.  */
+    /* Position each group size.
+       Sector 72 is the sector the player starts in.  */
     for (group = 2; group <= 4; ++group) {
         for (n = 0; n < number; ++n) {
             do {
                 s = Math.floor(Math.random() * 128);
-            } while (sectors[s] !== 0);
+            } while (sectors[s] !== 0 || s === 72);
             sectors[s] = group;
         }
     }
     /* Position starbases.  Make sure they're not already
-       surrounded and not on a map edge.  */
+       surrounded, not on a map edge, and not on the player's
+       starting sector.  */
     for (n = 0; n < number; ++n) {
         do {
             s = Math.floor(Math.random() * 128);
-            valid = sectors[s] === 0;
+            valid = (sectors[s] === 0 && s !== 72);
             if (valid) {
                 sy = s >>> 4;
                 sx = s & 0xF;
@@ -166,6 +177,11 @@ Model.prototype.newGame = function (difficulty) {
         } while (!valid);
         sectors[s] = -1;
     }
+
+    /* Start the player's location.  */
+    this.px = 8.5;
+    this.py = 4.5;
+    this.ps = 72;
 
     return this;
 };
@@ -195,12 +211,17 @@ function Chart() {
     for (s = 0; s < 128; ++s) {
         this._doms[s] = null;
     }
+    this._pdom = null; /* Player cursor's DOM node.  */
+    this._cdom = null; /* Target cursor's DOM node.  */
     /* Flag to determine if DOM nodes need to be refreshed.  */
     this._domRefresh = false;
 
     /* Control movement of cursor.  */
     this.movex = 0;
     this.movey = 0;
+    /* Cursor location.  */
+    this._cx = 0.0;
+    this._cy = 0.0;
 
     /* Current known state of the map.  */
     this._map = new Array(128);
@@ -224,6 +245,19 @@ Chart.prototype.update = function (seconds) {
             this._map[s] = this._m.sectors[s];
         }
         this._domRefresh = true;
+    }
+    /* If we're enabled, move cursor.  */
+    this._cx += this.movex * cursorSpeed * seconds;
+    if (this._cx >= 16.0) {
+        this._cx -= 16.0;
+    } else if (this._cx < 0.0) {
+        this._cx += 16.0;
+    }
+    this._cy += this.movey * cursorSpeed * seconds;
+    if (this._cy >= 8.0) {
+        this._cy -= 8.0;
+    } else if (this._cy < 0.0) {
+        this._cy += 8.0;
     }
 
     this._pdisplay = this._display;
@@ -258,6 +292,18 @@ Chart.prototype.render = function () {
             sdom.appendChild(vdom);
             this._dom.appendChild(sdom);
         }
+
+        sdom = document.createElement('div');
+        this._pdom = sdom;
+        sdom.className = 'cursor';
+        sdom.innerHTML = '&bull;';
+        this._dom.appendChild(sdom);
+        sdom = document.createElement('div');
+        this._cdom = sdom;
+        sdom.className = 'cursor';
+        sdom.innerHTML = '&bull;';
+        this._dom.appendChild(sdom);
+
         document.body.appendChild(this._dom);
         /* Force update.  */
         this._domRefresh = true;
@@ -267,16 +313,19 @@ Chart.prototype.render = function () {
     /* Show it.  */
     this._dom.style.display = 'block';
 
+    /* Map characteristics.  */
+    /* Sector size.  */
+    sz = Math.floor(resize.scale / 8);
+    /* Upper-left corner.  */
+    x = resize.cenx - sz * 8;
+    y = resize.ceny - sz * 4;
+
     /* Update if needed.  */
     if (this._domRefresh ||
         this._width !== resize.width ||
         this._height !== resize.height) {
         // Set font-size.
         this._dom.style.fontSize = Math.floor(resize.scale / 16) + 'px';
-        sz = Math.floor(resize.scale / 8);
-        // Set upper-left corner.
-        x = resize.cenx - sz * 8;
-        y = resize.ceny - sz * 4;
         s = 0;
         for (r = 0; r < 8; ++r) {
             for (c = 0; c < 16; ++c) {
@@ -291,6 +340,11 @@ Chart.prototype.render = function () {
             }
         }
     }
+
+    this._pdom.style.left = Math.floor(x + sz * this._m.px) + 'px';
+    this._pdom.style.top = Math.floor(y + sz * this._m.py) + 'px';
+    this._cdom.style.left = Math.floor(x + sz * this._cx) + 'px';
+    this._cdom.style.top = Math.floor(y + sz * this._cy) + 'px';
 
     this._height = resize.height;
     this._width = resize.width;
@@ -360,6 +414,8 @@ Chart.prototype.newGame = function () {
     }
     this._domRefresh = true;
     this._display = false;
+    this._cx = this._m.px;
+    this._cy = this._m.py;
     return this;
 };
 /* Called when the menu is entered.  */

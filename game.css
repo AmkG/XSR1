@@ -226,3 +226,12 @@ main#chart div span {
   width: 100%;
   height: 1em;
 }
+main#chart div.cursor {
+  width: auto;
+  height: auto;
+  border: none;
+  color: yellow;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+}
