@@ -1,0 +1,234 @@
+/* help.css - CSS for help.html.  */
+/**
+ *
+ * @licstart  The following is the entire license notice for the 
+ *  CSS code in this page.
+ *
+ * Copyright (C) 2014  Alan Manuel K. Gloria
+ *
+ *
+ * The CSS code in this page is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU
+ * General Public License (GNU GPL) as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option)
+ * any later version.  The code is distributed WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+ *
+ * As additional permission under GNU GPL version 3 section 7, you
+ * may distribute non-source (e.g., minimized or compacted) forms of
+ * that code without the copy of the GNU GPL normally required by
+ * section 4, provided you include this license notice and a URL
+ * through which recipients can access the Corresponding Source.
+ *
+ * @licend  The above is the entire license notice
+ * for the CSS code in this page.
+ *
+ */
+/*-----------------------------------------------------------------------------
+From the HTML5 Reset stylesheet by html5doctor
+-----------------------------------------------------------------------------*/
+/* @source: http://html5doctor.com/html-5-reset-stylesheet/
+ * The above source says "The stylesheet is released in the public domain".
+ * We integrate this code here as such.
+ */
+/* 
+html5doctor.com Reset Stylesheet
+v1.6.1
+Last Updated: 2010-09-17
+Author: Richard Clark - http://richclarkdesign.com 
+Twitter: @rich_clark
+*/
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+}
+
+body {
+    line-height:1;
+}
+
+article,aside,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section { 
+    display:block;
+}
+
+nav ul {
+    list-style:none;
+}
+
+blockquote, q {
+    quotes:none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content:'';
+    content:none;
+}
+
+a {
+    margin:0;
+    padding:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+}
+
+/* change colours to suit your needs */
+ins {
+    background-color:#ff9;
+    color:#000;
+    text-decoration:none;
+}
+
+/* change colours to suit your needs */
+mark {
+    background-color:#ff9;
+    color:#000; 
+    font-style:italic;
+    font-weight:bold;
+}
+
+del {
+    text-decoration: line-through;
+}
+
+abbr[title], dfn[title] {
+    border-bottom:1px dotted;
+    cursor:help;
+}
+
+table {
+    border-collapse:collapse;
+    border-spacing:0;
+}
+
+/* change border colour to suit your needs */
+hr {
+    display:block;
+    height:1px;
+    border:0;   
+    border-top:1px solid #cccccc;
+    margin:1em 0;
+    padding:0;
+}
+
+input, select {
+    vertical-align:middle;
+}
+
+/*-----------------------------------------------------------------------------
+Main layout
+-----------------------------------------------------------------------------*/
+
+body {
+  min-height: 100%;
+  margin: 0;
+  padding-left: 2in; /* Left column.  */
+  padding-right: 1in; /* Right column width + padding.  */
+  min-width: 2.1in; /* Left column + padding.  */
+
+  /* Make the font big and readable.  */
+  font-size: 120%;
+}
+header, footer {
+  margin-left: -2in; /* Left column width negated.  */
+  margin-right: -1in; /* Right column width + padding, negated.  */
+}
+nav { /* Columns.  */
+  position: relative; float: left;
+}
+main { /* Columns.  */
+  position: relative; float: left;
+}
+main {
+  padding: 0 0.2in; width: 100%;
+}
+nav { /* Left column.  */
+  width: 1.8in; /* Left column text width.  */
+  padding: 0 0.1in; /* Left column padding.  */
+  right: 2.3in; /* Left column actual width + CC padding.  */
+  margin-left: -100%;
+}
+footer {
+  clear: both;
+}
+* html nav { left: 0.9in; }
+
+/*-----------------------------------------------------------------------------
+Header Style
+-----------------------------------------------------------------------------*/
+
+header {
+  background-color: black;
+  color: white;
+  font-family: sans-serif;
+}
+
+header h1 {
+  font-size: 250%;
+}
+header h2 {
+  font-size: 150%;
+}
+
+/*-----------------------------------------------------------------------------
+Navigation Style
+-----------------------------------------------------------------------------*/
+
+nav {
+  background-color: #f0f0f0;
+}
+
+/*-----------------------------------------------------------------------------
+Main Content Style
+-----------------------------------------------------------------------------*/
+
+main {
+}
+
+main h1 {
+  font-family: sans-serif;
+  font-size: 200%;
+}
+main h2 {
+  font-family: sans-serif;
+  font-size: 150%;
+}
+main p {
+  padding-bottom: 1em;
+}
+main ol {
+  padding-bottom: 1em;
+}
+main ul {
+  padding-bottom: 1em;
+}
+
+/*-----------------------------------------------------------------------------
+Footer Style
+-----------------------------------------------------------------------------*/
+footer {
+  background-color: #e0e0e0;
+  font-style: italic;
+  font-size: 80%;
+  text-align: center;
+}
