@@ -139,6 +139,33 @@ main#panel div span#panel_z_content {
   color: green;
 }
 
+main#panel2 {
+  z-index: 5;
+  font-family: serif;
+  position: absolute;
+  display: block;
+  text-align: center;
+  color: white;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+main#panel2 div span#panel_targets_label {
+  color: green;
+}
+main#panel2 div span#panel_targets_content {
+  color: green;
+}
+main#panel2 div span#panel_dc_label {
+  color: white;
+}
+main#panel2 div span#panel_stardate_label {
+  color: purple;
+}
+main#panel2 div span#panel_stardate_content {
+  color: purple;
+}
+
 /*-----------------------------------------------------------------------------
 Screen-top label
 -----------------------------------------------------------------------------*/

@@ -58,14 +58,14 @@ for (i = 0; i <= 9; ++i) {
 
 keytable['a'] = keytable['A'] = function () {
     label('AFT VIEW');
-    panel.show();
+    panel.show().setNormalPanel();
     field.viewAft();
     field.display = true;
     chart.hide();
 };
 keytable['f'] = keytable['F'] = function () {
     label('');
-    panel.show();
+    panel.show().setNormalPanel();
     field.viewFront();
     field.display = true;
     chart.hide();
@@ -73,7 +73,7 @@ keytable['f'] = keytable['F'] = function () {
 // TODO: LRS
 keytable['g'] = keytable['G'] = function () {
     label('GALACTIC CHART');
-    panel.hide();
+    panel.show().setGalacticChartPanel();
     field.display = false;
     chart.show();
 };
