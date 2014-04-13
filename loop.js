@@ -116,7 +116,7 @@ function loop () {
 loop.enterMainMenu = function () {
     console
     .clear()
-    .writeWait('XSR1, an Atari Star Raiders Clone')
+    .writeWait('XSR1, a clone of 1979 Atari Star Raiders')
     .writeWait('Copyright &copy; 2014 Alan Manuel K. Gloria')
     .writeWait('License GPLv3+: GNU GPL version 3 or later')
     .writeWait('This game is free software: ' +
