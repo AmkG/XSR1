@@ -177,4 +177,25 @@ main#chart {
   z-index: 3;
   display: block;
   position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  text-align: center;
+  color: white;
+}
+main#chart div {
+  position: absolute;
+  display: block;
+  border: 1px solid white;
+}
+main#chart div span {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  margin: auto;
+  width: 100%;
+  height: 1em;
 }

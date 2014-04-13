@@ -26,7 +26,7 @@
  * for the JavaScript code in this page.
  *
  */
-define(['signal'], function (signal) {
+define(['signal', 'resize'], function (signal, resize) {
 "use strict";
 
 /* The galaxy is 16x8.  Sectors are identified from 0 -> 127.  */
@@ -183,26 +183,152 @@ var DESTROYED = 2;
 
 /* A map of the real world.  The map is not the territory.  */
 function Chart() {
+    var s;
     this._display = false;
+    this._pdisplay = false;
 
     this._state = FIXED;
 
+    /* DOM nodes.  */
     this._dom = null;
+    this._doms = new Array(128);
+    for (s = 0; s < 128; ++s) {
+        this._doms[s] = null;
+    }
+    /* Flag to determine if DOM nodes need to be refreshed.  */
+    this._domRefresh = false;
 
     /* Control movement of cursor.  */
     this.movex = 0;
     this.movey = 0;
 
+    /* Current known state of the map.  */
+    this._map = new Array(128);
+    for (s = 0; s < 128; ++s) {
+        this._map[s] = 0;
+    }
+
+    /* Current scale at which the map is drawn.  */
+    this._width = -1.0;
+    this._height = -1.0;
+
     /* Reserve for initialization.  */
     this._m = null;
 }
 Chart.prototype.update = function (seconds) {
-    /* TODO */
+    var s;
+    /* If we were just enabled, then update
+       from model.  */
+    if (this._display && !this._pdisplay && this._state === FIXED) {
+        for (s = 0; s < 128; ++s) {
+            this._map[s] = this._m.sectors[s];
+        }
+        this._domRefresh = true;
+    }
+
+    this._pdisplay = this._display;
     return this;
 };
 Chart.prototype.render = function () {
-    /* TODO */
+    var sdom;
+    var vdom;
+    var r;
+    var c;
+    var s;
+    var dom;
+    var sz;
+    var x, y;
+
+    /* Quickly leave when disabled.  */
+    if (!this._display) {
+        if (this._dom) {
+            this._dom.style.display = 'none';
+        }
+        return this;
+    }
+
+    /* Create DOM if needed.  */
+    if (!this._dom) {
+        this._dom = document.createElement('main');
+        this._dom.id = 'chart';
+        for (s = 0; s < 128; ++s) {
+            sdom = document.createElement('div');
+            vdom = document.createElement('span');
+            this._doms[s] = vdom;
+            sdom.appendChild(vdom);
+            this._dom.appendChild(sdom);
+        }
+        document.body.appendChild(this._dom);
+        /* Force update.  */
+        this._domRefresh = true;
+        this._height = -1.0;
+    }
+
+    /* Show it.  */
+    this._dom.style.display = 'block';
+
+    /* Update if needed.  */
+    if (this._domRefresh ||
+        this._width !== resize.width ||
+        this._height !== resize.height) {
+        // Set font-size.
+        this._dom.style.fontSize = Math.floor(resize.scale / 16) + 'px';
+        sz = Math.floor(resize.scale / 8);
+        // Set upper-left corner.
+        x = resize.cenx - sz * 8;
+        y = resize.ceny - sz * 4;
+        s = 0;
+        for (r = 0; r < 8; ++r) {
+            for (c = 0; c < 16; ++c) {
+                vdom = this._doms[s];
+                sdom = vdom.parentNode;
+                sdom.style.left = Math.floor(x + sz * c) + 'px';
+                sdom.style.top = Math.floor(y + sz * r) + 'px';
+                sdom.style.height = sz + 'px';
+                sdom.style.width = sz + 'px';
+                vdom.innerHTML = this._fillDom(this._map[s]);
+                ++s;
+            }
+        }
+    }
+
+    this._height = resize.height;
+    this._width = resize.width;
+    this._domRefresh = false;
+
     return this;
+};
+/* Generate the innerHTML of each cell in the Galactic Chart.  */
+Chart.prototype._fillDom = function (cellContent) {
+    if (cellContent === 0) {
+        return '';
+    } else if (cellContent < 0) {
+        return '&diams;';
+    } else switch (cellContent) {
+    case 1:
+        return '-';
+    case 2:
+        return (
+            '<div style="font-size: 25%; position: static; border: none;">' +
+            '&mdash;&nbsp;&nbsp;<br>' +
+            '&nbsp;&nbsp;&mdash;' +
+            '</div>');
+    case 3:
+        return (
+            '<div style="font-size: 25%; position: static; border: none;">' +
+            '&mdash;&nbsp;&nbsp;<br>' +
+            '&nbsp;&nbsp;&mdash;<br>' +
+            '&mdash;&nbsp;&nbsp;'+
+            '</div>');
+    case 4:
+        return (
+            '<div style="font-size: 25%; position: static; border: none;">' +
+            '&mdash;&nbsp;&nbsp;<br>' +
+            '&nbsp;&nbsp;&mdash;<br>' +
+            '&mdash;&nbsp;&nbsp;<br>'+
+            '&nbsp;&nbsp;&mdash;' +
+            '</div>');
+    }
 };
 /* Display state.  */
 Chart.prototype.show = function () {
@@ -226,8 +352,19 @@ Chart.prototype._modelChange = function () {
 /* Called at the beginning of each game, after the model
    has initialized.  */
 Chart.prototype.newGame = function () {
+    var s;
     this._state = FIXED;
-    /* TODO */
+    /* Copy map from model.  */
+    for (s = 0; s < 128; ++s) {
+        this._map[s] = this._m.sectors[s];
+    }
+    this._domRefresh = true;
+    this._display = false;
+    return this;
+};
+/* Called when the menu is entered.  */
+Chart.prototype.mainMenu = function () {
+    this._display = false;
     return this;
 };
 
@@ -243,6 +380,7 @@ function Galaxy() {
     signal('update', this.update.bind(this));
     signal('render', this.render.bind(this));
     signal('newGame', this.newGame.bind(this));
+    signal('mainMenu', this.mainMenu.bind(this));
 }
 Galaxy.prototype.update = function (seconds) {
     this._m.update(seconds);
@@ -256,6 +394,10 @@ Galaxy.prototype.render = function () {
 Galaxy.prototype.newGame = function (difficulty) {
     this._m.newGame(difficulty);
     this.chart.newGame(difficulty);
+    return this;
+};
+Galaxy.prototype.mainMenu = function () {
+    this.chart.mainMenu();
     return this;
 };
 Galaxy.prototype.playerDestroyStarbase = function () {
