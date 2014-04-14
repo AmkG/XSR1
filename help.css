@@ -225,9 +225,11 @@ main p {
   padding-bottom: 1em;
 }
 main ol {
+  padding-left: 2em;
   padding-bottom: 1em;
 }
 main ul {
+  padding-left: 2em;
   padding-bottom: 1em;
 }
 
