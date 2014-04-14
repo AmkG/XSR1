@@ -213,6 +213,14 @@ main h2 {
   font-family: sans-serif;
   font-size: 150%;
 }
+main h3 {
+  font-family: sans-serif;
+  font-size: 125%;
+}
+main h4 {
+  font-family: sans-serif;
+  font-size: 100%;
+}
 main p {
   padding-bottom: 1em;
 }
