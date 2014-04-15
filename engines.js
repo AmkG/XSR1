@@ -207,6 +207,11 @@ Engines.prototype.update = function (seconds) {
 
     vars.energy.consume(this._enerate * seconds);
 
+    if (this._warping && this._actualspeed === this._targetspeed) {
+        this.setSpeed(0);
+        this._warpcb.call(this._warpcb);
+    }
+
     return this;
 };
 Engines.prototype._onMainMenu = function () {
