@@ -287,7 +287,7 @@ function Field() {
     this.display = true;
 
     /* Current view.  */
-    this._currentView = '';
+    this.currentView = '';
 
     /* Register.  */
     signal('update', this.update.bind(this));
@@ -302,8 +302,8 @@ Field.prototype.viewFront = function () {
     this._size = foreSize;
     this._min = foreMin;
     this._max = foreMax;
-    if (this._currentView !== FRONT) {
-        this._currentView = FRONT;
+    if (this.currentView !== FRONT) {
+        this.currentView = FRONT;
         this.generateStars();
     }
     return this;
@@ -314,8 +314,8 @@ Field.prototype.viewAft = function () {
     this._size = aftSize;
     this._min = aftMin;
     this._max = aftMax;
-    if (this._currentView !== AFT) {
-        this._currentView = AFT;
+    if (this.currentView !== AFT) {
+        this.currentView = AFT;
         this.generateStars();
     }
     return this;
