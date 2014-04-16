@@ -25,8 +25,8 @@
  * for the JavaScript code in this page.
  *
  */
-define( ['resize', 'engines', 'vars', 'signal', 'shield'],
-function (resize ,  engines ,  vars ,  signal ,  shield) {
+define( ['resize', 'engines', 'vars', 'signal', 'shield', 'galaxy'],
+function (resize ,  engines ,  vars ,  signal ,  shield ,  galaxy) {
 "use strict";
 
 /*
@@ -116,7 +116,7 @@ Panel.prototype.render = function () {
             this._dc_e.style.color = engines.colorState();
             this._dc_s.style.color = shield.colorState();
             // TODO: refresh other panel damage states.
-            // TODO: starDate
+            this._stardate.innerHTML = galaxy.stardate.toString();
         }
     } else {
         if (this._dom) {

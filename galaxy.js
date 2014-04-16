@@ -67,6 +67,9 @@ function asmModule(stdlib) {
 var asm = asmModule(window);
 var sectorOffset = asm.sectorOffset;
 
+/*-----------------------------------------------------------------------------
+Model of the Galaxy
+-----------------------------------------------------------------------------*/
 
 /* A model of the real world.
 
@@ -191,6 +194,44 @@ Model.prototype.playerDestroyStarbase = function () {
     // TODO
     return this;
 };
+
+/*-----------------------------------------------------------------------------
+Stardate
+-----------------------------------------------------------------------------*/
+
+/* This object is a convenience intended only to generate a string form
+   of the current stardate.  */
+function Stardate(model) {
+    this._m = model;
+}
+Stardate.prototype.toString = function () {
+    var dateMaj = this._m.dateMaj;
+    var dateMin = this._m.dateMin;
+    var rv = '';
+    if (dateMaj >= 1000) {
+        return '999.99';
+    } else if (dateMaj >= 100) {
+        rv = dateMaj.toString();
+    } else if (dateMaj >= 10) {
+        rv = '0' + dateMaj.toString();
+    } else {
+        rv = '00' + dateMaj.toString();
+    }
+
+    rv += '.';
+
+    if (dateMin >= 10) {
+        rv += dateMin.toString();
+    } else {
+        rv += '0' + dateMin.toString();
+    }
+
+    return rv;
+};
+
+/*-----------------------------------------------------------------------------
+Galactic Chart
+-----------------------------------------------------------------------------*/
 
 /* Status of the sub-space radio.  */
 var FIXED = 0;
@@ -424,10 +465,15 @@ Chart.prototype.mainMenu = function () {
     return this;
 };
 
+/*-----------------------------------------------------------------------------
+Galaxy API
+-----------------------------------------------------------------------------*/
+
 function Galaxy() {
-    /* Initialize chart and model.  */
+    /* Initialize chart, stardate, and model.  */
     this.chart = new Chart();
     this._m = new Model();
+    this.stardate = new Stardate(this._m);
     /* Tie them.  */
     this.chart._m = this._m;
     this._m.chart = this.chart;
