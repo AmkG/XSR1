@@ -450,7 +450,10 @@ Field.prototype.render = function () {
     return this;
 };
 Field.prototype.mainMenu = function () {
-    this.generateStars().display = true;
+    this.yaw = 0;
+    this.pitch = 0;
+    this.display = true;
+    this.generateStars();
     return this;
 };
 
