@@ -25,12 +25,14 @@
  * for the JavaScript code in this page.
  *
  */
-define(['signal', 'field'], function (signal, field) {
+define(['signal', 'field', 'vars'], function (signal, field, vars) {
 
 /* Refire rate for an individual tube.  */
 var tubeRefire = 0.5;
 /* Refire rate for the ship in general.  */
 var mainRefire = 0.2;
+/* Energy cost of firing a photon.  */
+var photonEnergy = 10;
 
 /* Position of the photon tubes.  */
 var tubeY = 1.0;
@@ -149,6 +151,7 @@ Photons.prototype._tryFireLeft = function () {
             /*otherwise*/                                       1 ;
         field.fireMissile(0, leftTubeX, tubeY, 0.0, dir);
         this._priority = RIGHT;
+        vars.energy.consume(photonEnergy);
         return true;
     } else {
         return false;
@@ -164,6 +167,7 @@ Photons.prototype._tryFireRight = function () {
             /*otherwise*/                                       1 ;
         field.fireMissile(1, rightTubeX, tubeY, 0.0, dir);
         this._priority = LEFT;
+        vars.energy.consume(photonEnergy);
         return true;
     } else {
         return false;
