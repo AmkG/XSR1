@@ -288,9 +288,23 @@ function Chart() {
     /* Reserve for initialization.  */
     this._m = null;
 }
+/* Fetch the data from the model.  */
+Chart.prototype._updateFromModel = function () {
+    var s;
+    for (s = 0; s < 128; ++s) {
+        this._map[s] = this._m.sectors[s];
+    }
+    this._domRefresh = true;
+};
+/* Damage state.  */
 Chart.prototype.fix = function () {
+    /* Sub-space radio is currently damaged or destroyed, and
+       the chart is displayed, then radio is fixed.  Update
+       immediately.  */
+    if (this._display && this._state !== FIXED) {
+        this._updateFromModel();
+    }
     this._state = FIXED;
-    // TODO, if we are displayed, update from model.
     return this;
 };
 Chart.prototype.damage = function () {
@@ -310,15 +324,13 @@ Chart.prototype.colorState = function () {
         return 'red';
     }
 };
+/* Called each clock tick.  */
 Chart.prototype.update = function (seconds) {
     var s;
     /* If we were just enabled, then update
        from model.  */
     if (this._display && !this._pdisplay && this._state === FIXED) {
-        for (s = 0; s < 128; ++s) {
-            this._map[s] = this._m.sectors[s];
-        }
-        this._domRefresh = true;
+        this._updateFromModel();
     }
     /* If we're enabled, move cursor.  */
     this._cx += this.movex * cursorSpeed * seconds;
