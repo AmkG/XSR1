@@ -235,3 +235,69 @@ main#chart div.cursor {
   -ms-transform: translate(-50%, -50%);
   -webkit-transform: translate(-50%, -50%);
 }
+
+/*-----------------------------------------------------------------------------
+Hyperwarp and Hyperspace
+-----------------------------------------------------------------------------*/
+
+/* Hyperwarp Target.  */
+main#hyperwarptarget {
+  z-index: 4;
+  color: white;
+  background: none;
+  display: block;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  cursor: none;
+}
+/* Four div's that form the cross.  */
+main#hyperwarptarget div {
+  position: absolute;
+  display: block;
+  width: 35%;
+  height: 35%;
+  cursor: none;
+}
+main#hyperwarptarget div#hyperwarptarget_sub0 {
+  /* upper left.  */
+  left: 0px;
+  top: 0px;
+  border-bottom: 2px solid white;
+  border-right: 2px solid white;
+}
+main#hyperwarptarget div#hyperwarptarget_sub1 {
+  /* upper right.  */
+  right: 0px;
+  top: 0px;
+  border-bottom: 2px solid white;
+  border-left: 2px solid white;
+}
+main#hyperwarptarget div#hyperwarptarget_sub2 {
+  /* lower left.  */
+  left: 0px;
+  bottom: 0px;
+  border-top: 2px solid white;
+  border-right: 2px solid white;
+}
+main#hyperwarptarget div#hyperwarptarget_sub3 {
+  /* lower right.  */
+  right: 0px;
+  bottom: 0px;
+  border-top: 2px solid white;
+  border-left: 2px solid white;
+}
+
+/* Hyperspace - covers the field from view.  */
+main#hyperspace {
+  z-index: 0;
+  position: absolute;
+  display: block;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background: black;
+  cursor: none;
+}

@@ -39,6 +39,7 @@ var panel = require('panel');
 var shield = require('shield');
 var signal = require('signal');
 var vars = require('vars');
+var hyperwarp = require('hyperwarp');
 
 /*-----------------------------------------------------------------------------
 Key Handler Table
@@ -49,12 +50,24 @@ var keytable = {};
 (function () {
 var i;
 function engineControl(k) {
+    if (hyperwarp.engaged()) {
+        console.write('Hyperwarp aborted.');
+    }
     engines.setSpeed(parseInt(k));
 }
 for (i = 0; i <= 9; ++i) {
     keytable[i.toString()] = engineControl;
 }
 })();
+keytable['h'] = keytable['H'] = function () {
+    if (hyperwarp.engaged()) {
+        console.write('Hyperwarp aborted.');
+        engines.setSpeed(0);
+    } else {
+        console.write('Hyperwarp engines engaged.');
+        hyperwarp.engage();
+    }
+};
 
 keytable['a'] = keytable['A'] = function () {
     label('AFT VIEW');
@@ -115,7 +128,7 @@ function onUpdate() {
         ++movey;
     }
 
-    if (!chart.isShown()) {
+    if (!chart.isShown() || hyperwarp.engaged()) {
         field.yaw = movex;
         field.pitch = -movey;
         chart.movex = 0;
