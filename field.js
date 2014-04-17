@@ -472,6 +472,15 @@ Field.prototype.render = function () {
     return this;
 };
 Field.prototype.mainMenu = function () {
+    var missiles = this._missiles;
+    var i;
+    /* Clear missiles and bogeys.  */
+    for (i = 0; i < 3; ++i) {
+        missiles[i].loc.display = false;
+    }
+    this._bogey0.loc.display = false;
+    this._bogey1.loc.display = false;
+
     this.yaw = 0;
     this.pitch = 0;
     this.display = true;
