@@ -141,8 +141,8 @@ function aft(loc2d, loc) {
     loc2d.display = true;
     pos2d = loc2d.pos;
     bz = z - ez;
-    pos2d[0] = (ez * pos[0]) / bz;
-    pos2d[1] = (ez * pos[1]) / bz;
+    pos2d[0] = -(ez * pos[0]) / bz;
+    pos2d[1] = -(ez * pos[1]) / bz;
 }
 function aftSize(loc) {
     return -sizeFactor / loc.pos[2];
