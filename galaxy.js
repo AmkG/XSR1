@@ -160,22 +160,33 @@ Model.prototype.newGame = function (difficulty) {
         }
     }
     /* Position starbases.  Make sure they're not already
-       surrounded, not on a map edge, and not on the player's
-       starting sector.  */
+       surrounded, not adjacent to another starbase, not
+       on a map edge, and not on the player's starting
+       sector.  */
     for (n = 0; n < number; ++n) {
         do {
             s = Math.floor(Math.random() * 128);
+            // ensure empty sector and not player's starting sector
             valid = (sectors[s] === 0 && s !== 72);
+            // ensure not on map edge
             if (valid) {
                 sy = s >>> 4;
                 sx = s & 0xF;
                 valid = !(sx === 0 || sx === 15 || sy === 0 || sy === 7);
             }
+            // ensure not surrounded
             if (valid) {
                 valid = (sectors[sectorOffset(s, -1,  0)] === 0) ||
                         (sectors[sectorOffset(s,  1,  0)] === 0) ||
                         (sectors[sectorOffset(s,  0, -1)] === 0) ||
                         (sectors[sectorOffset(s,  0,  1)] === 0);
+            }
+            // ensure not adjacent to another starbase
+            if (valid) {
+                valid = (sectors[sectorOffset(s, -1,  0)] !== -1) &&
+                        (sectors[sectorOffset(s,  1,  0)] !== -1) &&
+                        (sectors[sectorOffset(s,  0, -1)] !== -1) &&
+                        (sectors[sectorOffset(s,  0,  1)] !== -1);
             }
         } while (!valid);
         sectors[s] = -1;
