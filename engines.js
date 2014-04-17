@@ -112,12 +112,16 @@ function Engines() {
     signal('update', this.update.bind(this));
     signal('mainMenu', this._onMainMenu.bind(this));
     signal('newGame', this._onNewGame.bind(this));
+    signal('enterNormal', this._onEnterNormal.bind(this));
+    signal('enterHyperspace', this._onEnterHyperspace.bind(this));
 }
 Engines.prototype.initialize = function () {
     this._state = FIXED;
 
     this._warping = false;
+    this._inhyperspace = false;
     this._warpcb = nullFun;
+    this._warpspeed = 0.0;
 
     this._curspeed = 0.0;
     this._actualspeed = 0.0;
@@ -149,6 +153,10 @@ Engines.prototype.colorState = function () {
     }
 };
 Engines.prototype.setSpeed = function (n) {
+    if (this._inhyperspace) {
+        // ignore player attempts to change speed.
+        return this;
+    }
     this._targetspeed = speeds[n];
     this._enerate = rates[n];
     this._warping = false;
@@ -156,7 +164,10 @@ Engines.prototype.setSpeed = function (n) {
     return this;
 };
 Engines.prototype.hyperwarp = function (f) {
-    this._targetspeed = 100.0;
+    if (this._inhyperspace) {
+        // ignore player attempts to change speed.
+        return this;
+    }
     this._enerate = hyperwarprate;
     this._warping = true;
     this._warpcb = f;
@@ -176,21 +187,25 @@ Engines.prototype.toString = function () {
     }
 };
 Engines.prototype.update = function (seconds) {
-    var step;
+    var step = acceleration * seconds;
+    if (this._inhyperspace) {
+        // Don't update in hyperspace
+        return this;
+    }
+
+    /* Update normal engines.  */
     if (this._curspeed < this._targetspeed) {
-        step = acceleration * seconds;
         this._curspeed += step;
         if (this._curspeed > this._targetspeed) {
             this._curspeed = this._targetspeed;
         }
     } else if (this._curspeed > this._targetspeed) {
-        step = acceleration * seconds;
         this._curspeed -= step;
         if (this._curspeed < this._targetspeed) {
             this._curspeed = this._targetspeed;
         }
     }
-
+    /* Handle engine damage.  */
     if (this._state === FIXED || this._warping) {
         this._actualspeed = this._curspeed;
     } else if (this._state === DAMAGED) {
@@ -203,11 +218,34 @@ Engines.prototype.update = function (seconds) {
         this._actualspeed = this._curspeed;
     }
 
-    field.speed = this._actualspeed;
+    /* Update warp engines.  */
+    if (this._warping) {
+        if (this._warpspeed < 100.0) {
+            this._warpspeed += step;
+            if (this._warpspeed > 100.0) {
+                this._warpspeed = 100.0;
+            }
+        }
+    } else {
+        if (this._warpspeed > 0.0) {
+            this._warpspeed >= step;
+            if (this._warpspeed < 0.0) {
+                this._warpspeed = 0.0;
+            }
+        }
+    }
+
+    /* Get the higher of actual and warp speed*/
+    if (this._warpspped > this._actualspeed) {
+        field.speed = this._warpspeed;
+    } else {
+        field.speed = this._actualspeed;
+    }
 
     vars.energy.consume(this._enerate * seconds);
 
-    if (this._warping && this._actualspeed === this._targetspeed) {
+    /* On hyperwarp entry.  */
+    if (this._warping && this._warpspeed === 100.0) {
         this.setSpeed(0);
         this._warpcb.call(this._warpcb);
     }
@@ -225,6 +263,14 @@ Engines.prototype._onMainMenu = function () {
 };
 Engines.prototype._onNewGame = function () {
     this._enerate = rates[6];
+    return this;
+};
+Engines.prototype._onEnterNormal = function () {
+    this._inhyperspace = false;
+    return this;
+};
+Engines.prototype._onEnterHyperspace = function () {
+    this._inhyperspace = true;
     return this;
 };
 
