@@ -144,6 +144,9 @@ Hyperwarp.prototype.engage = function () {
 Hyperwarp.prototype.engaged = function () {
     return engines.isHyperwarp();
 };
+Hyperwarp.prototype.inHyperspace = function () {
+    return this._hyperspaceTime > 0.0;
+};
 Hyperwarp.prototype._onHyperwarp = function () {
     var dist = 0;
     var energy = 0;
