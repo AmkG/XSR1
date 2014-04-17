@@ -33,6 +33,7 @@ var keys = {
     left: false,
     right: false,
     down: false,
+    fire: false,
     key: ''
 };
 var lastkey = '';
@@ -82,6 +83,9 @@ function onkeydown(e) {
     } else {
         lastkey = String.fromCharCode(e.charCode);
     }
+    if (lastkey === ' ') {
+        keys.fire = true;
+    }
 
     e.stopPropagation();
     e.preventDefault();
@@ -107,6 +111,9 @@ function onkeyup(e) {
     case 40:
         keys.down = false;
         break;
+    }
+    if (e.keyCode === 32 || e.charCode === 32) {
+        keys.fire = false;
     }
 
     e.stopPropagation();
