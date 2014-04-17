@@ -101,7 +101,7 @@ var update = null;
 
 /* Function called regularly.  */
 function repeat() {
-    update(0.040);
+    update(0.020);
     signal.render();
 }
 
@@ -111,7 +111,7 @@ Export Interface.
 
 function loop () {
     loop.enterMainMenu();
-    setInterval(repeat, 40);
+    setInterval(repeat, 20);
 }
 loop.enterMainMenu = function () {
     console
