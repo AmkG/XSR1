@@ -188,6 +188,7 @@ Engines.prototype.toString = function () {
 };
 Engines.prototype.update = function (seconds) {
     var step = acceleration * seconds;
+    var warpcb = nullFun;
     if (this._inhyperspace) {
         // Don't update in hyperspace
         return this;
@@ -206,7 +207,7 @@ Engines.prototype.update = function (seconds) {
         }
     }
     /* Handle engine damage.  */
-    if (this._state === FIXED || this._warping) {
+    if (this._state === FIXED) {
         this._actualspeed = this._curspeed;
     } else if (this._state === DAMAGED) {
         this._actualspeed = this._curspeed * Math.random();
@@ -228,7 +229,7 @@ Engines.prototype.update = function (seconds) {
         }
     } else {
         if (this._warpspeed > 0.0) {
-            this._warpspeed >= step;
+            this._warpspeed -= step;
             if (this._warpspeed < 0.0) {
                 this._warpspeed = 0.0;
             }
@@ -236,18 +237,18 @@ Engines.prototype.update = function (seconds) {
     }
 
     /* Get the higher of actual and warp speed*/
-    if (this._warpspped > this._actualspeed) {
-        field.speed = this._warpspeed;
-    } else {
-        field.speed = this._actualspeed;
+    if (this._warpspeed > this._actualspeed) {
+        this._actualspeed = this._warpspeed;
     }
+    field.speed = this._actualspeed;
 
     vars.energy.consume(this._enerate * seconds);
 
     /* On hyperwarp entry.  */
-    if (this._warping && this._warpspeed === 100.0) {
+    if (this._warping && this._warpspeed >= 99.999) {
+        warpcb = this._warpcb;
         this.setSpeed(0);
-        this._warpcb.call(this._warpcb);
+        warpcb.call(warpcb);
     }
 
     return this;
