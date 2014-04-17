@@ -25,8 +25,8 @@
  * for the JavaScript code in this page.
  *
  */
-define( ['resize', 'engines', 'vars', 'signal', 'shield', 'galaxy'],
-function (resize ,  engines ,  vars ,  signal ,  shield ,  galaxy) {
+define( ['resize','engines','vars','signal','shield','galaxy','photons'],
+function (resize , engines , vars , signal , shield , galaxy , photons) {
 "use strict";
 
 /*
@@ -113,6 +113,7 @@ Panel.prototype.render = function () {
             this._dom2.style.fontSize = Math.floor(resize.height / 11) + 'px';
 
             // TODO: chart targets value.
+            this._dc_p.style.color = photons.colorState();
             this._dc_e.style.color = engines.colorState();
             this._dc_s.style.color = shield.colorState();
             // TODO: refresh other panel damage states.

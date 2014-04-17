@@ -48,6 +48,8 @@ var speedFactor = 2.5; // multiplier for base speed.
    from the range value in about 2 seconds.  */
 
 
+var actualMissileSpeed = missileSpeed * speedFactor;
+
 /* Observer distance factor.  Not in the original game.
    (or, more properly, 1 in the original game, but not
    added to the z-coordinate)
@@ -319,7 +321,22 @@ Field.prototype.viewAft = function () {
         this.generateStars();
     }
     return this;
-}
+};
+Field.prototype.fireMissile = function (id, x, y, z, dir) {
+    var missiles = this._missiles;
+    var missile = missiles[id];
+    var loc = missile.loc;
+    var pos = loc.pos;
+
+    loc.display = true;
+    pos[0] = x;
+    pos[1] = y;
+    pos[2] = z;
+    missile.direction = dir;
+    missile.lifetime = missileLifetime;
+
+    return this;
+};
 Field.prototype.generateStars = function () {
     var stars = this._stars;
     var min = this._min;
@@ -411,7 +428,7 @@ Field.prototype.update = function (seconds) {
         if (loc.display) {
             updateLoc(loc, mov, isRot, sinRot, cosRot, this.yaw, this.pitch);
             /* Missiles move!  */
-            loc.pos[2] += missile.direction * seconds;
+            loc.pos[2] += missile.direction * actualMissileSpeed * seconds;
             missile.lifetime -= seconds;
             if (missile.lifetime <= 0.0) {
                 missile.lifetime = 0.0;
@@ -425,6 +442,7 @@ Field.prototype.update = function (seconds) {
 };
 Field.prototype.render = function () {
     var stars = this._stars;
+    var missiles = this._missiles;
     var item;
     var pos;
     var size;
@@ -445,7 +463,11 @@ Field.prototype.render = function () {
     for (i = 0; i < numStars; ++i) {
         project(this, stars[i], '&middot;');
     }
-    /* TODO: bogeys, missiles.  */
+    for (i = 0; i < 3; ++i) {
+         // '&#9679;'
+         project(this, missiles[i].loc, '&#10042;');
+    }
+    /* TODO: bogeys.  */
 
     return this;
 };

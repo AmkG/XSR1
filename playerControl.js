@@ -40,6 +40,7 @@ var shield = require('shield');
 var signal = require('signal');
 var vars = require('vars');
 var hyperwarp = require('hyperwarp');
+var photons = require('photons');
 
 /*-----------------------------------------------------------------------------
 Key Handler Table
@@ -126,6 +127,14 @@ function onUpdate() {
     }
     if (keys.down) {
         ++movey;
+    }
+
+    /* Only fire missiles if not in hyperspace or hyperwarp.  */
+    if (!hyperwarp.engaged() && !hyperwarp.inHyperspace() &&
+        field.speed < 45) {
+        photons.fire = keys.fire;
+    } else {
+        photons.fire = false;
     }
 
     if (!chart.isShown() || hyperwarp.engaged()) {
