@@ -116,7 +116,9 @@ Panel.prototype.render = function () {
             this._dc_p.style.color = photons.colorState();
             this._dc_e.style.color = engines.colorState();
             this._dc_s.style.color = shield.colorState();
-            // TODO: refresh other panel damage states.
+            // TODO: this._dc_c.style.color
+            // TODO: this._dc_l.style.color
+            this._dc_r.style.color = galaxy.chart.colorState();
             this._stardate.innerHTML = galaxy.stardate.toString();
         }
     } else {

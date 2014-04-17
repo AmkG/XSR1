@@ -288,6 +288,28 @@ function Chart() {
     /* Reserve for initialization.  */
     this._m = null;
 }
+Chart.prototype.fix = function () {
+    this._state = FIXED;
+    // TODO, if we are displayed, update from model.
+    return this;
+};
+Chart.prototype.damage = function () {
+    this._state = DAMAGED;
+    return this;
+};
+Chart.prototype.destroy = function () {
+    this._state = DESTROYED;
+    return this;
+};
+Chart.prototype.colorState = function () {
+    if (this._state === FIXED) {
+        return 'green';
+    } else if (this._state === DAMAGED) {
+        return 'yellow';
+    } else {
+        return 'red';
+    }
+};
 Chart.prototype.update = function (seconds) {
     var s;
     /* If we were just enabled, then update
