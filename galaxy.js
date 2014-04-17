@@ -464,6 +464,17 @@ Chart.prototype.mainMenu = function () {
     this._display = false;
     return this;
 };
+/* Get and set the current target position.  */
+Chart.prototype.getTargetPosition = function (ar2d) {
+    ar2d[0] = this._cx;
+    ar2d[1] = this._cy;
+    return this;
+};
+Chart.prototype.setTargetPosition = function (ar2d) {
+    this._cx = ar2d[0];
+    this._cy = ar2d[1];
+    return this;
+};
 
 /*-----------------------------------------------------------------------------
 Galaxy API
@@ -506,6 +517,28 @@ Galaxy.prototype.playerDestroyStarbase = function () {
     this._m.playerDestroyStarbase();
     return this;
 };
+Galaxy.prototype.getPlayerPosition = function (ar2d) {
+    ar2d[0] = this._m.px;
+    ar2d[1] = this._m.py;
+    return this;
+};
+Galaxy.prototype.setPlayerPosition = function (ar2d) {
+    this._m.px = ar2d[0];
+    this._m.py = ar2d[1];
+    this._m.ps = sectorOffset(0, ar2d[0], ar2d[1]);
+    return this;
+};
+Galaxy.prototype.getPlayerSectorContents = function () {
+    var rv = this._m.sectors[this._m.ps];
+    if (rv < 0) {
+        rv = -1;
+    }
+    return rv;
+};
+Galaxy.prototype.getPlayerSector = function () {
+    return this._m.ps;
+};
+Galaxy.prototype.sectorOffset = sectorOffset;
 
 return new Galaxy();
 });
