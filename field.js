@@ -91,6 +91,7 @@ function Loc() {
 /* Class for enemies, asteroids, starbases, etc.  */
 function Bogey() {
     this.loc = new Loc();
+    this.vec = [0.0, 0.0, 0.0];
     this.onupdate = nullFun;
     this.oncollideMissile = nullFun;
     this.html = '&middot;';
@@ -104,6 +105,7 @@ Bogey.prototype.clear = function () {
 Bogey.prototype.set = function (x, y, z, onupdate, oncollideMissile, html) {
     var loc = this.loc;
     var pos = loc.pos;
+    var vec = this.vec;
     loc.display = true;
     if (loc.dom) {
         loc.dom.innerHTML = html;
@@ -111,6 +113,9 @@ Bogey.prototype.set = function (x, y, z, onupdate, oncollideMissile, html) {
     pos[0] = x;
     pos[1] = y;
     pos[2] = z;
+    vec[0] = 0.0;
+    vec[1] = 0.0;
+    vec[2] = 0.0;
     this.onupdate = onupdate;
     this.oncollideMissile = oncollideMissile;
     this.html = html;
@@ -553,6 +558,7 @@ Field.prototype.update = function (seconds) {
     var missile = null;
     var loc = null;
     var pos = null;
+    var vec = null;
     var min = this._min;
     var max = this._max;
     var i = 0;
@@ -629,6 +635,7 @@ Field.prototype.update = function (seconds) {
         }
     }
 
+    /* Debris.  */
     if (this._debrisTime > 0.0) {
         this._debrisTime -= seconds;
         if (this._debrisTime <= 0.0) {
@@ -654,7 +661,25 @@ Field.prototype.update = function (seconds) {
         }
     }
 
-    /* TODO: bogey behavior.  */
+    /* Bogey behavior.  */
+    for (i = 0; i < 2; ++i) {
+        if (i === 0) {
+            bogey = this._bogey0;
+        } else {
+	    bogey = this._bogey1;
+        }
+        loc = bogey.loc;
+        if (loc.display) {
+            pos = loc.pos;
+            vec = bogey.vec;
+            bogey.onupdate.call(bogey.onupdate,
+                pos, vec
+            );
+            pos[0] += vec[0] * speedFactor * seconds;
+            pos[1] += vec[1] * speedFactor * seconds;
+            pos[2] += vec[2] * speedFactor * seconds;
+        }
+    }
 
     /* Missile collision check.  */
     if (missiles[2].loc.display) {
