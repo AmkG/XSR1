@@ -45,6 +45,7 @@ function LRS() {
     signal('update', this.update.bind(this));
     signal('render', this.render.bind(this));
     signal('newGame', this.newGame.bind(this));
+    signal('mainMenu', this.mainMenu.bind(this));
 }
 /* Damage state.  */
 LRS.prototype.fix = function () {
@@ -122,6 +123,11 @@ LRS.prototype.render = function () {
 /* At start of game.  */
 LRS.prototype.newGame = function () {
     this.fix();
+    return this;
+};
+/* Enter main menu.  */
+LRS.prototype.mainMenu = function () {
+    this.hide();
     return this;
 };
 
