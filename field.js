@@ -47,7 +47,6 @@ var speedFactor = 2.5; // multiplier for base speed.
    at 12.5 (engines key 6) removes about 50 to 60 metrons
    from the range value in about 2 seconds.  */
 
-
 var actualMissileSpeed = missileSpeed * speedFactor;
 
 /* Observer distance factor.  Not in the original game.
@@ -59,6 +58,13 @@ var actualMissileSpeed = missileSpeed * speedFactor;
    and (y3d / z3d), respectively.  With observer distance,
    it's (ez * xrd / (zrd + ez)), ditto with y.  */
 var ez = 2.0;
+
+/* LRS maximum distance.  */
+var lrsDistance = 400.0;
+/* LRS object size.  */
+var lrsSizeConst = 1.0 / 25.0;
+
+var lrsLimit = lrsDistance * 2.0;
 
 function nullFun() { }
 
@@ -88,6 +94,10 @@ function Missile(direction, enemy) {
     this.lifetime = missileLifetime;
     this.enemy = enemy;
 }
+
+/*-----------------------------------------------------------------------------
+Projections
+-----------------------------------------------------------------------------*/
 
 /* View constants.  */
 var FRONT = 'front';
@@ -150,6 +160,39 @@ function aftSize(loc) {
 var aftMin = [-100.1, -100.1, -140.01];
 var aftMax = [100.1, 100.1, -0.01];
 
+/* LRS projection.  */
+function lrs(loc2d, loc) {
+    var pos;
+    var pos2d;
+
+    if (!loc.display) {
+        loc2d.display = false;
+        return;
+    }
+
+    pos = loc.pos;
+    if (pos[0] < -lrsLimit || pos[0] > lrsLimit ||
+        pos[2] < -lrsLimit || pos[2] > lrsLimit) {
+        loc2d.display = false;
+        return;
+    }
+
+    loc2d.display = true;
+    pos2d = loc2d.pos;
+
+    pos2d[0] = pos[0] / lrsDistance;
+    pos2d[1] = -pos[2] / lrsDistance;
+}
+function lrsSize(loc) {
+    return lrsSizeConst;
+}
+var lrsMin = [-lrsLimit, -lrsLimit, -lrsLimit];
+var lrsMax = [lrsLimit, lrsLimit, lrsLimit];
+
+/*-----------------------------------------------------------------------------
+Support functions
+-----------------------------------------------------------------------------*/
+
 /* Gets a random number between lo and hi.  */
 function randomIn(lo, hi) {
     return lo + (hi - lo) * Math.random();
@@ -168,6 +211,10 @@ function createItemDom(fieldDom) {
     fieldDom.appendChild(rv);
     return rv;
 }
+
+/*-----------------------------------------------------------------------------
+Loc projection
+-----------------------------------------------------------------------------*/
 
 /* Projects a given Loc item.  */
 function project(field, loc, html, className) {
@@ -208,6 +255,10 @@ function project(field, loc, html, className) {
         }
         dom.style.fontSize = Math.floor(size) + 'px';
 
+        if (field.mirror) {
+            ar2d.pos[1] = -ar2d.pos[1];
+        }
+
         x = ar2d.pos[0] * scale + resize.cenx;
         y = ar2d.pos[1] * scale + resize.ceny;
         dom.style.left = Math.floor(x) + 'px';
@@ -220,6 +271,10 @@ function project(field, loc, html, className) {
         }
     }
 }
+
+/*-----------------------------------------------------------------------------
+Loc update
+-----------------------------------------------------------------------------*/
 
 /* Compute rotation.  */
 function computeRotation(sinRot, cosRot, ar3d, yaw, pitch) {
@@ -248,6 +303,10 @@ function updateLoc(loc, mov, isRot, sinRot, cosRot, yaw, pitch) {
     }
 }
 
+/*-----------------------------------------------------------------------------
+Field
+-----------------------------------------------------------------------------*/
+
 /* Field constructor.  */
 function Field() {
     var i;
@@ -275,7 +334,6 @@ function Field() {
     this._ar2d = {display: false, pos: [0.1, 0.1]};
 
     /* View properties.  */
-    this._view = false;
     this._project = nullFun;
     this._size = null;
     this._min = null;
@@ -288,6 +346,8 @@ function Field() {
     this.pitch = 0;
     /* Display by default.  */
     this.display = true;
+    /* Whether to mirror the y axis (Mostly used in LRS damaged state).  */
+    this.mirror = false;
 
     /* Current view.  */
     this.currentView = '';
@@ -300,7 +360,6 @@ function Field() {
     this.viewFront();
 }
 Field.prototype.viewFront = function () {
-    this._view = true;
     this._project = fore;
     this._size = foreSize;
     this._min = foreMin;
@@ -312,13 +371,23 @@ Field.prototype.viewFront = function () {
     return this;
 };
 Field.prototype.viewAft = function () {
-    this._view = true;
     this._project = aft;
     this._size = aftSize;
     this._min = aftMin;
     this._max = aftMax;
     if (this.currentView !== AFT) {
         this.currentView = AFT;
+        this.generateStars();
+    }
+    return this;
+};
+Field.prototype.viewLRS = function () {
+    this._project = lrs;
+    this._size = lrsSize;
+    this._min = lrsMin;
+    this._max = lrsMax;
+    if (this.currentView !== LRS) {
+        this.currentView = LRS;
         this.generateStars();
     }
     return this;
