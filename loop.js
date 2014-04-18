@@ -113,6 +113,12 @@ function loop () {
     loop.enterMainMenu();
     setInterval(repeat, 20);
 }
+/*
+ * down: &#9660;
+ * up: &#9650;
+ * right: &#9654;
+ * left: &#9664;
+ */
 loop.enterMainMenu = function () {
     console
     .clear()

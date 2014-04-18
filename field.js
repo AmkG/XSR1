@@ -518,6 +518,21 @@ Field.prototype.clearBogey = function (i) {
     bogey.clear()
     return this;
 };
+/* Get the location of the indicated bogey.  */
+Field.prototype.getBogeyPosition = function (i, ar3d) {
+    var bogey = null;
+    var pos = null;
+    if (i === 0) {
+        bogey = this._bogey0;
+    } else if (i === 1) {
+        bogey = this._bogey1;
+    }
+    pos = bogey.loc.pos;
+    ar3d[0] = pos[0];
+    ar3d[1] = pos[1];
+    ar3d[2] = pos[2];
+    return this;
+};
 /* Cause an explosion on the field.  */
 Field.prototype.explosion = function (x, y, z) {
     var i;
