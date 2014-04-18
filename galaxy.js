@@ -203,7 +203,31 @@ Model.prototype.newGame = function (difficulty) {
 /* Called when the player destroys the starbase in the current
    sector.  */
 Model.prototype.playerDestroyStarbase = function () {
-    // TODO
+    var sectors = this.sectors;
+    var ps = this.ps;
+    if (sectors[ps] >= 0) {
+        console.write("Internal Error!  " +
+            "Destroyed starbase on sector# " + ps + ", which has none."
+        ).write("sectors[ps] = " + sectors[ps]);
+    } else {
+        sectors[ps] = 0;
+        // TODO: if the current starbase is the Nyloz target,
+        // select a new target.
+    }
+    return this;
+};
+/* Called when the player kills a Nyloz ship in the current
+   sector.  */
+Model.prototype.killNyloz = function () {
+    var sectors = this.sectors;
+    var ps = this.ps;
+    if (sectors[ps] <= 0) {
+        console.write("Internal Error!  " +
+            "Killed a Nyloz on sector# " + ps + ", which doesn't have any!"
+        ).write("sectors[ps] = " + sectors[ps]);
+    } else {
+        --sectors[ps];
+    }
     return this;
 };
 
@@ -553,6 +577,8 @@ function Galaxy() {
     signal('render', this.render.bind(this));
     signal('newGame', this.newGame.bind(this));
     signal('mainMenu', this.mainMenu.bind(this));
+    signal('playerDestroyStarbase', this.playerDestroyStarbase.bind(this));
+    signal('killNyloz', this.killNyloz.bind(this));
 }
 Galaxy.prototype.update = function (seconds) {
     this._m.update(seconds);
@@ -574,6 +600,10 @@ Galaxy.prototype.mainMenu = function () {
 };
 Galaxy.prototype.playerDestroyStarbase = function () {
     this._m.playerDestroyStarbase();
+    return this;
+};
+Galaxy.prototype.killNyloz = function () {
+    this._m.killNyloz();
     return this;
 };
 Galaxy.prototype.getPlayerPosition = function (ar2d) {
