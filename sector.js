@@ -25,23 +25,100 @@
  * for the JavaScript code in this page.
  *
  */
-define(['signal','galaxy','field'],
-function(signal , galaxy , field) {
+define(['signal','galaxy','field','console'],
+function(signal , galaxy , field , console) {
 
 /*
  * This file manages the player's experience within a sector.
  * It generates starbases and enemy Nyloz craft.
  */
 
-/* Behavior of star bases.  */
-function starbaseUpdate() {
-    // TODO: if starbase is near enough, initiate docking sequence.
+/*-----------------------------------------------------------------------------
+Starbase Behavior
+-----------------------------------------------------------------------------*/
+
+function Starbase() {
+    this.onupdate = this._onupdate.bind(this);
+    this.oncollide = this._oncollide.bind(this);
+    this.onbotupdate = this._onbotupdate.bind(this);
+    this.onbotcollide = this._onbotcollide.bind(this);
+    /* Status if docked or not.  */
+    this._pdocked = false;
+    /* Docking sequence completed.  */
+    this._finished = false;
 }
-function starbaseCollideMissile() {
+Starbase.prototype.html = "&ndash;=&equiv;=&ndash;";
+Starbase.prototype.create = function (x, y, z) {
+    this._pdocked = false;
+    this._finished = false;
+    field.setBogey(0, x, y, z, this.onupdate, this.oncollide, this.html);
+    return this;
+};
+/* Behavior of star bases.  */
+Starbase.prototype._onupdate = function (pos, vec, seconds) {
+    var docked = true;
+    docked = field.speed === 0.0 &&
+        (0.0 < pos[2] && pos[2] < 5.0) &&
+        (-3.0 < pos[0] && pos[0] < 1.0) &&
+        (-3.0 < pos[1] && pos[1] < 1.0) ;
+
+    if (!this._finished) {
+        /* On initiate of docking.  */
+        if (docked && !this._pdocked) {
+            console.write('Docking initiated.');
+            field.setBogey(1,
+                1.0, 1.0, 30.0,
+                this.onbotupdate, this.onbotcollide, this.bothtml
+            );
+        }
+        /* On breaking-off of docking.  */
+        if (!docked && this._pdocked) {
+            console.write('Docking aborted.');
+            field.clearBogey(1);
+        }
+    }
+
+    vec[0] = 0.0;
+    vec[1] = 0.0;
+    vec[2] = 0.0;
+
+    this._pdocked = docked;
+    return this;
+};
+/* Reaction to being hit.  */
+Starbase.prototype._oncollide = function () {
     field.clearBogey(0);
     signal.raise('playerDestroyStarbase');
-}
-var starbaseHTML = "&ndash;=&equiv;=&ndash;";
+    return this;
+};
+/* Resupply bot.  */
+Starbase.prototype.bothtml = "[&deg;]";
+Starbase.prototype._onbotupdate = function (pos, vec, seconds) {
+    vec[0] = 0.0;
+    vec[1] = 0.0;
+    if (!this._finished) {
+        vec[2] = -1.0;
+        if (pos[2] <= 0.0) {
+            console.write("Repair and recharge completed.");
+            signal.raise('fix');
+            this._finished = true;
+        }
+    } else {
+        vec[2] = 1.5;
+        if (pos[2] >= 30.0) {
+            field.clearBogey(1);
+        }
+    }
+};
+Starbase.prototype._onbotcollide = function () {
+    field.clearBogey(1);
+};
+
+var starbase = new Starbase();
+
+/*-----------------------------------------------------------------------------
+Sector Manager
+-----------------------------------------------------------------------------*/
 
 /* Generate a random location that isn't very near
    to the player.  */
@@ -72,10 +149,7 @@ Sector.prototype.enterNormal = function () {
     var ar3d = this._ar3d;
     if (sector === -1) {
         randomLocation(ar3d);
-        field.setBogey(0,
-            ar3d[0], ar3d[1], ar3d[2],
-            starbaseUpdate, starbaseCollideMissile, starbaseHTML
-        );
+        starbase.create(ar3d[0], ar3d[1], ar3d[2]);
     } else if (sector === 0) {
         field.clearBogeysAndMissiles();
     } else {
