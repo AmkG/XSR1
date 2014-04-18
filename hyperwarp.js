@@ -137,14 +137,13 @@ Hyperwarp.prototype._onHyperwarp = function () {
     } else if (this._targetY >= 8.0) {
         this._targetY -= 8.0;
     }
-    /* Determine offset from player location.  */
+    /* Determine player location.  */
     galaxy.getPlayerPosition(this._ar2);
-    dist = Math.floor(
-        Math.abs(this._ar2[1] - this._targetY) +
-        Math.abs(this._ar2[0] - this._targetX)
-    );
     /* Get energy required to jump.  */
-    energy = warpCosts[dist];
+    energy = warpCosts(
+        this._ar2[0], this._ar2[1],
+        this._targetX, this._targetY
+    );
     /* Compute hyperspace time.  */
     this._hyperspaceTime = energy / energyConsumeRate;
 
