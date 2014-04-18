@@ -38,6 +38,7 @@ function starbaseUpdate() {
     // TODO: if starbase is near enough, initiate docking sequence.
 }
 function starbaseCollideMissile() {
+    field.clearBogey(0);
     signal.raise('playerDestroyStarbase');
 }
 var starbaseHTML = "&ndash;=&equiv;=&ndash;";

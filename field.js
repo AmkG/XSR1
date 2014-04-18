@@ -74,6 +74,10 @@ var actualDebrisSpeed = debrisSpeed * speedFactor;
 /* Time debris stays on the field.  */
 var debrisTime = 2.0;
 
+/* Size of bogeys and missiles.  */
+var bogeySize = 1.0;
+var missileSize = 0.5;
+
 function nullFun() { }
 
 /* Location class.  */
@@ -233,6 +237,18 @@ function lrsSize(loc) {
 }
 var lrsMin = [-lrsLimit, -lrsLimit, -lrsLimit];
 var lrsMax = [lrsLimit, lrsLimit, lrsLimit];
+
+/*-----------------------------------------------------------------------------
+Collision check.
+-----------------------------------------------------------------------------*/
+
+function collides(pos1, size1, pos2, size2) {
+    var ss = size1 + size2;
+    var x = Math.abs(pos1[0] - pos2[0]);
+    var y = Math.abs(pos1[1] - pos2[1]);
+    var z = Math.abs(pos1[2] - pos2[2]);
+    return x < ss && y < ss && z < ss;
+}
 
 /*-----------------------------------------------------------------------------
 Support functions
@@ -638,7 +654,48 @@ Field.prototype.update = function (seconds) {
         }
     }
 
-    /* TODO: bogey behavior, missile collision.  */
+    /* TODO: bogey behavior.  */
+
+    /* Missile collision check.  */
+    if (missiles[2].loc.display) {
+        /* Missile-to-missile.  */
+        for (i = 0; i < 2; ++i) {
+            missile = missiles[i];
+            pos = missile.loc.pos;
+            if (missile.loc.display &&
+                collides(pos, missileSize,
+                    missiles[2].loc.pos, missileSize)) {
+                this.explosion(pos[0], pos[1], pos[2]);
+                missile.loc.display = false;
+                missiles[2].loc.display = false;
+                break;
+            }
+        }
+        /* TODO: missile to player.  */
+    }
+    /* Missile-to-bogey.  */
+    for (i = 0; i < 2; ++i) {
+        missile = missiles[i];
+        loc = missile.loc;
+        if (loc.display) {
+            pos = loc.pos;
+            if (this._bogey0.loc.display &&
+                collides(pos, missileSize,
+                         this._bogey0.loc.pos, bogeySize)) {
+                pos = this._bogey0.loc.pos;
+                this.explosion(pos[0], pos[1], pos[2]);
+                loc.display = false;
+                this._bogey0.oncollideMissile();
+            } else if (this._bogey1.loc.display &&
+                collides(pos, missileSize,
+                         this._bogey1.loc.pos, bogeySize)) {
+                pos = this._bogey1.loc.pos;
+                this.explosion(pos[0], pos[1], pos[2]);
+                loc.display = false;
+                this._bogey1.oncollideMissile();
+            }
+        }
+    }
     return this;
 };
 Field.prototype.render = function () {
