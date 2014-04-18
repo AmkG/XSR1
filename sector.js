@@ -67,7 +67,7 @@ Starbase.prototype._onupdate = function (pos, vec, seconds) {
         if (docked && !this._pdocked) {
             console.write('Docking initiated.');
             field.setBogey(1,
-                1.0, 1.0, 30.0,
+                2.0, 2.0, 60.0,
                 this.onbotupdate, this.onbotcollide, this.bothtml
             );
         }
@@ -97,15 +97,15 @@ Starbase.prototype._onbotupdate = function (pos, vec, seconds) {
     vec[0] = 0.0;
     vec[1] = 0.0;
     if (!this._finished) {
-        vec[2] = -1.0;
+        vec[2] = -2.0;
         if (pos[2] <= 0.0) {
             console.write("Repair and recharge completed.");
             signal.raise('fix');
             this._finished = true;
         }
     } else {
-        vec[2] = 1.5;
-        if (pos[2] >= 30.0) {
+        vec[2] = 3.0;
+        if (pos[2] >= 60.0) {
             field.clearBogey(1);
         }
     }
