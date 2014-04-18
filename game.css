@@ -32,6 +32,11 @@ main#field span {
   -ms-transform: translate(-50%, -50%);
   -webkit-transform: translate(-50%, -50%);
 }
+main#field span.star {
+}
+main#field span.photon {
+  color: #ffff80;
+}
 
 /*-----------------------------------------------------------------------------
 Console

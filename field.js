@@ -170,7 +170,7 @@ function createItemDom(fieldDom) {
 }
 
 /* Projects a given Loc item.  */
-function project(field, loc, html) {
+function project(field, loc, html, className) {
     var ar2d = field._ar2d;
     var dom;
     var scale;
@@ -193,6 +193,7 @@ function project(field, loc, html) {
         if (!dom) {
             dom = loc.dom = createItemDom(field._dom);
             dom.innerHTML = html;
+            dom.className = className;
         }
         dom.style.display = 'block';
 
@@ -461,11 +462,11 @@ Field.prototype.render = function () {
     this._dom.style.display = 'block';
 
     for (i = 0; i < numStars; ++i) {
-        project(this, stars[i], '&middot;');
+        project(this, stars[i], '&middot;', 'star');
     }
     for (i = 0; i < 3; ++i) {
          // '&#9679;'
-         project(this, missiles[i].loc, '&#10042;');
+         project(this, missiles[i].loc, '&#10042;', 'photon');
     }
     /* TODO: bogeys.  */
 
