@@ -94,6 +94,7 @@ vars.update = function (seconds) {
 
 signal('newGame', vars.clear);
 signal('update', vars.update);
+signal('killNyloz', kills.add);
 
 return vars;
 });
