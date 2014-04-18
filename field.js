@@ -673,7 +673,7 @@ Field.prototype.update = function (seconds) {
             pos = loc.pos;
             vec = bogey.vec;
             bogey.onupdate.call(bogey.onupdate,
-                pos, vec
+                pos, vec, seconds
             );
             pos[0] += vec[0] * speedFactor * seconds;
             pos[1] += vec[1] * speedFactor * seconds;
