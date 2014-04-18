@@ -66,6 +66,14 @@ var lrsSizeConst = 1.0 / 25.0;
 
 var lrsLimit = lrsDistance * 2.0;
 
+/* Number of debris elements to emit.  */
+var numDebris = 20;
+/* Speed of debris.  */
+var debrisSpeed = 2.0;
+var actualDebrisSpeed = debrisSpeed * speedFactor;
+/* Time debris stays on the field.  */
+var debrisTime = 2.0;
+
 function nullFun() { }
 
 /* Location class.  */
@@ -112,6 +120,25 @@ function Missile(direction, enemy) {
     this.lifetime = missileLifetime;
     this.enemy = enemy;
 }
+
+/* Class for debris.  */
+function Debris() {
+    this.loc = new Loc();
+    this.vec = [0.0, 0.0, 0.0];
+}
+Debris.prototype.set = function (x, y, z) {
+    var loc = this.loc;
+    var pos = loc.pos;
+    var vec = this.vec;
+    pos[0] = x;
+    pos[1] = y;
+    pos[2] = z;
+    vec[0] = Math.random() * 2 - 1.0;
+    vec[1] = Math.random() * 2 - 1.0;
+    vec[2] = Math.random() * 2 - 1.0;
+    loc.display = true;
+    return this;
+};
 
 /*-----------------------------------------------------------------------------
 Projections
@@ -345,6 +372,15 @@ function Field() {
     this._missiles[1] = new Missile(1.0, false);
     this._missiles[2] = new Missile(1.0, true);
 
+    /* Debris from explosion.  */
+    this._debrisTime = 0.0;
+    this._clearDebris = false;
+    this._debris = [];
+    this._debris.length = numDebris;
+    for (i = 0; i < numDebris; ++i) {
+        this._debris[i] = new Debris();
+    }
+
     /* DOM container of all field items.  */
     this._dom = null;
 
@@ -463,7 +499,13 @@ Field.prototype.clearBogey = function (i) {
 };
 /* Cause an explosion on the field.  */
 Field.prototype.explosion = function (x, y, z) {
-    // TODO
+    var i;
+    var debris = this._debris;
+    for (i = 0; i < numDebris; ++i) {
+        debris[i].set(x, y, z);
+    }
+    this._clearDebris = false;
+    this._debrisTime = debrisTime;
     return this;
 };
 /* Re-generate stars on the field.  */
@@ -485,8 +527,12 @@ Field.prototype.generateStars = function () {
 };
 Field.prototype.update = function (seconds) {
     var mov = this.speed * seconds * speedFactor;
+    var debrismov = 0.0;
     var stars = this._stars;
     var missiles = this._missiles;
+    var debris = null;
+    var debris1 = null;
+    var vec = null;
     var bogey = null;
     var missile = null;
     var loc = null;
@@ -567,12 +613,39 @@ Field.prototype.update = function (seconds) {
         }
     }
 
+    if (this._debrisTime > 0.0) {
+        this._debrisTime -= seconds;
+        if (this._debrisTime <= 0.0) {
+            this._debrisTime = 0.0;
+            this._clearDebris = true;
+        } else {
+            /* Handle debris field.  */
+            debris = this._debris;
+            debrismov = actualDebrisSpeed * seconds;
+            for (i = 0; i < numDebris; ++i) {
+                debris1 = debris[i];
+                loc = debris1.loc;
+                vec = debris1.vec;
+                pos = loc.pos;
+                updateLoc(loc, mov, isRot, sinRot, cosRot,
+                    this.yaw, this.pitch
+                );
+                /* Radiate out from the center.  */
+                pos[0] += vec[0] * debrismov;
+                pos[1] += vec[1] * debrismov;
+                pos[2] += vec[2] * debrismov;
+            }
+        }
+    }
+
     /* TODO: bogey behavior, missile collision.  */
     return this;
 };
 Field.prototype.render = function () {
     var stars = this._stars;
     var missiles = this._missiles;
+    var debris = null;
+    var loc = null;
     var item;
     var pos;
     var size;
@@ -599,6 +672,29 @@ Field.prototype.render = function () {
     }
     project(this, this._bogey0.loc, this._bogey0.html);
     project(this, this._bogey1.loc, this._bogey1.html);
+
+    if (this._debrisTime > 0.0) {
+        /* Debris shown.  */
+        debris = this._debris;
+        for (i = 0; i < numDebris; ++i) {
+            project(this, debris[i].loc, '&middot;');
+        }
+    } else {
+        /* No debris.  */
+        if (this._clearDebris) {
+            /* Just changed state from shown to hidden, so
+               clear them all.  */
+            debris = this._debris;
+            for (i = 0; i < numDebris; ++i) {
+                loc = debris[i].loc;
+                if (loc.dom) {
+                    loc.dom.style.display = 'none';
+                }
+            }
+        }
+
+        this._clearDebris = false;
+    }
 
     return this;
 };
