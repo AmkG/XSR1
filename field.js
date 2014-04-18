@@ -69,10 +69,10 @@ var lrsLimit = lrsDistance * 2.0;
 /* Number of debris elements to emit.  */
 var numDebris = 20;
 /* Speed of debris.  */
-var debrisSpeed = 2.0;
+var debrisSpeed = 4.0;
 var actualDebrisSpeed = debrisSpeed * speedFactor;
 /* Time debris stays on the field.  */
-var debrisTime = 2.0;
+var debrisTime = 5.0;
 
 /* Size of bogeys and missiles.  */
 var bogeySize = 1.0;
