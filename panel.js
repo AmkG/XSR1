@@ -25,8 +25,8 @@
  * for the JavaScript code in this page.
  *
  */
-define( ['resize','engines','vars','signal','shield','galaxy','photons','lrs'],
-function (resize , engines , vars , signal , shield , galaxy , photons , lrs) {
+define( ['resize','engines','vars','signal','shield','galaxy','photons','lrs','computer'],
+function (resize , engines , vars , signal , shield , galaxy , photons , lrs , computer) {
 "use strict";
 
 /*
@@ -106,6 +106,10 @@ Panel.prototype.render = function () {
 
             this._v.innerHTML = engines;
             this._k.innerHTML = vars.kills;
+            this._t.innerHTML = computer.instruments.panelT();
+            this._y.innerHTML = computer.instruments.panelY();
+            this._x.innerHTML = computer.instruments.panelX();
+            this._z.innerHTML = computer.instruments.panelZ();
             this._e.innerHTML = vars.energy;
             // TODO: refresh other panel data.
         } else {
