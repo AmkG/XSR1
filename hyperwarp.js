@@ -25,8 +25,8 @@
  * for the JavaScript code in this page.
  *
  */
-define( ['signal','engines','field','galaxy','console','vars','resize'],
-function (signal , engines , field , galaxy , console , vars , resize) {
+define( ['signal','engines','field','galaxy','console','vars','resize','warpCosts'],
+function (signal , engines , field , galaxy , console , vars , resize , warpCosts) {
 /*
  * Note: the state of "entering hyperwarp" is stored
  * by the engines, because that module is responsible
@@ -48,33 +48,6 @@ var energyConsumeRate = 600.0;
 /* Rate at which they hyperwarp target can move/be moved, in
    sectors per second.  */
 var targetSpeed = 2.0;
-/* Energy actually consumed to jump from one sector to another.  */
-var jumpEnergy = [
-    100,
-    130,
-    160,
-    200,
-    230,
-    500,
-    700,
-    800,
-    900,
-    1200,
-    1250,
-    1300,
-    1350,
-    1400,
-    1550,
-    1700,
-    1840,
-    2000,
-    2080,
-    2160,
-    2230,
-    2320,
-    2410,
-    2500
-];
 
 /* Create the DOM node for the hyperwarp target.  */
 function createTargetDom() {
@@ -171,7 +144,7 @@ Hyperwarp.prototype._onHyperwarp = function () {
         Math.abs(this._ar2[0] - this._targetX)
     );
     /* Get energy required to jump.  */
-    energy = jumpEnergy[dist];
+    energy = warpCosts[dist];
     /* Compute hyperspace time.  */
     this._hyperspaceTime = energy / energyConsumeRate;
 
