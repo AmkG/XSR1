@@ -37,6 +37,9 @@ main#field span.star {
 main#field span.photon {
   color: #ffff80;
 }
+main#field span.debris {
+  color: yellow;
+}
 
 /*-----------------------------------------------------------------------------
 Console

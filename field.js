@@ -677,7 +677,7 @@ Field.prototype.render = function () {
         /* Debris shown.  */
         debris = this._debris;
         for (i = 0; i < numDebris; ++i) {
-            project(this, debris[i].loc, '&middot;');
+            project(this, debris[i].loc, '&middot;', 'debris');
         }
     } else {
         /* No debris.  */
