@@ -51,6 +51,7 @@ function Shield() {
     signal('render', this.render.bind(this));
     signal('mainMenu', this._onMainMenu.bind(this));
     signal('newGame', this._onNewGame.bind(this));
+    signal('fix', this.fix.bind(this));
 }
 
 Shield.prototype.damage = function () {

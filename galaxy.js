@@ -579,6 +579,8 @@ function Galaxy() {
     signal('mainMenu', this.mainMenu.bind(this));
     signal('playerDestroyStarbase', this.playerDestroyStarbase.bind(this));
     signal('killNyloz', this.killNyloz.bind(this));
+
+    signal('fix', this.chart.fix.bind(this.chart));
 }
 Galaxy.prototype.update = function (seconds) {
     this._m.update(seconds);

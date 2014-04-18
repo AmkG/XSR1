@@ -114,6 +114,7 @@ function Engines() {
     signal('newGame', this._onNewGame.bind(this));
     signal('enterNormal', this._onEnterNormal.bind(this));
     signal('enterHyperspace', this._onEnterHyperspace.bind(this));
+    signal('fix', this.fix.bind(this));
 }
 Engines.prototype.initialize = function () {
     this._state = FIXED;

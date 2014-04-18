@@ -65,6 +65,7 @@ function Photons() {
     signal('update', this.update.bind(this));
     /* Nothing to render, as field does rendering of photons for us.  */
     signal('newGame', this.newGame.bind(this));
+    signal('fix', this.fix.bind(this));
 }
 Photons.prototype.colorState = function () {
     var state = this._state;

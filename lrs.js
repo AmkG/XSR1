@@ -46,6 +46,7 @@ function LRS() {
     signal('render', this.render.bind(this));
     signal('newGame', this.newGame.bind(this));
     signal('mainMenu', this.mainMenu.bind(this));
+    signal('fix', this.fix.bind(this));
 }
 /* Damage state.  */
 LRS.prototype.fix = function () {
