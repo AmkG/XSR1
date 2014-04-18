@@ -171,6 +171,7 @@ Hyperwarp.prototype.update = function (seconds) {
             .chart.setTargetPosition(this._ar2);
             /* Tell rest of the game that we have entered normal space.  */
             signal.raise('enterNormal');
+            console.write('Normal space.');
         }
     }
     /* Offset the target at random in hyperwarp.  */
