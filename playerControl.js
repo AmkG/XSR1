@@ -41,6 +41,7 @@ var signal = require('signal');
 var vars = require('vars');
 var hyperwarp = require('hyperwarp');
 var photons = require('photons');
+var lrs = require('lrs');
 
 /*-----------------------------------------------------------------------------
 Key Handler Table
@@ -75,6 +76,7 @@ keytable['a'] = keytable['A'] = function () {
     panel.show().setNormalPanel();
     field.viewAft();
     field.display = true;
+    lrs.hide();
     chart.hide();
 };
 keytable['f'] = keytable['F'] = function () {
@@ -82,13 +84,20 @@ keytable['f'] = keytable['F'] = function () {
     panel.show().setNormalPanel();
     field.viewFront();
     field.display = true;
+    lrs.hide();
     chart.hide();
 };
-// TODO: LRS
+keytable['l'] = keytable['L'] = function () {
+    label('LONG RANGE SCAN');
+    panel.hide();
+    lrs.show();
+    chart.hide();
+}
 keytable['g'] = keytable['G'] = function () {
     label('GALACTIC CHART');
     panel.show().setGalacticChartPanel();
     field.display = false;
+    lrs.hide();
     chart.show();
 };
 

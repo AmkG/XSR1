@@ -306,3 +306,19 @@ main#hyperspace {
   background: black;
   cursor: none;
 }
+
+/*-----------------------------------------------------------------------------
+Long-range scan
+-----------------------------------------------------------------------------*/
+
+main#lrsship {
+  z-index: 0;
+  position: absolute;
+  display: block;
+  cursor: none;
+  color: white;
+  background: none;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+}
