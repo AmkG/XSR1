@@ -80,12 +80,30 @@ function Loc() {
 function Bogey() {
     this.loc = new Loc();
     this.onupdate = nullFun;
-    this.cancollidePlayer = false;
-    this.oncollidePlayer = nullFun;
-    this.cancollideMissile = false;
     this.oncollideMissile = nullFun;
     this.html = '&middot;';
 }
+Bogey.prototype.clear = function () {
+    this.loc.display = false;
+    this.onupdate = nullFun;
+    this.oncollideMissile = nullFun;
+    return this;
+};
+Bogey.prototype.set = function (x, y, z, onupdate, oncollideMissile, html) {
+    var loc = this.loc;
+    var pos = loc.pos;
+    loc.display = true;
+    if (loc.dom) {
+        loc.dom.innerHTML = html;
+    }
+    pos[0] = x;
+    pos[1] = y;
+    pos[2] = z;
+    this.onupdate = onupdate;
+    this.oncollideMissile = oncollideMissile;
+    this.html = html;
+    return this;
+};
 
 /* Class for missiles.  */
 function Missile(direction, enemy) {
@@ -392,6 +410,7 @@ Field.prototype.viewLRS = function () {
     }
     return this;
 };
+/* Fire missile.  */
 Field.prototype.fireMissile = function (id, x, y, z, dir) {
     var missiles = this._missiles;
     var missile = missiles[id];
@@ -407,6 +426,47 @@ Field.prototype.fireMissile = function (id, x, y, z, dir) {
 
     return this;
 };
+/* Clear the field of all bogeys and missiles.  */
+Field.prototype.clearBogeysAndMissiles = function () {
+    var i;
+    var missiles = this._missiles;
+    this._bogey0.clear();
+    this._bogey1.clear();
+    for (i = 0; i < 3; ++i) {
+        missiles[i].loc.display = false;
+        missiles[i].lifetime = 0.0;
+    }
+    return this;
+};
+/* Create a bogey in the field, with the behavior function
+   onupdate and the collision event oncollide.  */
+Field.prototype.setBogey = function (i, x, y, z, onupdate, oncollide, html) {
+    var bogey = null;
+    if (i === 0) {
+        bogey = this._bogey0;
+    } else if (i === 1) {
+        bogey = this._bogey1;
+    }
+    bogey.set(x, y, z, onupdate, oncollide, html);
+    return this;
+};
+/* Remove the indicated bogey from the field.  */
+Field.prototype.clearBogey = function (i) {
+    var bogey = null;
+    if (i === 0) {
+        bogey = this._bogey0;
+    } else if (i === 1) {
+        bogey = this._bogey1;
+    }
+    bogey.clear()
+    return this;
+};
+/* Cause an explosion on the field.  */
+Field.prototype.explosion = function (x, y, z) {
+    // TODO
+    return this;
+};
+/* Re-generate stars on the field.  */
 Field.prototype.generateStars = function () {
     var stars = this._stars;
     var min = this._min;
@@ -537,7 +597,8 @@ Field.prototype.render = function () {
          // '&#9679;'
          project(this, missiles[i].loc, '&#10042;', 'photon');
     }
-    /* TODO: bogeys.  */
+    project(this, this._bogey0.loc, this._bogey0.html);
+    project(this, this._bogey1.loc, this._bogey1.html);
 
     return this;
 };
