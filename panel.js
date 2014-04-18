@@ -25,8 +25,8 @@
  * for the JavaScript code in this page.
  *
  */
-define( ['resize','engines','vars','signal','shield','galaxy','photons'],
-function (resize , engines , vars , signal , shield , galaxy , photons) {
+define( ['resize','engines','vars','signal','shield','galaxy','photons','lrs'],
+function (resize , engines , vars , signal , shield , galaxy , photons , lrs) {
 "use strict";
 
 /*
@@ -119,7 +119,7 @@ Panel.prototype.render = function () {
             this._dc_e.style.color = engines.colorState();
             this._dc_s.style.color = shield.colorState();
             // TODO: this._dc_c.style.color
-            // TODO: this._dc_l.style.color
+            this._dc_l.style.color = lrs.colorState();
             this._dc_r.style.color = galaxy.chart.colorState();
             this._stardate.innerHTML = galaxy.stardate.toString();
         }
