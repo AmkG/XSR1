@@ -35,8 +35,8 @@ var sizeFactor = 4; // pixel factor
 
 var turnSpeed = 0.4; // radians per second
 
-var missileSpeed = 62.5; // metrons per second
-var missileLifetime = 2.0; // seconds
+var missileSpeed = 75.0; // metrons per second
+var missileLifetime = 1.8; // seconds
 
 var speedFactor = 2.5; // multiplier for base speed.
 /* Note: Although the original game claims the velocity
