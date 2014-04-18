@@ -101,7 +101,7 @@ Panel.prototype.render = function () {
         if (!this._gchart) {
             this._dom.style.display = 'block';
             this._dom2.style.display = 'none';
-            this._dom.style.fontSize = Math.floor(resize.height / 11) + 'px';
+            this._dom.style.fontSize = Math.floor(resize.height / 14) + 'px';
 
             this._v.innerHTML = engines;
             this._k.innerHTML = vars.kills;
@@ -110,7 +110,7 @@ Panel.prototype.render = function () {
         } else {
             this._dom2.style.display = 'block';
             this._dom.style.display = 'none';
-            this._dom2.style.fontSize = Math.floor(resize.height / 11) + 'px';
+            this._dom2.style.fontSize = Math.floor(resize.height / 14) + 'px';
 
             // TODO: chart targets value.
             this._dc_p.style.color = photons.colorState();
