@@ -106,12 +106,11 @@ Panel.prototype.render = function () {
 
             this._v.innerHTML = engines;
             this._k.innerHTML = vars.kills;
+            this._e.innerHTML = vars.energy;
             this._t.innerHTML = computer.instruments.panelT();
             this._y.innerHTML = computer.instruments.panelY();
             this._x.innerHTML = computer.instruments.panelX();
             this._z.innerHTML = computer.instruments.panelZ();
-            this._e.innerHTML = vars.energy;
-            // TODO: refresh other panel data.
         } else {
             this._dom2.style.display = 'block';
             this._dom.style.display = 'none';
@@ -122,7 +121,7 @@ Panel.prototype.render = function () {
             this._dc_p.style.color = photons.colorState();
             this._dc_e.style.color = engines.colorState();
             this._dc_s.style.color = shield.colorState();
-            // TODO: this._dc_c.style.color
+            this._dc_c.style.color = computer.colorState();
             this._dc_l.style.color = lrs.colorState();
             this._dc_r.style.color = galaxy.chart.colorState();
             this._stardate.innerHTML = galaxy.stardate.toString();
