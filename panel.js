@@ -72,6 +72,7 @@ function Panel() {
     this._y = null;
     this._x = null;
     this._z = null;
+    this._warpenergy = null;
     this._targets = null;
     this._dc_p = null;
     this._dc_e = null;
@@ -112,6 +113,7 @@ Panel.prototype.render = function () {
             this._dom.style.display = 'none';
             this._dom2.style.fontSize = Math.floor(resize.height / 14) + 'px';
 
+            this._warpenergy.innerHTML = galaxy.chart.jumpCost();
             // TODO: chart targets value.
             this._dc_p.style.color = photons.colorState();
             this._dc_e.style.color = engines.colorState();
@@ -133,6 +135,7 @@ Panel.prototype.render = function () {
 Panel.prototype._createPanelDoms = function () {
     var self = this;
     var main;
+    var line0;
     var line1;
     var line2;
     var span;
@@ -183,6 +186,17 @@ Panel.prototype._createPanelDoms = function () {
         line.appendChild(valuedom);
     }
 
+    line0 = document.createElement('div');
+    span = document.createElement('span');
+    span.id = 'panel_warpenergy_label';
+    span.innerHTML = 'WARP ENERGY:';
+    line0.appendChild(span);
+    span = document.createElement('span');
+    this._warpenergy = span;
+    span.id = 'panel_warpenergy_value';
+    span.innerHTML = '0000';
+    line0.appendChild(span);
+
     line1 = document.createElement('div');
     span = document.createElement('span');
     span.id = 'panel_targets_label';
@@ -219,6 +233,7 @@ Panel.prototype._createPanelDoms = function () {
     main = document.createElement('main');
     this._dom2 = main;
     main.id = 'panel2';
+    main.appendChild(line0);
     main.appendChild(line1);
     main.appendChild(line2);
     document.body.appendChild(main);

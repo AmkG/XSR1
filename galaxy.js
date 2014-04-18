@@ -26,7 +26,8 @@
  * for the JavaScript code in this page.
  *
  */
-define(['signal', 'resize'], function (signal, resize) {
+define(['signal','resize','warpCosts'],
+function(signal , resize , warpCosts) {
 "use strict";
 
 /* Cursor movement speed, in sectors per second.  */
@@ -322,6 +323,19 @@ Chart.prototype.colorState = function () {
         return 'yellow';
     } else {
         return 'red';
+    }
+};
+/* Query cost of jump.  */
+Chart.prototype.jumpCost = function () {
+    var cost = warpCosts(this._m.px, this._m.py, this._cx, this._cy);
+    if (cost >= 1000) {
+        return cost.toString();
+    } else if (cost >= 100) {
+        return '0' + cost.toString();
+    } else if (cost >= 10) {
+        return '00' + cost.toString();
+    } else {
+        return '000' + cost.toString();
     }
 };
 /* Called each clock tick.  */
