@@ -533,6 +533,16 @@ Field.prototype.getBogeyPosition = function (i, ar3d) {
     ar3d[2] = pos[2];
     return this;
 };
+/* Determine if the given bogey is valid.  */
+Field.prototype.isBogeyValid = function (i) {
+    var bogey = null;
+    if (i === 0) {
+        bogey = this._bogey0;
+    } else if (i === 1) {
+        bogey = this._bogey1;
+    }
+    return bogey.loc.display;
+}
 /* Cause an explosion on the field.  */
 Field.prototype.explosion = function (x, y, z) {
     var i;
