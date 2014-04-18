@@ -34,7 +34,7 @@ var menu = require('menu');
 var engines = require('engines');
 var playerControl = require('playerControl'); // needed.
 var loop = require('loop');
-
+var sector = require('sector'); // needed.
 
 function stopDefault(e) {
     e = e || window.event;
