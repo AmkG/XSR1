@@ -105,7 +105,7 @@ Starbase.prototype._onbotupdate = function (pos, vec, seconds) {
     vec[1] = 0.0;
     if (!this._finished) {
         vec[2] = -0.2;
-        if (pos[2] <= 0.0) {
+        if (pos[2] <= 0.1) {
             console.write("Repair and recharge completed.");
             signal.raise('fix');
             this._finished = true;
