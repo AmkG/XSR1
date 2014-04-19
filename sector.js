@@ -63,7 +63,9 @@ Starbase.prototype._onupdate = function (pos, vec, seconds) {
     docked = field.speed === 0.0 &&
         (0.0 < pos[2] && pos[2] < 5.0) &&
         (-3.0 < pos[0] && pos[0] < 1.0) &&
-        (-3.0 < pos[1] && pos[1] < 1.0) ;
+        (-3.0 < pos[1] && pos[1] < 1.0) &&
+        (field.yaw === 0) &&
+        (field.pitch === 0);
 
     if (!this._finished) {
         /* On initiate of docking.  */
