@@ -62,8 +62,8 @@ Starbase.prototype._onupdate = function (pos, vec, seconds) {
     var docked = true;
     docked = field.speed === 0.0 &&
         (0.0 < pos[2] && pos[2] < 6.0) &&
-        (-1.0 < pos[0] && pos[0] < 1.0) &&
-        (-1.0 < pos[1] && pos[1] < 1.0) &&
+        (-0.5 < pos[0] && pos[0] < 0.5) &&
+        (-0.5 < pos[1] && pos[1] < 0.5) &&
         (field.yaw === 0) &&
         (field.pitch === 0);
 
@@ -72,7 +72,7 @@ Starbase.prototype._onupdate = function (pos, vec, seconds) {
         if (docked && !this._pdocked) {
             console.write('Docking initiated.');
             field.setBogey(1,
-                0.5, 0.5, 6.0,
+                pos[0] + 0.4, pos[1] + 0.4, 6.0,
                 this.onbotupdate, this.onbotcollide, this.bothtml,
                 this.botsizeFactor
             );
