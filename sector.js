@@ -146,6 +146,7 @@ function Sector() {
 
     signal('enterHyperspace', this.enterHyperspace.bind(this));
     signal('enterNormal', this.enterNormal.bind(this));
+    signal('nylozKillStarbase', this.nylozKillStarbase.bind(this));
 }
 Sector.prototype.enterHyperspace = function () {
     field.clearBogeysAndMissiles();
@@ -162,6 +163,24 @@ Sector.prototype.enterNormal = function () {
     } else {
         // TODO: create enemy Nyloz craft
     }
+    return this;
+};
+Sector.prototype.nylozKillStarbase = function (sector) {
+    var ar3d = null;
+    if (sector === galaxy.getPlayerSector()) {
+        // The nyloz destroyed the starbase.  Explode it
+        // and recreate the scenario.
+        ar3d = this._ar3d;
+        field.getBogeyPosition(0, ar3d);
+        field.explosion(ar3d[0], ar3d[1], ar3d[2]);
+        field.clearBogey(0);
+        field.clearBogey(1);
+        // By the time this function is called, the galactic
+        // model should have 2 enemies in the sector.  Just
+        // reuse the existing code.
+        this.enterNormal();
+    }
+    return this;
 };
 
 return new Sector();

@@ -121,6 +121,9 @@ Model.prototype.update = function (seconds) {
 /* Called at each time that the enemy moves.  */
 Model.prototype._enemyMove = function () {
     // TODO
+    // TODO: when the enemy successfully destroys a starbase,
+    // send a 'nylozDestroyStarbase' message with the sector
+    // number after setting the sector to 2 enemies.
     return this;
 };
 /* Called at the start of the game.  */
