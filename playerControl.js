@@ -89,7 +89,7 @@ keytable['f'] = keytable['F'] = function () {
 };
 keytable['l'] = keytable['L'] = function () {
     label('LONG RANGE SCAN');
-    panel.hide();
+    panel.show().setNormalPanel();
     lrs.show();
     chart.hide();
 }
