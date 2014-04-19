@@ -164,26 +164,17 @@ var AFT = 'aft';
 var LRS = 'lrs';
 
 /* Fore-view projection.  */
-function fore(loc2d, loc) {
-    var pos;
-    var pos2d;
+function fore(pos2d, pos) {
     var z;
     var bz;
-    if (!loc.display) {
-        loc2d.display = false;
-        return;
-    }
-    pos = loc.pos;
     z = pos[2];
     if (z < 0.0 || z > 120.0) {
-        loc2d.display = false;
-        return;
+        return false;
     }
-    loc2d.display = true;
-    pos2d = loc2d.pos;
     bz = ez + z;
     pos2d[0] = (ez * pos[0]) / bz;
     pos2d[1] = (ez * pos[1]) / bz;
+    return true;
 }
 function foreSize(loc, sizeFactor) {
     return sizeFactor / loc.pos[2];
@@ -192,26 +183,17 @@ var foreMin = [-100.1, -100.1, 0.01];
 var foreMax = [100.1, 100.1, 140.01];
 
 /* Aft-view projection.  */
-function aft(loc2d, loc) {
-    var pos;
-    var pos2d;
+function aft(pos2d, pos) {
     var z;
     var bz;
-    if (!loc.display) {
-        loc2d.display = false;
-        return;
-    }
-    pos = loc.pos;
     z = pos[2];
     if (z < -120.0 || z > 0.0) {
-        loc2d.display = false;
-        return;
+        return false;
     }
-    loc2d.display = true;
-    pos2d = loc2d.pos;
     bz = z - ez;
     pos2d[0] = -(ez * pos[0]) / bz;
     pos2d[1] = -(ez * pos[1]) / bz;
+    return true;
 }
 function aftSize(loc, sizeFactor) {
     return -sizeFactor / loc.pos[2];
@@ -220,27 +202,15 @@ var aftMin = [-100.1, -100.1, -140.01];
 var aftMax = [100.1, 100.1, -0.01];
 
 /* LRS projection.  */
-function lrs(loc2d, loc) {
-    var pos;
-    var pos2d;
-
-    if (!loc.display) {
-        loc2d.display = false;
-        return;
-    }
-
-    pos = loc.pos;
+function lrs(pos2d, pos) {
     if (pos[0] < -lrsLimit || pos[0] > lrsLimit ||
         pos[2] < -lrsLimit || pos[2] > lrsLimit) {
-        loc2d.display = false;
-        return;
+        return false;
     }
-
-    loc2d.display = true;
-    pos2d = loc2d.pos;
 
     pos2d[0] = pos[0] / lrsDistance;
     pos2d[1] = -pos[2] / lrsDistance;
+    return true;
 }
 function lrsSize(loc, sizeFactor) {
     return lrsSizeConst * sizeFactor;
@@ -305,7 +275,7 @@ function project(field, loc, html, className, sizeFactor) {
         return;
     }
 
-    field._project(ar2d, loc);
+    ar2d.display = field._project(ar2d.pos, loc.pos);
     if (ar2d.display) {
         // displayed
         if (!dom) {
