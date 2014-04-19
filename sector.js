@@ -48,10 +48,13 @@ function Starbase() {
     this._finished = false;
 }
 Starbase.prototype.html = "&ndash;=&equiv;=&ndash;";
+Starbase.prototype.sizeFactor = 3.0;
 Starbase.prototype.create = function (x, y, z) {
     this._pdocked = false;
     this._finished = false;
-    field.setBogey(0, x, y, z, this.onupdate, this.oncollide, this.html);
+    field.setBogey(0, x, y, z, this.onupdate, this.oncollide, this.html,
+        this.sizeFactor
+    );
     return this;
 };
 /* Behavior of star bases.  */
@@ -68,7 +71,8 @@ Starbase.prototype._onupdate = function (pos, vec, seconds) {
             console.write('Docking initiated.');
             field.setBogey(1,
                 2.0, 2.0, 60.0,
-                this.onbotupdate, this.onbotcollide, this.bothtml
+                this.onbotupdate, this.onbotcollide, this.bothtml,
+                this.botsizeFactor
             );
         }
         /* On breaking-off of docking.  */
@@ -93,6 +97,7 @@ Starbase.prototype._oncollide = function () {
 };
 /* Resupply bot.  */
 Starbase.prototype.bothtml = "[&deg;]";
+Starbase.prototype.botsizeFactor = 1.0;
 Starbase.prototype._onbotupdate = function (pos, vec, seconds) {
     vec[0] = 0.0;
     vec[1] = 0.0;

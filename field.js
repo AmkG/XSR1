@@ -31,12 +31,13 @@ define(['resize', 'signal'], function (resize, signal) {
 "use strict";
 
 var numStars = 24; // number
-var sizeFactor = 4; // pixel factor
+var starSizeFactor = 4; // pixel factor
 
 var turnSpeed = 0.4; // radians per second
 
 var missileSpeed = 75.0; // metrons per second
 var missileLifetime = 1.8; // seconds
+var missileSizeFactor = 4; // pixel factor
 
 var speedFactor = 2.5; // multiplier for base speed.
 /* Note: Although the original game claims the velocity
@@ -62,7 +63,7 @@ var ez = 2.0;
 /* LRS maximum distance.  */
 var lrsDistance = 400.0;
 /* LRS object size.  */
-var lrsSizeConst = 1.0 / 25.0;
+var lrsSizeConst = 0.25 / 25.0;
 
 var lrsLimit = lrsDistance * 2.0;
 
@@ -95,6 +96,7 @@ function Bogey() {
     this.onupdate = nullFun;
     this.oncollideMissile = nullFun;
     this.html = '&middot;';
+    this.sizeFactor = starSizeFactor;
 }
 Bogey.prototype.clear = function () {
     this.loc.display = false;
@@ -102,7 +104,9 @@ Bogey.prototype.clear = function () {
     this.oncollideMissile = nullFun;
     return this;
 };
-Bogey.prototype.set = function (x, y, z, onupdate, oncollideMissile, html) {
+Bogey.prototype.set = function (x, y, z,
+                                onupdate, oncollideMissile, html,
+                                sizeFactor) {
     var loc = this.loc;
     var pos = loc.pos;
     var vec = this.vec;
@@ -119,6 +123,7 @@ Bogey.prototype.set = function (x, y, z, onupdate, oncollideMissile, html) {
     this.onupdate = onupdate;
     this.oncollideMissile = oncollideMissile;
     this.html = html;
+    this.sizeFactor = sizeFactor;
     return this;
 };
 
@@ -180,7 +185,7 @@ function fore(loc2d, loc) {
     pos2d[0] = (ez * pos[0]) / bz;
     pos2d[1] = (ez * pos[1]) / bz;
 }
-function foreSize(loc) {
+function foreSize(loc, sizeFactor) {
     return sizeFactor / loc.pos[2];
 }
 var foreMin = [-100.1, -100.1, 0.01];
@@ -208,7 +213,7 @@ function aft(loc2d, loc) {
     pos2d[0] = -(ez * pos[0]) / bz;
     pos2d[1] = -(ez * pos[1]) / bz;
 }
-function aftSize(loc) {
+function aftSize(loc, sizeFactor) {
     return -sizeFactor / loc.pos[2];
 }
 var aftMin = [-100.1, -100.1, -140.01];
@@ -237,8 +242,8 @@ function lrs(loc2d, loc) {
     pos2d[0] = pos[0] / lrsDistance;
     pos2d[1] = -pos[2] / lrsDistance;
 }
-function lrsSize(loc) {
-    return lrsSizeConst;
+function lrsSize(loc, sizeFactor) {
+    return lrsSizeConst * sizeFactor;
 }
 var lrsMin = [-lrsLimit, -lrsLimit, -lrsLimit];
 var lrsMax = [lrsLimit, lrsLimit, lrsLimit];
@@ -283,7 +288,7 @@ Loc projection
 -----------------------------------------------------------------------------*/
 
 /* Projects a given Loc item.  */
-function project(field, loc, html, className) {
+function project(field, loc, html, className, sizeFactor) {
     var ar2d = field._ar2d;
     var dom;
     var scale;
@@ -313,7 +318,7 @@ function project(field, loc, html, className) {
         scale = resize.scale;
         maxsize = resize.maxsize;
 
-        size = field._size(loc) * scale;
+        size = field._size(loc, sizeFactor) * scale;
         if (size < 1) {
             size = 1;
         } else if (size > maxsize) {
@@ -497,14 +502,16 @@ Field.prototype.clearBogeysAndMissiles = function () {
 };
 /* Create a bogey in the field, with the behavior function
    onupdate and the collision event oncollide.  */
-Field.prototype.setBogey = function (i, x, y, z, onupdate, oncollide, html) {
+Field.prototype.setBogey = function (i, x, y, z,
+                                     onupdate, oncollide, html,
+                                     sizeFactor) {
     var bogey = null;
     if (i === 0) {
         bogey = this._bogey0;
     } else if (i === 1) {
         bogey = this._bogey1;
     }
-    bogey.set(x, y, z, onupdate, oncollide, html);
+    bogey.set(x, y, z, onupdate, oncollide, html, sizeFactor);
     return this;
 };
 /* Remove the indicated bogey from the field.  */
@@ -771,20 +778,26 @@ Field.prototype.render = function () {
     this._dom.style.display = 'block';
 
     for (i = 0; i < numStars; ++i) {
-        project(this, stars[i], '&middot;', 'star');
+        project(this, stars[i], '&middot;', 'star', starSizeFactor);
     }
     for (i = 0; i < 3; ++i) {
          // '&#9679;'
-         project(this, missiles[i].loc, '&#10042;', 'photon');
+         project(this, missiles[i].loc, '&#10042;', 'photon',
+             missileSizeFactor
+         );
     }
-    project(this, this._bogey0.loc, this._bogey0.html);
-    project(this, this._bogey1.loc, this._bogey1.html);
+    project(this, this._bogey0.loc, this._bogey0.html, 'bogey',
+        this._bogey0.sizeFactor
+    );
+    project(this, this._bogey1.loc, this._bogey1.html, 'bogey',
+        this._bogey1.sizeFactor
+    );
 
     if (this._debrisTime > 0.0) {
         /* Debris shown.  */
         debris = this._debris;
         for (i = 0; i < numDebris; ++i) {
-            project(this, debris[i].loc, '&middot;', 'debris');
+            project(this, debris[i].loc, '&middot;', 'debris', starSizeFactor);
         }
     } else {
         /* No debris.  */
