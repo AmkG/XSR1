@@ -25,8 +25,8 @@
  * for the JavaScript code in this page.
  *
  */
-define(['field','lrs','panel','label','galaxy'],
-function(field , lrs , panel , label , galaxy) {
+define(['field','lrs','panel','label','galaxy','signal'],
+function(field , lrs , panel , label , galaxy , signal) {
 
 var gchart = galaxy.chart;
 
@@ -59,6 +59,9 @@ function chart() {
     lrs.hide();
     gchart.show();
 }
+
+signal('setViewFront', fore);
+signal('setViewAft', aft);
 
 return {
     "aft": aft,

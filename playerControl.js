@@ -43,6 +43,7 @@ var hyperwarp = require('hyperwarp');
 var photons = require('photons');
 var lrs = require('lrs');
 var viewControl = require('viewControl');
+var computer = require('computer');
 
 /*-----------------------------------------------------------------------------
 Key Handler Table
@@ -72,11 +73,24 @@ keytable['h'] = keytable['H'] = function () {
     }
 };
 
+/* View control.  */
 keytable['a'] = keytable['A'] = viewControl.aft;
 keytable['f'] = keytable['F'] = viewControl.fore;
 keytable['l'] = keytable['L'] = viewControl.lrs;
 keytable['g'] = keytable['G'] = viewControl.chart;
 
+/* Instrument computer.  */
+keytable['t'] = keytable['T'] = function () {
+    if (!computer.instruments.isAutotrackEnabled()) {
+        console.write('Computer auto-tracking enabled.');
+        computer.instruments.autotrackEnable();
+    } else {
+        console.write('Computer auto-tracking disabled.');
+        computer.instruments.autotrackDisable();
+    }
+};
+
+/* Shields.  */
 keytable['s'] = keytable['S'] = function () {
     if (shield.isEnabled()) {
         console.write('Shields Disabled.');

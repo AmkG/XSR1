@@ -25,7 +25,8 @@
  * for the JavaScript code in this page.
  *
  */
-define(['signal','field','vars'], function (signal,field,vars) {
+define(['signal','field','vars','hyperwarp'],
+function(signal , field , vars , hyperwarp) {
 
 /* Terminology:
  * instruments computer - the computer that updates the instruments
@@ -42,6 +43,7 @@ function Instruments() {
     this._fixed = true;
     this._targetNum = 0;
     this._target = [0.0, 0.0, 0.0];
+    this._autotrack = false;
 }
 /* Damage status.  */
 Instruments.prototype.fix = function () {
@@ -85,9 +87,23 @@ Instruments.prototype._encodeCoord = function (v, digs) {
         return s + '00' + a.toString();
     }
 };
+/* Auto-tracking.  This is the feature where the computer
+   automatically switches between aft and fore view depending
+   on the current focused target.  */
+Instruments.prototype.isAutotrackEnabled = function () {
+    return this._autotrack;
+};
+Instruments.prototype.autotrackEnable = function () {
+    this._autotrack = true;
+    return this;
+};
+Instruments.prototype.autotrackDisable = function () {
+    this._autotrack = false;
+    return this;
+};
 /* Events.  */
 Instruments.prototype.newGame = function () {
-    this.fix();
+    this.fix()/*.autotrackDisable()*/;
     this._targetNum = 0;
     this._target[0] = 0.0;
     this._target[1] = 0.0;
@@ -97,6 +113,8 @@ Instruments.prototype.newGame = function () {
 /* Called at each clock tick.  */
 Instruments.prototype.update = function (seconds) {
     var othernum;
+    /* TODO: switch focus to bogey that is firing.  Probably via
+       a signal.  */
     /* TODO: tracking of asteroids (when asteroids are implemented).  */
     if (this._fixed) {
         /* Try to get a valid target.  */
@@ -109,6 +127,24 @@ Instruments.prototype.update = function (seconds) {
         /* If the target is valid, track it.  */
         if (field.isBogeyValid(this._targetNum)) {
             field.getBogeyPosition(this._targetNum, this._target);
+
+            /* If auto-tracked, set it.  */
+            if (this._autotrack) {
+                if (this._target[2] >= 0.0 || hyperwarp.engaged()) {
+                    if (field.currentView === 'aft') {
+                        /* Why use a signal instead of importing viewControl
+                           and calling viewControl.aft()?  Because
+                           viewControl depends on panel, and panel depends
+                           on computer - which is this module.  Use signals
+                           to circle the loop.  */
+                        signal.raise('setViewFront');
+                    }
+                } else {
+                    if (field.currentView === 'front') {
+                        signal.raise('setViewAft');
+                    }
+                }
+            }
         }
     }
     return this;
