@@ -42,6 +42,7 @@ var vars = require('vars');
 var hyperwarp = require('hyperwarp');
 var photons = require('photons');
 var lrs = require('lrs');
+var viewControl = require('viewControl');
 
 /*-----------------------------------------------------------------------------
 Key Handler Table
@@ -71,35 +72,10 @@ keytable['h'] = keytable['H'] = function () {
     }
 };
 
-keytable['a'] = keytable['A'] = function () {
-    label('AFT VIEW');
-    panel.show().setNormalPanel();
-    field.viewAft();
-    field.display = true;
-    lrs.hide();
-    chart.hide();
-};
-keytable['f'] = keytable['F'] = function () {
-    label('');
-    panel.show().setNormalPanel();
-    field.viewFront();
-    field.display = true;
-    lrs.hide();
-    chart.hide();
-};
-keytable['l'] = keytable['L'] = function () {
-    label('LONG RANGE SCAN');
-    panel.show().setNormalPanel();
-    lrs.show();
-    chart.hide();
-}
-keytable['g'] = keytable['G'] = function () {
-    label('GALACTIC CHART');
-    panel.show().setGalacticChartPanel();
-    field.display = false;
-    lrs.hide();
-    chart.show();
-};
+keytable['a'] = keytable['A'] = viewControl.aft;
+keytable['f'] = keytable['F'] = viewControl.fore;
+keytable['l'] = keytable['L'] = viewControl.lrs;
+keytable['g'] = keytable['G'] = viewControl.chart;
 
 keytable['s'] = keytable['S'] = function () {
     if (shield.isEnabled()) {
