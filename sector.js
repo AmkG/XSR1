@@ -61,9 +61,9 @@ Starbase.prototype.create = function (x, y, z) {
 Starbase.prototype._onupdate = function (pos, vec, seconds) {
     var docked = true;
     docked = field.speed === 0.0 &&
-        (0.0 < pos[2] && pos[2] < 5.0) &&
-        (-3.0 < pos[0] && pos[0] < 1.0) &&
-        (-3.0 < pos[1] && pos[1] < 1.0) &&
+        (0.0 < pos[2] && pos[2] < 6.0) &&
+        (-1.0 < pos[0] && pos[0] < 1.0) &&
+        (-1.0 < pos[1] && pos[1] < 1.0) &&
         (field.yaw === 0) &&
         (field.pitch === 0);
 
@@ -72,7 +72,7 @@ Starbase.prototype._onupdate = function (pos, vec, seconds) {
         if (docked && !this._pdocked) {
             console.write('Docking initiated.');
             field.setBogey(1,
-                2.0, 2.0, 60.0,
+                0.5, 0.5, 6.0,
                 this.onbotupdate, this.onbotcollide, this.bothtml,
                 this.botsizeFactor
             );
@@ -99,20 +99,20 @@ Starbase.prototype._oncollide = function () {
 };
 /* Resupply bot.  */
 Starbase.prototype.bothtml = "[&deg;]";
-Starbase.prototype.botsizeFactor = 1.0;
+Starbase.prototype.botsizeFactor = 0.15;
 Starbase.prototype._onbotupdate = function (pos, vec, seconds) {
     vec[0] = 0.0;
     vec[1] = 0.0;
     if (!this._finished) {
-        vec[2] = -2.0;
+        vec[2] = -0.2;
         if (pos[2] <= 0.0) {
             console.write("Repair and recharge completed.");
             signal.raise('fix');
             this._finished = true;
         }
     } else {
-        vec[2] = 3.0;
-        if (pos[2] >= 60.0) {
+        vec[2] = 0.4;
+        if (pos[2] >= 6.0) {
             field.clearBogey(1);
         }
     }
