@@ -25,7 +25,7 @@
  * for the JavaScript code in this page.
  *
  */
-define(['signal','field'], function (signal,field) {
+define(['signal','field','vars'], function (signal,field,vars) {
 
 /* Terminology:
  * instruments computer - the computer that updates the instruments
@@ -120,9 +120,17 @@ Attack Computer
 -----------------------------------------------------------------------------*/
 
 function Attack(instruments) {
+    /* Connection to other computer.  */
+    this._instruments = instruments;
+    /* Status.  */
     this._fixed = true;
     this._enabled = false;
-    this._instruments = instruments;
+
+    /* Scratch space.  */
+    this._ar2d = [0.0, 0.0];
+
+    /* DOM for overlay.  */
+    this._dom = null;
 }
 /* Damage status.  */
 Attack.prototype.fix = function () {
@@ -155,11 +163,22 @@ Attack.prototype.newGame = function () {
     return this;
 };
 Attack.prototype.update = function (seconds) {
-    // TODO
+    var targetNum = this._instruments._targetNum;
+    if (this._enabled) {
+        vars.energy.consume(0.5 * seconds);
+    }
+    if (this._enabled && this._fixed) {
+        // TODO
+    }
     return this;
 };
 Attack.prototype.render = function () {
-    // TODO
+    if (this._enabled && this._fixed) {
+    } else {
+        if (this._dom) {
+            this._dom.style.display = 'none';
+        }
+    }
     return this;
 };
 
