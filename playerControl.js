@@ -89,6 +89,9 @@ keytable['t'] = keytable['T'] = function () {
         computer.instruments.autotrackDisable();
     }
 };
+keytable['m'] = keytable['M'] = function () {
+    computer.instruments.switchTarget();
+};
 
 /* Shields.  */
 keytable['s'] = keytable['S'] = function () {

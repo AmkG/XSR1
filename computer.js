@@ -101,6 +101,15 @@ Instruments.prototype.autotrackDisable = function () {
     this._autotrack = false;
     return this;
 };
+/* Target switching.  */
+Instruments.prototype.switchTarget = function () {
+    if (this._targetNum === 0) {
+        this._targetNum = 1;
+    } else {
+        this._targetNum = 0;
+    }
+    return this;
+};
 /* Events.  */
 Instruments.prototype.newGame = function () {
     this.fix()/*.autotrackDisable()*/;
