@@ -64,7 +64,7 @@ function createTargetDom() {
         dom.appendChild(sub);
     }
 
-    document.body.appendChild(dom);
+    document.documentElement.appendChild(dom);
     return dom;
 }
 
