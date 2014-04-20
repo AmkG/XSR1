@@ -63,7 +63,7 @@ Menu
 -----------------------------------------------------------------------------*/
 
 main#menu {
-  z-index: 6;
+  z-index: 7;
   cursor: none;
   position: absolute;
   display: block;
@@ -324,4 +324,31 @@ main#lrsship {
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   -webkit-transform: translate(-50%, -50%);
+}
+
+/*-----------------------------------------------------------------------------
+Attack Computer
+-----------------------------------------------------------------------------*/
+
+main#attackcomputer {
+  z-index: 6;
+  position: absolute;
+  display: block;
+  cursor: none;
+  color: white;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+main#attackcomputer div.cursor {
+  position: absolute;
+  color: #00ff00;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+}
+main#attackcomputer div.direction {
+  display: none;
+  /* TODO */
 }

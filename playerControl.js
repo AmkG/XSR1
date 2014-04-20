@@ -92,6 +92,16 @@ keytable['t'] = keytable['T'] = function () {
 keytable['m'] = keytable['M'] = function () {
     computer.instruments.switchTarget();
 };
+/* Attack computer.  */
+keytable['c'] = keytable['C'] = function () {
+    if (!computer.attack.isEnabled()) {
+        console.write('Attack computer enabled.');
+        computer.attack.enable();
+    } else {
+        console.write('Attack computer disabled.');
+        computer.attack.disable();
+    }
+};
 
 /* Shields.  */
 keytable['s'] = keytable['S'] = function () {

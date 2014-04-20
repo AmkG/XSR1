@@ -25,8 +25,8 @@
  * for the JavaScript code in this page.
  *
  */
-define(['signal','field','vars','hyperwarp'],
-function(signal , field , vars , hyperwarp) {
+define(['signal','field','vars','hyperwarp','resize'],
+function(signal , field , vars , hyperwarp , resize) {
 
 /* Terminology:
  * instruments computer - the computer that updates the instruments
@@ -164,6 +164,12 @@ Instruments.prototype.update = function (seconds) {
 Attack Computer
 -----------------------------------------------------------------------------*/
 
+var NONE = 0;
+var UP = 1;
+var DOWN = 2;
+var LEFT = 3;
+var RIGHT = 4;
+
 function Attack(instruments) {
     /* Connection to other computer.  */
     this._instruments = instruments;
@@ -172,10 +178,25 @@ function Attack(instruments) {
     this._enabled = false;
 
     /* Scratch space.  */
-    this._ar2d = [0.0, 0.0];
+    this._ar3d = [0.0, 0.0];
+    /* Position of the cursor.  */
+    this._cursor = [0.0, 0.0];
+    this._cursorshow = false;
+    /* Direction of the indicator.  */
+    this._direction = NONE;
+
+    /* Time control for computer animations.  */
+    this._timeStep = 0.0;
 
     /* DOM for overlay.  */
     this._dom = null;
+    /* DOM for cursor elements.  */
+    this._domCursor = [null, null, null, null, null, null, null, null]; // 8
+    /* DOM for direction indicator.  */
+    this._domDirection = null;
+    /* DOM for fore and aft crosshairs.  */
+    this._domCrosshairsFore = null; // TODO: figure out implementation.
+    this._domCrosshairsAft = null;
 }
 /* Damage status.  */
 Attack.prototype.fix = function () {
@@ -198,6 +219,9 @@ Attack.prototype.disable = function () {
     this._enabled = false;
     return this;
 };
+Attack.prototype.isEnabled = function () {
+    return this._enabled;
+};
 /* Events.  */
 Attack.prototype.mainMenu = function () {
     this.fix().disable();
@@ -205,25 +229,139 @@ Attack.prototype.mainMenu = function () {
 };
 Attack.prototype.newGame = function () {
     this.fix();
+    this._cursor[0] = 0.0;
+    this._cursor[1] = 0.0;
+    this._cursorshow = false;
+    this._direction = NONE;
+    this._timeStep = 0.0;
     return this;
 };
 Attack.prototype.update = function (seconds) {
     var targetNum = this._instruments._targetNum;
+    var ar3d = null;
+    var cursor = null;
+    var visible = false;
+    var x = 0.0;
+    var y = 0.0;
+    var ax = 0.0;
+    var ay = 0.0;
     if (this._enabled) {
         vars.energy.consume(0.5 * seconds);
     }
     if (this._enabled && this._fixed) {
-        // TODO
+        ar3d = this._ar3d;
+        cursor = this._cursor;
+        field.getBogeyPosition(targetNum, ar3d);
+        /* Update cursor position.  */
+        this._cursorshow = field.project(cursor, ar3d);
+        /* Update direction information.  */
+        x = ar3d[0];
+        y = ar3d[1];
+        ax = Math.abs(x);
+        ay = Math.abs(y);
+        if (ax > ay) {
+            // LEFT-RIGHT axis.
+            if (ax < 1.0) {
+                this._direction = NONE;
+            } else if (x < 0.0) {
+                this._direction = LEFT;
+            } else {
+                this._direction = RIGHT;
+            }
+        } else {
+            if (ay < 1.0) {
+                this._direction = NONE;
+            } else if (y < 0.0) {
+                this._direction = UP;
+            } else {
+                this._direction = DOWN;
+            }
+        }
+    }
+    /* Increment for animation.  */
+    this._timeStep += seconds;
+    if (this._timeStep > 1.0) {
+        this._timeStep -= 1.0;
     }
     return this;
 };
 Attack.prototype.render = function () {
-    if (this._enabled && this._fixed) {
+    var i = 0;
+    var piOver4 = 0.0;
+    var angle = 0.0;
+    var x = 0.0;
+    var y = 0.0;
+    var dom = null;
+    var cursorsize = 0.0;
+    if (this._enabled && field.display && field.currentView !== 'lrs') {
+        if (!this._dom) {
+            this._constructDom();
+        }
+        this._dom.style.display = 'block';
+
+        // TODO: If fixed, show the crosshairs.
+
+        /* Cursor indicators.  */
+        if (this._cursorshow) {
+            // There are 8 cursor indicators, at 45deg each.
+            // Since Math.sin and Math.cos accept radians,
+            // that amounts to 1/4 pi each.
+            piOver4 = Math.PI / 4;
+            angle = 4 * piOver4 * this._timeStep;
+            x = resize.cenx + this._cursor[0] * resize.scale;
+            y = resize.ceny + this._cursor[1] * resize.scale;
+            cursorsize = resize.maxsize / 4;
+            for (i = 0; i < 8; ++i) {
+                dom = this._domCursor[i];
+                dom.style.display = 'block';
+                dom.style.left = Math.floor(x +
+                    Math.sin(angle) * cursorsize
+                ) + 'px';
+                dom.style.top = Math.floor(y +
+                    Math.cos(angle) * cursorsize
+                ) + 'px';
+
+                angle += piOver4;
+            }
+        } else {
+            for (i = 0; i < 8; ++i) {
+                this._domCursor[i].style.display = 'none';
+            }
+        }
+
+        // TODO: Direction indicators.
     } else {
         if (this._dom) {
             this._dom.style.display = 'none';
         }
     }
+    return this;
+};
+Attack.prototype._constructDom = function () {
+    var main = null;
+    var cursor = null;
+    var dir = null;
+    var i = 0;
+    var l = 0;
+
+    this._dom = main = document.createElement('main');
+    main.id = 'attackcomputer';
+
+    l = this._domCursor.length;
+    for (i = 0; i < l; ++i) {
+        this._domCursor[i] = cursor = document.createElement('div');
+        cursor.className = 'cursor';
+        cursor.innerHTML = '&middot;';
+        main.appendChild(cursor);
+    }
+
+    this._domDirection = dir = document.createElement('div');
+    dir.className = 'direction';
+    main.appendChild(dir);
+
+    // TODO: crosshairs
+
+    document.documentElement.appendChild(main);
     return this;
 };
 

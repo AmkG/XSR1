@@ -168,13 +168,16 @@ function fore(pos2d, pos) {
     var z;
     var bz;
     z = pos[2];
-    if (z < 0.0 || z > 120.0) {
+    if (z < 0.0) {
         return false;
     }
     bz = ez + z;
     pos2d[0] = (ez * pos[0]) / bz;
     pos2d[1] = (ez * pos[1]) / bz;
     return true;
+}
+function foreLimit(pos) {
+    return pos[2] <= 120.0;
 }
 function foreSize(loc, sizeFactor) {
     return sizeFactor / loc.pos[2];
@@ -187,13 +190,16 @@ function aft(pos2d, pos) {
     var z;
     var bz;
     z = pos[2];
-    if (z < -120.0 || z > 0.0) {
+    if (z > 0.0) {
         return false;
     }
     bz = z - ez;
     pos2d[0] = -(ez * pos[0]) / bz;
     pos2d[1] = -(ez * pos[1]) / bz;
     return true;
+}
+function aftLimit(pos) {
+    return pos[2] >= -120.0;
 }
 function aftSize(loc, sizeFactor) {
     return -sizeFactor / loc.pos[2];
@@ -210,6 +216,9 @@ function lrs(pos2d, pos) {
 
     pos2d[0] = pos[0] / lrsDistance;
     pos2d[1] = -pos[2] / lrsDistance;
+    return true;
+}
+function lrsLimitF(pos) {
     return true;
 }
 function lrsSize(loc, sizeFactor) {
@@ -275,7 +284,10 @@ function project(field, loc, html, className, sizeFactor) {
         return;
     }
 
-    ar2d.display = field._project(ar2d.pos, loc.pos);
+    ar2d.display = field._limit(loc.pos);
+    if (ar2d.display) {
+        ar2d.display = field._project(ar2d.pos, loc.pos);
+    }
     if (ar2d.display) {
         // displayed
         if (!dom) {
@@ -411,6 +423,7 @@ function Field() {
 }
 Field.prototype.viewFront = function () {
     this._project = fore;
+    this._limit = foreLimit;
     this._size = foreSize;
     this._min = foreMin;
     this._max = foreMax;
@@ -422,6 +435,7 @@ Field.prototype.viewFront = function () {
 };
 Field.prototype.viewAft = function () {
     this._project = aft;
+    this._limit = aftLimit;
     this._size = aftSize;
     this._min = aftMin;
     this._max = aftMax;
@@ -433,6 +447,7 @@ Field.prototype.viewAft = function () {
 };
 Field.prototype.viewLRS = function () {
     this._project = lrs;
+    this._limit = lrsLimitF;
     this._size = lrsSize;
     this._min = lrsMin;
     this._max = lrsMax;
@@ -441,6 +456,13 @@ Field.prototype.viewLRS = function () {
         this.generateStars();
     }
     return this;
+};
+/* Compute the 2-d projection of the 3-d point.
+   Return false if cannot be projected (for example
+   in Fore view but the position is aft).
+   Does not write pos, writes to pos2d.  */
+Field.prototype.project = function (pos2d, pos) {
+    return this._project(pos2d, pos);
 };
 /* Fire missile.  */
 Field.prototype.fireMissile = function (id, x, y, z, dir) {
