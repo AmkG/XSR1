@@ -293,6 +293,7 @@ Attack.prototype.render = function () {
     var y = 0.0;
     var dom = null;
     var cursorsize = 0.0;
+    var cursorfontsize = '';
     var cx = '';
     var cy = '';
     if (this._enabled && field.display && field.currentView !== 'lrs') {
@@ -336,9 +337,11 @@ Attack.prototype.render = function () {
             x = resize.cenx + this._cursor[0] * resize.scale;
             y = resize.ceny + this._cursor[1] * resize.scale;
             cursorsize = resize.maxsize / 4;
+            cursorfontsize = Math.floor(resize.maxsize / 2) + 'px';
             for (i = 0; i < 8; ++i) {
                 dom = this._domCursor[i];
                 dom.style.display = 'block';
+                dom.style.fontSize = cursorfontsize;
                 dom.style.left = Math.floor(x +
                     Math.sin(angle) * cursorsize
                 ) + 'px';
