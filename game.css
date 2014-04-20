@@ -348,6 +348,62 @@ main#attackcomputer div.cursor {
   -ms-transform: translate(-50%, -50%);
   -webkit-transform: translate(-50%, -50%);
 }
+main#attackcomputer div.crosshairHoriz {
+  cursor: none;
+  display: block;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  height: 2px;
+  overflow: hidden;
+}
+main#attackcomputer div.crosshairHoriz div.crosshairHoriz0 {
+  display: block;
+  background: #00ff00;
+  width: 40%;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+main#attackcomputer div.crosshairHoriz div.crosshairHoriz1 {
+  display: block;
+  background: #00ff00;
+  width: 40%;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+main#attackcomputer div.crosshairVert {
+  cursor: none;
+  display: block;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  width: 2px;
+  overflow: hidden;
+}
+main#attackcomputer div.crosshairVert div.crosshairVert0 {
+  display: block;
+  background: #00ff00;
+  height: 33%;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+}
+main#attackcomputer div.crosshairVert div.crosshairVert1 {
+  display: block;
+  background: #00ff00;
+  height: 33%;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
 main#attackcomputer div.direction {
   display: none;
   /* TODO */

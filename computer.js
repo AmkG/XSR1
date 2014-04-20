@@ -195,8 +195,8 @@ function Attack(instruments) {
     /* DOM for direction indicator.  */
     this._domDirection = null;
     /* DOM for fore and aft crosshairs.  */
-    this._domCrosshairsFore = null; // TODO: figure out implementation.
-    this._domCrosshairsAft = null;
+    this._domCrosshairsHoriz = null;
+    this._domCrosshairsVert = null;
 }
 /* Damage status.  */
 Attack.prototype.fix = function () {
@@ -293,6 +293,8 @@ Attack.prototype.render = function () {
     var y = 0.0;
     var dom = null;
     var cursorsize = 0.0;
+    var cx = '';
+    var cy = '';
     if (this._enabled && field.display && field.currentView !== 'lrs') {
         if (!this._dom) {
             this._constructDom();
@@ -300,6 +302,29 @@ Attack.prototype.render = function () {
         this._dom.style.display = 'block';
 
         // TODO: If fixed, show the crosshairs.
+        if (this._fixed) {
+            cx = Math.floor(resize.cenx) + 'px';
+            cy = Math.floor(resize.ceny) + 'px';
+            dom = this._domCrosshairsHoriz;
+            dom.style.display = 'block';
+            dom.style.left = cx;
+            dom.style.top = cy;
+            dom.style.width = Math.floor(resize.maxsize * 2.5) + 'px';
+            dom = this._domCrosshairsVert;
+            if (field.currentView === 'front') {
+                dom.style.display = 'block';
+                dom.style.left = cx;
+                dom.style.top = cy;
+                dom.style.height = Math.floor(resize.maxsize * 1.5) + 'px';
+            } else {
+                dom.style.display = 'none';
+            }
+        } else {
+            dom = this._domCrosshairsHoriz;
+            dom.style.display = 'none';
+            dom = this._domCrosshairsVert;
+            dom.style.display = 'none';
+        }
 
         /* Cursor indicators.  */
         if (this._cursorshow) {
@@ -341,12 +366,38 @@ Attack.prototype._constructDom = function () {
     var main = null;
     var cursor = null;
     var dir = null;
+    var crossdiv = null;
+    var cross0 = null;
+    var cross1 = null;
     var i = 0;
     var l = 0;
 
     this._dom = main = document.createElement('main');
     main.id = 'attackcomputer';
 
+    /* Crosshairs.  */
+    /* Horizontal.  */
+    this._domCrosshairsHoriz = crossdiv = document.createElement('div');
+    crossdiv.className = 'crosshairHoriz';
+    cross0 = document.createElement('div');
+    cross0.className = 'crosshairHoriz0';
+    crossdiv.appendChild(cross0);
+    cross1 = document.createElement('div');
+    cross1.className = 'crosshairHoriz1';
+    crossdiv.appendChild(cross1);
+    main.appendChild(crossdiv);
+    /* Vertical.  */
+    this._domCrosshairsVert = crossdiv = document.createElement('div');
+    crossdiv.className = 'crosshairVert';
+    cross0 = document.createElement('div');
+    cross0.className = 'crosshairVert0';
+    crossdiv.appendChild(cross0);
+    cross1 = document.createElement('div');
+    cross1.className = 'crosshairVert1';
+    crossdiv.appendChild(cross1);
+    main.appendChild(crossdiv);
+
+    /* Circular cursor indicators.  */
     l = this._domCursor.length;
     for (i = 0; i < l; ++i) {
         this._domCursor[i] = cursor = document.createElement('div');
@@ -355,11 +406,10 @@ Attack.prototype._constructDom = function () {
         main.appendChild(cursor);
     }
 
+    /* Direction indicator.  */
     this._domDirection = dir = document.createElement('div');
     dir.className = 'direction';
     main.appendChild(dir);
-
-    // TODO: crosshairs
 
     document.documentElement.appendChild(main);
     return this;
