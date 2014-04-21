@@ -405,6 +405,10 @@ main#attackcomputer div.crosshairVert div.crosshairVert1 {
   bottom: 0px;
 }
 main#attackcomputer div.direction {
-  display: none;
-  /* TODO */
+  display: block;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  color: #00ff00;
 }

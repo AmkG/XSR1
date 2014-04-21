@@ -169,6 +169,13 @@ var UP = 1;
 var DOWN = 2;
 var LEFT = 3;
 var RIGHT = 4;
+var directionCode = [
+    '&#9670;', // NONE
+    '&#9650;', // UP
+    '&#9660;', // DOWN
+    '&#9664;', // LEFT
+    '&#9654;'  // RIGHT
+];
 
 function Attack(instruments) {
     /* Connection to other computer.  */
@@ -265,7 +272,7 @@ Attack.prototype.update = function (seconds) {
             ay = Math.abs(y);
             if (ax > ay) {
                 // LEFT-RIGHT axis.
-                if (ax < 1.0) {
+                if (ax < 5.0) {
                     this._direction = NONE;
                 } else if (x < 0.0) {
                     this._direction = LEFT;
@@ -273,7 +280,7 @@ Attack.prototype.update = function (seconds) {
                     this._direction = RIGHT;
                 }
             } else {
-                if (ay < 1.0) {
+                if (ay < 5.0) {
                     this._direction = NONE;
                 } else if (y < 0.0) {
                     this._direction = UP;
@@ -307,7 +314,7 @@ Attack.prototype.render = function () {
         }
         this._dom.style.display = 'block';
 
-        // TODO: If fixed, show the crosshairs.
+        /* If fixed, show the crosshairs.  */
         if (this._fixed) {
             cx = Math.floor(resize.cenx) + 'px';
             cy = Math.floor(resize.ceny) + 'px';
@@ -362,7 +369,17 @@ Attack.prototype.render = function () {
             }
         }
 
-        // TODO: Direction indicators.
+        // Direction indicator.
+        if (this._fixed) {
+            dom = this._domDirection;
+            dom.style.display = 'display';
+            dom.style.left = Math.floor(resize.cenx) + 'px';
+            dom.style.top = Math.floor(resize.ceny) + 'px';
+            dom.style.fontSize = Math.floor(resize.maxsize / 4) + 'px';
+            dom.innerHTML = directionCode[this._direction];
+        } else {
+            this._domDirection.style.display = 'none';
+        }
     } else {
         if (this._dom) {
             this._dom.style.display = 'none';
