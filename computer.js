@@ -251,30 +251,35 @@ Attack.prototype.update = function (seconds) {
     if (this._enabled && this._fixed) {
         ar3d = this._ar3d;
         cursor = this._cursor;
-        field.getBogeyPosition(targetNum, ar3d);
-        /* Update cursor position.  */
-        this._cursorshow = field.project(cursor, ar3d);
-        /* Update direction information.  */
-        x = ar3d[0];
-        y = ar3d[1];
-        ax = Math.abs(x);
-        ay = Math.abs(y);
-        if (ax > ay) {
-            // LEFT-RIGHT axis.
-            if (ax < 1.0) {
-                this._direction = NONE;
-            } else if (x < 0.0) {
-                this._direction = LEFT;
-            } else {
-                this._direction = RIGHT;
-            }
+        if (!field.isBogeyValid(targetNum)) {
+            this._cursorshow = false;
+            this._direction = NONE;
         } else {
-            if (ay < 1.0) {
-                this._direction = NONE;
-            } else if (y < 0.0) {
-                this._direction = UP;
+            field.getBogeyPosition(targetNum, ar3d);
+            /* Update cursor position.  */
+            this._cursorshow = field.project(cursor, ar3d);
+            /* Update direction information.  */
+            x = ar3d[0];
+            y = ar3d[1];
+            ax = Math.abs(x);
+            ay = Math.abs(y);
+            if (ax > ay) {
+                // LEFT-RIGHT axis.
+                if (ax < 1.0) {
+                    this._direction = NONE;
+                } else if (x < 0.0) {
+                    this._direction = LEFT;
+                } else {
+                    this._direction = RIGHT;
+                }
             } else {
-                this._direction = DOWN;
+                if (ay < 1.0) {
+                    this._direction = NONE;
+                } else if (y < 0.0) {
+                    this._direction = UP;
+                } else {
+                    this._direction = DOWN;
+                }
             }
         }
     }
