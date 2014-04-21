@@ -143,7 +143,7 @@ function onUpdate() {
 
     /* Only fire missiles if not in hyperspace or hyperwarp.  */
     if (!hyperwarp.engaged() && !hyperwarp.inHyperspace() &&
-        field.speed < 60) {
+        field.speed < 70.0) {
         photons.fire = keys.fire;
     } else {
         photons.fire = false;
