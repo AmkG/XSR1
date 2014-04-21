@@ -25,8 +25,8 @@
  * for the JavaScript code in this page.
  *
  */
-define(['signal','galaxy','field','console'],
-function(signal , galaxy , field , console) {
+define(['signal','galaxy','field','console','pilots'],
+function(signal , galaxy , field , console , pilots) {
 
 /*
  * This file manages the player's experience within a sector.
@@ -143,26 +143,48 @@ function randomLocation(ar3d) {
 function Sector() {
     /* Temporary array.  */
     this._ar3d = [0.0, 0.0, 0.0];
+    /* Number of enemies in the sector.  */
+    this._numNyloz = 0;
+    /* Recreation information.  When a Nyloz is destroyed in the
+       current sector, we need to recreate it (unless the sector
+       has no more extra Nyloz).  To encourage the instruments
+       computer to switch targets, we must defer recreation for
+       an update cycle.  */
+    this._recreate = -1;
+    this._deferRecreate = false;
 
     signal('enterHyperspace', this.enterHyperspace.bind(this));
     signal('enterNormal', this.enterNormal.bind(this));
     signal('nylozKillStarbase', this.nylozKillStarbase.bind(this));
+    signal('killNyloz', this.killNyloz.bind(this));
+    signal('update', this.update.bind(this));
 }
 Sector.prototype.enterHyperspace = function () {
     field.clearBogeysAndMissiles();
+    this._numNyloz = 0;
+    this._recreate = -1;
+    this._deferRecreate = false;
     return this;
 };
 Sector.prototype.enterNormal = function () {
     var sector = galaxy.getPlayerSectorContents();
     var ar3d = this._ar3d;
+
+    this._recreate = -1;
     if (sector === -1) {
         randomLocation(ar3d);
         starbase.create(ar3d[0], ar3d[1], ar3d[2]);
     } else if (sector === 0) {
         field.clearBogeysAndMissiles();
     } else {
-        // TODO: create enemy Nyloz craft
+        this._numNyloz = sector;
+        pilots[0].create();
+        if (sector > 1) {
+            pilots[1].create();
+        }
     }
+    this._recreate = -1;
+    this._deferRecreate = false;
     return this;
 };
 Sector.prototype.nylozKillStarbase = function (sector) {
@@ -179,6 +201,30 @@ Sector.prototype.nylozKillStarbase = function (sector) {
         // model should have 2 enemies in the sector.  Just
         // reuse the existing code.
         this.enterNormal();
+    }
+    return this;
+};
+/* When the player kills a Nyloz, update the number of enemies
+   currently in the sector and create a replacement if
+   necessary.  */
+Sector.prototype.killNyloz = function (num) {
+    --this._numNyloz;
+    if (this._numNyloz > 1) {
+        // Only recreate if there are *still* more than
+        // 1 ship.
+        this._recreate = num;
+        this._deferRecreate = true;
+    }
+};
+/* Handle recreation during update.  */
+Sector.prototype.update = function () {
+    if (this._deferRecreate) {
+        this._deferRecreate = false;
+        return this;
+    }
+    if (this._recreate >= 0) {
+        pilots[this._recreate].create();
+        this._recreate = -1;
     }
     return this;
 };
