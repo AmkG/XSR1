@@ -48,8 +48,6 @@ of destruction).
 function asmModule(stdlib) {
     "use asm";
 
-    var imul = stdlib.Math.imul;
-
     function sectorOffset(s, x, y) {
         s = s|0;
         x = x|0;
