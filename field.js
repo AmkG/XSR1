@@ -480,6 +480,21 @@ Field.prototype.fireMissile = function (id, x, y, z, dir) {
 
     return this;
 };
+/* Get the location of the indicated missile.  */
+Field.prototype.getMissilePosition = function (i, ar3d) {
+    var missile = this._missiles[i];
+    var pos = null;
+    pos = missile.loc.pos;
+    ar3d[0] = pos[0];
+    ar3d[1] = pos[1];
+    ar3d[2] = pos[2];
+    return this;
+};
+/* Determine if the given missile is valid.  */
+Field.prototype.isMissileValid = function (i) {
+    var missile = this._missiles[i];
+    return missile.loc.display;
+}
 /* Clear the field of all bogeys and missiles.  */
 Field.prototype.clearBogeysAndMissiles = function () {
     var i;
