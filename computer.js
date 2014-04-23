@@ -372,7 +372,7 @@ Attack.prototype.render = function () {
         // Direction indicator.
         if (this._fixed) {
             dom = this._domDirection;
-            dom.style.display = 'display';
+            dom.style.display = 'block';
             dom.style.left = Math.floor(resize.cenx) + 'px';
             dom.style.top = Math.floor(resize.ceny) + 'px';
             dom.style.fontSize = Math.floor(resize.maxsize / 4) + 'px';
