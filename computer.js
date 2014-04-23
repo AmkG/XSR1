@@ -112,7 +112,7 @@ Instruments.prototype.switchTarget = function () {
 };
 /* Events.  */
 Instruments.prototype.newGame = function () {
-    this.fix()/*.autotrackDisable()*/;
+    this.fix().autotrackDisable();
     this._targetNum = 0;
     this._target[0] = 0.0;
     this._target[1] = 0.0;
