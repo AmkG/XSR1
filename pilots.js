@@ -226,7 +226,7 @@ tb[YN] = function (vec, mag) {
 tb[ZP] = function (vec, mag) {
     vec[0] += 0.0;
     vec[1] += 0.0;
-    vec[2] -= mag;
+    vec[2] += mag;
 };
 tb[ZN] = function (vec, mag) {
     vec[0] += 0.0;
