@@ -158,6 +158,11 @@ Instruments.prototype.update = function (seconds) {
     }
     return this;
 };
+Instruments.prototype.nylozFirePhoton = function (num) {
+    if (this._autotrack) {
+        this._targetNum = num;
+    }
+};
 
 
 /*-----------------------------------------------------------------------------
@@ -452,6 +457,7 @@ function Computer() {
     signal('newGame', this.newGame.bind(this));
     signal('update', this.update.bind(this));
     signal('render', this.render.bind(this));
+    signal('nylozFirePhoton', this.nylozFirePhoton.bind(this));
 }
 Computer.prototype.mainMenu = function () {
     this.attack.mainMenu();
@@ -486,6 +492,10 @@ Computer.prototype.update = function (seconds) {
 };
 Computer.prototype.render = function () {
     this.attack.render();
+    return this;
+};
+Computer.prototype.nylozFirePhoton = function (num) {
+    this.instruments.nylozFirePhoton(num);
     return this;
 };
 
