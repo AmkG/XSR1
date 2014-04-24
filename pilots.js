@@ -168,17 +168,20 @@ Photons.prototype.killNyloz = function (num) {
 Nyloz Ship Engines
 -----------------------------------------------------------------------------*/
 /*
- * Nyloz have two engines:
+ * Nyloz have three engines:
  *   One engine only moves in the Z direction
  *     at either away, towards, or no movement
  *     relative to player.
  *   The second engine moves in one of the 6
  *     3-d directions, or no movement.
+ *   The third engine is similar to the second
+ *     engine, but is much slower.
  *
  * The main "Z" engine runs at speed 12.5
  *   (the "engines 6" speed of the player).
  * The secondary "Direction" engine runs
- *   at speed 10
+ *   at speed 7
+ * The third "Nudge" engine runs at speed 2.
  */
 var NONE = 0;
 var XN = 1;
@@ -190,47 +193,52 @@ var ZP = 6;
 function Engines() {
     this._z = 0;
     this._dir = NONE;
+    this._nudge = NONE;
 }
 Engines.prototype.apply = (function () {
 
 var tb = [];
-tb[NONE] = function (vec) {
-    vec[0] = 0.0;
-    vec[1] = 0.0;
-    vec[2] = 0.0;
+tb[NONE] = function (vec, mag) {
+    vec[0] += 0.0;
+    vec[1] += 0.0;
+    vec[2] += 0.0;
 };
-tb[XP] = function (vec) {
-    vec[0] = 10.0;
-    vec[1] = 0.0;
-    vec[2] = 0.0;
+tb[XP] = function (vec, mag) {
+    vec[0] += mag;
+    vec[1] += 0.0;
+    vec[2] += 0.0;
 };
-tb[XN] = function (vec) {
-    vec[0] = -10.0;
-    vec[1] = 0.0;
-    vec[2] = 0.0;
+tb[XN] = function (vec, mag) {
+    vec[0] -= mag;
+    vec[1] += 0.0;
+    vec[2] += 0.0;
 };
-tb[YP] = function (vec) {
-    vec[0] = 0.0;
-    vec[1] = 10.0;
-    vec[2] = 0.0;
+tb[YP] = function (vec, mag) {
+    vec[0] += 0.0;
+    vec[1] += mag;
+    vec[2] += 0.0;
 };
-tb[YN] = function (vec) {
-    vec[0] = 0.0;
-    vec[1] = -10.0;
-    vec[2] = 0.0;
+tb[YN] = function (vec, mag) {
+    vec[0] += 0.0;
+    vec[1] -= mag;
+    vec[2] += 0.0;
 };
-tb[ZP] = function (vec) {
-    vec[0] = 0.0;
-    vec[1] = 0.0;
-    vec[2] = 10.0;
+tb[ZP] = function (vec, mag) {
+    vec[0] += 0.0;
+    vec[1] += 0.0;
+    vec[2] -= mag;
 };
-tb[ZN] = function (vec) {
-    vec[0] = 0.0;
-    vec[1] = 0.0;
-    vec[2] = -10.0;
+tb[ZN] = function (vec, mag) {
+    vec[0] += 0.0;
+    vec[1] += 0.0;
+    vec[2] -= mag;
 };
 function apply(vec) {
-    tb[this._dir](vec);
+    vec[0] = 0.0;
+    vec[1] = 0.0;
+    vec[2] = 0.0;
+    tb[this._dir](vec, 7.0);
+    tb[this._nudge](vec, 2.0);
     vec[2] += this._z * 12.5;
     return this;
 }
@@ -250,6 +258,13 @@ Engines.prototype.setDir = function (dir) {
 };
 Engines.prototype.getDir = function (dir) {
     return this._dir;
+};
+Engines.prototype.setNudge = function (dir) {
+    this._nudge = dir;
+    return this;
+};
+Engines.prototype.getNudge = function (dir) {
+    return this._nudge;
 };
 
 /*-----------------------------------------------------------------------------
@@ -357,7 +372,7 @@ Pilot.prototype._think = function (pos) {
     if (this._state === IDLE) {
         engines.setZ(0).setDir(NONE);
         photons.ceasefire();
-        if (dist <= 140.0) {
+        if (dist <= 140.0 || Math.random() < 0.4) {
             this._state = Math.floor(Math.random() * 3);
         } else if (dist <= 120.0) {
             this._state = ATTACK;
@@ -372,8 +387,9 @@ Pilot.prototype._think = function (pos) {
             // far enough away.
             this._state = IDLE;
             engines.setZ(0).setDir(NONE);
-        } else if (dist <= 120.0) {
-            // player caught up with us, oh well.
+        } else if (dist <= 120.0 || Math.random () < 0.3) {
+            // player caught up with us, or we got bored
+            // escaping, so attack.
             this._state = ATTACK;
         } else {
             // Try to get away.  Set the Z engine to
@@ -413,7 +429,7 @@ Pilot.prototype._think = function (pos) {
         if (!this._shootFromBehind && pos[2] < 0.0) {
             // Can't shoot from behind, so get in front.
             engines.setZ(1).setDir(ZP);
-        } else if (dist > 400.0 && (Math.random() < 0.5)) {
+        } else if (dist > 400.0 && (Math.random() < 0.1)) {
             // Randomly escape or idle
             this._state = (Math.random() < 0.5) ? IDLE : ESCAPE;
             engines.setZ(0).setDir(0);
@@ -482,6 +498,51 @@ Pilot.prototype._think = function (pos) {
             engines.setDir(dir);
         }
     }
+
+    /* Nudge engines manipulation.  Set it to randomly
+       go in a direction 90 degrees from the Direction
+       engines, or none.  */
+    dir = engines.getDir();
+    if (dir === NONE) {
+        engines.setNudge(NONE);
+    } else {
+        switch(Math.floor(Math.random() * 5)) {
+        case 0: engines.setNudge(NONE); break;
+        case 1:
+            switch (dir) {
+            case XP: case XN:
+                engines.setNudge(YP); break;
+            default:
+                engines.setNudge(XP); break;
+            }
+            break;
+        case 2:
+            switch (dir) {
+            case XP: case XN:
+                engines.setNudge(YN); break;
+            default:
+                engines.setNudge(XN); break;
+            }
+            break;
+        case 3:
+            switch (dir) {
+            case ZP: case ZN:
+                engines.setNudge(YP); break;
+            default:
+                engines.setNudge(ZP); break;
+            }
+            break;
+        case 3:
+            switch (dir) {
+            case ZP: case ZN:
+                engines.setNudge(YN); break;
+            default:
+                engines.setNudge(ZN); break;
+            }
+            break;
+        }
+    }
+
     return this;
 };
 /* Called by the field manager when a Nyloz ship is hit by
