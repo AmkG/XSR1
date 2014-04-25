@@ -75,9 +75,19 @@ var actualDebrisSpeed = debrisSpeed * speedFactor;
 /* Time debris stays on the field.  */
 var debrisTime = 5.0;
 
-/* Size of bogeys and missiles.  */
+/* Size of bogeys and missiles (for collision detection).  */
 var bogeySize = 1.0;
 var missileSize = 0.5;
+
+/* Size of the player (for collision detection),
+   according to difficulty.
+   (larger size is greater difficulty)  */
+var playerSizes = {
+    'NOVICE':       1.0,
+    'PILOT':        1.25,
+    'WARRIOR':      1.5,
+    'COMMANDER':    1.75
+};
 
 function nullFun() { }
 
@@ -394,12 +404,16 @@ function Field() {
 
     /* Scratch space.  */
     this._ar2d = {display: false, pos: [0.1, 0.1]};
+    this._ar3d = [0.1, 0.1, 0.1];
 
     /* View properties.  */
     this._project = nullFun;
     this._size = null;
     this._min = null;
     this._max = null;
+
+    /* Size of the player.  */
+    this._playerSize = 0.0;
 
     /* Speed of the player through the field.  */
     this.speed = 0.0;
@@ -418,6 +432,7 @@ function Field() {
     signal('update', this.update.bind(this));
     signal('render', this.render.bind(this));
     signal('mainMenu', this.mainMenu.bind(this));
+    signal('newGame', this.newGame.bind(this));
 
     this.viewFront();
 }
@@ -735,7 +750,19 @@ Field.prototype.update = function (seconds) {
                 break;
             }
         }
-        /* TODO: missile to player.  */
+    }
+    /* Missile-to-player check.  */
+    if (missiles[2].loc.display) {
+        this._ar3d[0] = 0.0;
+        this._ar3d[1] = 0.0;
+        this._ar3d[2] = 0.0;
+        pos = missiles[2].loc.pos;
+        if (collides(this._ar3d, this._playerSize,
+                pos, missileSize)) {
+            /* A hit!  A palpable hit!  */
+            this.explosion(pos[0], pos[1], pos[2]);
+            signal.raise('nylozHitPlayer');
+        }
     }
     /* Missile-to-bogey.  */
     for (i = 0; i < 2; ++i) {
@@ -840,6 +867,10 @@ Field.prototype.mainMenu = function () {
     this.display = true;
     this.viewFront();
     this.generateStars();
+    return this;
+};
+Field.prototype.newGame = function (difficulty) {
+    this._playerSize = playerSizes[difficulty];
     return this;
 };
 
