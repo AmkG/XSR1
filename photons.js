@@ -71,7 +71,7 @@ Photons.prototype.colorState = function () {
     var state = this._state;
     if (state === FIXED) {
         return 'green';
-    } else if (state === 'DEADLEFT' || state === 'DEADRIGHT') {
+    } else if (state === DEADLEFT || state === DEADRIGHT) {
         return 'yellow';
     } else {
         return 'red';
