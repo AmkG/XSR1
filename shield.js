@@ -28,6 +28,8 @@
 define(['vars', 'signal'], function (vars, signal) {
 "use strict";
 
+var flashTime = 0.2;
+
 var FIXED = 0;
 var DAMAGED = 1;
 var DESTROYED = 2;
@@ -44,8 +46,12 @@ function Shield() {
     this._on = false;
     this._status = FIXED;
 
+    this._flashTime = 0.0;
+    this._isFlash = false;
+
     this._dom = null;
     this._shown = false;
+    this._flashing = false;
 
     signal('update', this.update.bind(this));
     signal('render', this.render.bind(this));
@@ -88,6 +94,11 @@ Shield.prototype.isEnabled = function () {
     return this._enabled;
 };
 
+Shield.prototype.flash = function () {
+    this._flashTime = flashTime;
+    return this;
+};
+
 Shield.prototype.update = function (seconds) {
     if (this._enabled) {
         vars.energy.consume(2 * seconds);
@@ -104,6 +115,13 @@ Shield.prototype.update = function (seconds) {
     } else if (this._status === DESTROYED) {
         this._on = false;
     }
+    if (this._flashTime > 0.0) {
+        this._flashTime -= seconds;
+        if (this._flashTime <= 0.0) {
+            this._flashTime = 0.0;
+        }
+    }
+    this._isFlash = (this._flashTime > 0.0);
     return this;
 };
 Shield.prototype.render = function () {
@@ -120,6 +138,17 @@ Shield.prototype.render = function () {
             }
         }
     }
+    if (this._isFlash !== this._flashing) {
+        this._flashing = this._isFlash;
+        if (!this._dom) {
+            this._dom = createShieldDom();
+        }
+        if (this._isFlash) {
+            dom.style.backgroundColor = 'white';
+        } else {
+            dom.style.backgroundColor = 'blue';
+        }
+    }
     return this;
 };
 Shield.prototype._onMainMenu = function () {
@@ -130,6 +159,8 @@ Shield.prototype._onMainMenu = function () {
 Shield.prototype._onNewGame = function () {
     this.fix();
     this.disable();
+    this._flashTime = 0.0;
+    this._isFlash = false;
     return this;
 };
 
