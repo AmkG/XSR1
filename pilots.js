@@ -29,6 +29,35 @@ define(['signal','field'],
 function(signal , field ) {
 
 /*-----------------------------------------------------------------------------
+Nyloz Ship Types
+-----------------------------------------------------------------------------*/
+var fighterType = {
+    html: '&gt;&bull;&lt;',
+    shipSize: 2.5,
+    life: 1
+};
+var cruiserType = {
+    html: '/&circ;\\',
+    shipSize: 3.0,
+    life: 2
+};
+var basestarType = {
+    html: '&laquo;&diams;&raquo;',
+    shipSize: 3.0,
+    life: 4
+};
+var shipTypeDistribution = [
+    fighterType, fighterType, fighterType, fighterType,
+    cruiserType, cruiserType,
+    basestarType
+];
+function randomShipType() {
+    return shipTypeDistribution[
+        Math.floor(Math.random() * shipTypeDistribution.length)
+    ];
+}
+
+/*-----------------------------------------------------------------------------
 Nyloz Photon Manager
 -----------------------------------------------------------------------------*/
 /*
@@ -322,10 +351,11 @@ function Pilot(num) {
 /* Called by the sector manager to instantiate a random Nyloz
    craft outside the normal detection range of the player.  */
 Pilot.prototype.create = function () {
-    var html = '';
     var x = 0.0;
     var y = 0.0;
     var z = 150.0;
+    var shipType = null;
+    var html = '';
     var shipSize = 2.5;
 
     // Randomize state of the Nyloz ship.
@@ -338,10 +368,11 @@ Pilot.prototype.create = function () {
     z = Math.random() * 300.0 + 121.0;
     z = (Math.random() < 0.5) ? z : -z;
 
-    // TODO: Vary the Nyloz ship
-    html = '&gt;&bull;&lt;';
-    shipSize = 2.5;
-    this._life = 1;
+    // Vary the Nyloz ship
+    shipType = randomShipType();
+    html = shipType.html;
+    shipSize = shipType.shipSize;
+    this._life = shipType.life;
 
     field.setBogey(this._num, x, y, z,
                    this._cb_updateBogey, this._cb_collideBogey, html,
