@@ -229,6 +229,7 @@ function DC() {
     signal('newGame', this.newGame.bind(this));
     signal('fix', this.fix.bind(this));
     signal('update', this.update.bind(this));
+    signal('gameOver', this.gameOver.bind(this));
 }
 DC.prototype.nylozHitPlayer = function () {
     if (!shield.protectionCheck()) {
@@ -265,6 +266,11 @@ DC.prototype.update = function (seconds) {
             damageReport();
         }
     }
+};
+DC.prototype.gameOver = function () {
+    this._report = false;
+    this._reportTime = 0.0;
+    return this;
 };
 
 return new DC();

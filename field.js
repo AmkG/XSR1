@@ -415,6 +415,9 @@ function Field() {
     /* Size of the player.  */
     this._playerSize = 0.0;
 
+    /* Is the game over?  If so, ignore missile-to-player collision.  */
+    this._gameOver = false;
+
     /* Speed of the player through the field.  */
     this.speed = 0.0;
     /* Rotation of the player.  */
@@ -433,6 +436,7 @@ function Field() {
     signal('render', this.render.bind(this));
     signal('mainMenu', this.mainMenu.bind(this));
     signal('newGame', this.newGame.bind(this));
+    signal('gameOver', this.gameOver.bind(this));
 
     this.viewFront();
 }
@@ -752,7 +756,7 @@ Field.prototype.update = function (seconds) {
         }
     }
     /* Missile-to-player check.  */
-    if (missiles[2].loc.display) {
+    if (missiles[2].loc.display && !this._gameOver) {
         this._ar3d[0] = 0.0;
         this._ar3d[1] = 0.0;
         this._ar3d[2] = 0.0;
@@ -871,6 +875,11 @@ Field.prototype.mainMenu = function () {
 };
 Field.prototype.newGame = function (difficulty) {
     this._playerSize = playerSizes[difficulty];
+    this._gameOver = false;
+    return this;
+};
+Field.prototype.gameOver = function () {
+    this._gameOver = true;
     return this;
 };
 

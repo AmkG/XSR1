@@ -122,11 +122,20 @@ keytable['\e'] = keytable['p'] = keytable['P'] = function () {
 Interface
 -----------------------------------------------------------------------------*/
 
+var isGameOver = false;
+
 function onUpdate() {
     var movex = 0;
     var movey = 0;
     var k = '';
     var f = null;
+
+    if (isGameOver) {
+        if (keys.key === '\e') {
+            loop.enterPause();
+        }
+        return;
+    }
 
     if (keys.left) {
         --movex;
@@ -169,6 +178,15 @@ function onUpdate() {
     }
 }
 
+function onGameOver() {
+    isGameOver = true;
+}
+function onNewGame() {
+    isGameOver = false;
+}
+
 signal('update', onUpdate);
+signal('gameOver', onGameOver);
+signal('newGame', onNewGame);
 return onUpdate;
 });

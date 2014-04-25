@@ -36,6 +36,7 @@ var playerControl = require('playerControl'); // needed.
 var loop = require('loop');
 var sector = require('sector'); // needed.
 var damageControl = require('damageControl'); // needed.
+var gameOver = require('gameOver'); // needed.
 
 function stopDefault(e) {
     e = e || window.event;
