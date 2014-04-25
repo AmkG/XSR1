@@ -150,9 +150,9 @@ Shield.prototype.render = function () {
             this._dom = createShieldDom();
         }
         if (this._isFlash) {
-            dom.style.backgroundColor = 'white';
+            this._dom.style.backgroundColor = 'white';
         } else {
-            dom.style.backgroundColor = 'blue';
+            this._dom.style.backgroundColor = 'blue';
         }
     }
     return this;
