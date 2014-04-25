@@ -99,6 +99,12 @@ Shield.prototype.flash = function () {
     return this;
 };
 
+/* Return true if the shield protects the player from
+   complete destruction, false otherwise.  */
+Shield.prototype.protectionCheck = function () {
+    return this._on;
+};
+
 Shield.prototype.update = function (seconds) {
     if (this._enabled) {
         vars.energy.consume(2 * seconds);
