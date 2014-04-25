@@ -453,12 +453,18 @@ function Computer() {
     this.instruments = new Instruments();
     this.attack = new Attack(this.instruments);
 
+    signal('fix', this.fix.bind(this));
     signal('mainMenu', this.mainMenu.bind(this));
     signal('newGame', this.newGame.bind(this));
     signal('update', this.update.bind(this));
     signal('render', this.render.bind(this));
     signal('nylozFirePhoton', this.nylozFirePhoton.bind(this));
 }
+Computer.prototype.fix = function () {
+    this.attack.fix();
+    this.instruments.fix();
+    return this;
+};
 Computer.prototype.mainMenu = function () {
     this.attack.mainMenu();
     return this;
