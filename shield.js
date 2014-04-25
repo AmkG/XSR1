@@ -65,7 +65,7 @@ Shield.prototype.damage = function () {
     return this;
 };
 Shield.prototype.destroy = function () {
-    this._status = DESTROY;
+    this._status = DESTROYED;
     return this;
 };
 Shield.prototype.fix = function () {
