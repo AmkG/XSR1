@@ -577,7 +577,7 @@ Pilot.prototype.newGame = function (difficulty) {
     switch (difficulty) {
     case 'NOVICE':
         this._shootFromBehind = false;
-        this._thinkCycle = 0.45;
+        this._thinkCycle = 0.4;
         break;
     case 'PILOT':
         this._shootFromBehind = false;
@@ -589,7 +589,7 @@ Pilot.prototype.newGame = function (difficulty) {
         break;
     case 'COMMANDER':
         this._shootFromBehind = true;
-        this._thinkCycle = 0.25;
+        this._thinkCycle = 0.3;
         break;
     }
 
