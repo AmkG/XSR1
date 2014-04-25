@@ -35,6 +35,7 @@ var engines = require('engines');
 var playerControl = require('playerControl'); // needed.
 var loop = require('loop');
 var sector = require('sector'); // needed.
+var damageControl = require('damageControl'); // needed.
 
 function stopDefault(e) {
     e = e || window.event;
