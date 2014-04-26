@@ -47,6 +47,18 @@ of destruction).
 
 function asmModule(stdlib) {
     "use asm";
+    /* Note: this is mostly an experiment to see
+       just how difficult or easy it is to write
+       hand-written asm.js.  Any speed benefits
+       we might have from using AOT asm.js will
+       be lost in the lousy asm.js->js
+       interfacing of Firefox up to 28.
+       Verdict?  It's not that hard to write small
+       asm.js functions that do little
+       computations.  Mozilla would greatly
+       increase the utility of asm.js if they
+       could reduce the asm.js->js interfacing
+       overhead.  */
 
     function sectorOffset(s, x, y) {
         s = s|0;
@@ -60,8 +72,33 @@ function asmModule(stdlib) {
         sy = (sy + y) & 0x7;
         return ((sy << 4) + sx)|0;
     }
+    /* Gets the difference in X direction,
+       s1 - s2.  */
+    function sectorXDiff(s1, s2) {
+        s1 = s1|0;
+        s2 = s2|0;
+        var s1x = 0;
+        var s2x = 0;
+        s1x = (s1 & 0xF);
+        s2x = (s2 & 0xF);
+        return (s1x - s2x)|0;
+    }
+    /* Gets the difference in Y direction,
+       s1 - s2.  */
+    function sectorYDiff(s1, s2) {
+        s1 = s1|0;
+        s2 = s2|0;
+        var s1y = 0;
+        var s2y = 0;
+        s1y = (s1 >> 4);
+        s2y = (s2 >> 4);
+        return (s1y - s2y)|0;
+    }
 
-    return {sectorOffset: sectorOffset};
+    return { sectorOffset: sectorOffset
+           , sectorXDiff: sectorXDiff
+           , sectorYDiff: sectorYDiff
+           };
 }
 var asm = asmModule(window);
 var sectorOffset = asm.sectorOffset;
@@ -90,6 +127,9 @@ function Model() {
         this.sectors[i] = 0;
     }
 
+    /* The enemy target sector.  */
+    this._target = 0;
+
     /* Player location in x and y coordinates of the map
        as well as the player's sector.  */
     this.px = 0.0;
@@ -110,7 +150,7 @@ Model.prototype.update = function (seconds) {
         }
         /* Update at each x.50 or x.00.  */
         if (this.dateMin === 0 || this.dateMin === 50) {
-            this._enemyMove();
+            this._enemyMove()._surroundStarbase();
             this.chart._modelChange();
         }
     }
@@ -119,6 +159,11 @@ Model.prototype.update = function (seconds) {
 /* Called at each time that the enemy moves.  */
 Model.prototype._enemyMove = function () {
     // TODO
+    return this;
+};
+/* Called to check if starbases are surrounded after
+   the enemy moves.  */
+Model.prototype._surroundStarbase = function () {
     // TODO: when the enemy successfully destroys a starbase,
     // send a 'nylozDestroyStarbase' message with the sector
     // number after setting the sector to 2 enemies.
@@ -198,6 +243,9 @@ Model.prototype.newGame = function (difficulty) {
     this.px = 8.5;
     this.py = 4.5;
     this.ps = 72;
+
+    /* Initialize the current target to an invalid one.  */
+    this._target = 0;
 
     return this;
 };
@@ -538,8 +586,28 @@ Chart.prototype.isShown = function () {
    We only update the map if the galactic chart is
    actually enabled and the chart is fixed.  */
 Chart.prototype._modelChange = function () {
-    /* TODO */
+    if (this._display && this._state === FIXED) {
+        this._updateFromModel;
+    }
     return this;
+};
+/* Called by the model object if a starbase is
+   surrounded.  */
+Chart.prototype._starbaseSurrounded = function () {
+    if (this._state !== DESTROYED) {
+        console.write(
+            "<font color=#ff0000><b>STARBASE SURROUNDED</b></font>"
+        );
+    }
+};
+/* Called when a starbase is destroyed by Nyloz,
+   triggered by the 'nylozDestroyStarbase' signal.  */
+Chart.prototype.nylozDestroyStarbase = function (s) {
+    if (this._state !== DESTROYED) {
+        console.write(
+            "<font color=#ff0000><b>STARBASE DESTROYED</b></font>"
+        );
+    }
 };
 /* Called at the beginning of each game, after the model
    has initialized.  */
@@ -592,6 +660,7 @@ function Galaxy() {
     signal('newGame', this.newGame.bind(this));
     signal('mainMenu', this.mainMenu.bind(this));
     signal('playerDestroyStarbase', this.playerDestroyStarbase.bind(this));
+    signal('nylozDestroyStarbase', this.nylozDestroyStarbase.bind(this));
     signal('killNyloz', this.killNyloz.bind(this));
 
     signal('fix', this.chart.fix.bind(this.chart));
@@ -616,6 +685,10 @@ Galaxy.prototype.mainMenu = function () {
 };
 Galaxy.prototype.playerDestroyStarbase = function () {
     this._m.playerDestroyStarbase();
+    return this;
+};
+Galaxy.prototype.nylozDestroyStarbase = function (s) {
+    this.chart.nylozDestroyStarbase(s);
     return this;
 };
 Galaxy.prototype.killNyloz = function () {

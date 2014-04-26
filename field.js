@@ -77,7 +77,7 @@ var debrisTime = 5.0;
 
 /* Size of bogeys and missiles (for collision detection).  */
 var bogeySize = 1.0;
-var missileSize = 0.5;
+var missileSize = 0.75;
 
 /* Size of the player (for collision detection),
    according to difficulty.
