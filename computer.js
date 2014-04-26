@@ -140,7 +140,7 @@ Instruments.prototype.update = function (seconds) {
             /* If auto-tracked, set it.  */
             if (this._autotrack) {
                 if (this._target[2] >= 0.0 || hyperwarp.engaged()) {
-                    if (field.currentView === 'aft') {
+                    if (field.currentView === 'aft' && field.display) {
                         /* Why use a signal instead of importing viewControl
                            and calling viewControl.aft()?  Because
                            viewControl depends on panel, and panel depends
@@ -149,7 +149,7 @@ Instruments.prototype.update = function (seconds) {
                         signal.raise('setViewFront');
                     }
                 } else {
-                    if (field.currentView === 'front') {
+                    if (field.currentView === 'front' && field.display) {
                         signal.raise('setViewAft');
                     }
                 }
