@@ -766,6 +766,7 @@ Field.prototype.update = function (seconds) {
             /* A hit!  A palpable hit!  */
             this.explosion(pos[0], pos[1], pos[2]);
             signal.raise('nylozHitPlayer');
+            missiles[2].loc.display = false;
         }
     }
     /* Missile-to-bogey.  */
