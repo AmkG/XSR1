@@ -131,6 +131,8 @@ function onUpdate() {
     var f = null;
 
     if (isGameOver) {
+        field.pitch = 0;
+        field.yaw = 0;
         if (keys.key === '\e') {
             loop.enterPause();
         }
