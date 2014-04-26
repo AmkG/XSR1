@@ -177,6 +177,7 @@ Sector.prototype.enterNormal = function () {
     } else if (sector === 0) {
         field.clearBogeysAndMissiles();
     } else {
+        console.write("<font color=#ff0000><b>WARNING: Nyloz craft detected.</b></font>");
         this._numNyloz = sector;
         pilots[0].create();
         if (sector > 1) {
