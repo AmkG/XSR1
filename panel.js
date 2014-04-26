@@ -118,6 +118,7 @@ Panel.prototype.render = function () {
 
             this._warpenergy.innerHTML = galaxy.chart.jumpCost();
             // TODO: chart targets value.
+            this._targets.innerHTML = galaxy.chart.targets();
             this._dc_p.style.color = photons.colorState();
             this._dc_e.style.color = engines.colorState();
             this._dc_s.style.color = shield.colorState();

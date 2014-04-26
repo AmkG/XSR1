@@ -350,6 +350,19 @@ Chart.prototype.colorState = function () {
         return 'red';
     }
 };
+/* Query number of targets.  */
+Chart.prototype.targets = function () {
+    if (this._state === DESTROYED) {
+        return '?';
+    }
+    var sectors = this._m.sectors;
+    var s = sectorOffset(0, Math.floor(this._cx), Math.floor(this._cy));
+    if (sectors[s] <= 0) {
+        return '0';
+    } else {
+        return sectors[s].toString();
+    }
+};
 /* Query cost of jump.  */
 Chart.prototype.jumpCost = function () {
     var cost = warpCosts(this._m.px, this._m.py, this._cx, this._cy);
