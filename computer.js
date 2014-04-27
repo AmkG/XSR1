@@ -122,8 +122,6 @@ Instruments.prototype.newGame = function () {
 /* Called at each clock tick.  */
 Instruments.prototype.update = function (seconds) {
     var othernum;
-    /* TODO: switch focus to bogey that is firing.  Probably via
-       a signal.  */
     /* TODO: tracking of asteroids (when asteroids are implemented).  */
     if (this._fixed) {
         /* Try to get a valid target.  */
