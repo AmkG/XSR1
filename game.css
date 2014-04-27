@@ -1,0 +1,414 @@
+body {
+  position: absolute;
+  left: 0px; right: 0px; top: 0px; bottom: 0px;
+  background-color: black;
+  font-family: serif;
+  overflow: hidden;
+  cursor: none;
+  width: 100%;
+  height: 100%;
+}
+
+/*-----------------------------------------------------------------------------
+Starfield
+-----------------------------------------------------------------------------*/
+
+main#field {
+  z-index: -1;
+  display: block;
+  position: absolute;
+  left: 0px; right: 0px; top: 0px; bottom: 0px;
+  overflow: hidden;
+  cursor: none;
+}
+main#field span {
+  display: block;
+  position: absolute;
+  min-width: 1px;
+  min-height: 1px;
+  color: white;
+  cursor: none;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+}
+main#field span.star {
+}
+main#field span.photon {
+  color: #ffff80;
+}
+main#field span.debris {
+  color: yellow;
+}
+
+/*-----------------------------------------------------------------------------
+Console
+-----------------------------------------------------------------------------*/
+
+main#console {
+  z-index: 4;
+  font-family: "Courier New", Courier, monospace;
+  cursor: none;
+  position: absolute;
+  display: block;
+  left: 10%;
+  bottom: 25%;
+  width: 80%;
+  height: auto;
+  color: rgb(0,255,0);
+}
+
+/*-----------------------------------------------------------------------------
+Menu
+-----------------------------------------------------------------------------*/
+
+main#menu {
+  z-index: 7;
+  cursor: none;
+  position: absolute;
+  display: block;
+  text-align: center;
+  color: white;
+  font-family: sans-serif;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  background-color: rgba(0,0,0,0.6);
+}
+main#menu div:before {
+  content: '> ';
+  color: transparent;
+}
+main#menu div:after {
+  content: ' <';
+  color: transparent;
+}
+main#menu div.select:before {
+  color: white;
+}
+main#menu div.select:after {
+  color: white;
+}
+
+/*-----------------------------------------------------------------------------
+Panel
+-----------------------------------------------------------------------------*/
+
+main#panel {
+  z-index: 5;
+  font-family: serif;
+  position: absolute;
+  display: block;
+  text-align: center;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+main#panel div span#panel_v_label {
+  color: green;
+}
+main#panel div span#panel_v_content {
+  color: green;
+}
+main#panel div span#panel_k_label {
+  color: purple;
+}
+main#panel div span#panel_k_content {
+  color: purple;
+}
+main#panel div span#panel_e_label {
+  color: yellow;
+}
+main#panel div span#panel_e_content {
+  color: yellow;
+}
+main#panel div span#panel_t_label {
+  color: green;
+}
+main#panel div span#panel_t_content {
+  color: green;
+}
+main#panel div span#panel_y_label {
+  color: green;
+}
+main#panel div span#panel_y_content {
+  color: green;
+}
+main#panel div span#panel_x_label {
+  color: purple;
+}
+main#panel div span#panel_x_content {
+  color: green;
+}
+main#panel div span#panel_z_label {
+  color: yellow;
+}
+main#panel div span#panel_z_content {
+  color: green;
+}
+
+main#panel2 {
+  z-index: 5;
+  font-family: serif;
+  position: absolute;
+  display: block;
+  text-align: center;
+  color: white;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+main#panel2 div span#panel_targets_label {
+  color: green;
+}
+main#panel2 div span#panel_targets_content {
+  color: green;
+}
+main#panel2 div span#panel_dc_label {
+  color: white;
+}
+main#panel2 div span#panel_stardate_label {
+  color: purple;
+}
+main#panel2 div span#panel_stardate_content {
+  color: purple;
+}
+
+/*-----------------------------------------------------------------------------
+Screen-top label
+-----------------------------------------------------------------------------*/
+main#label {
+  display: block;
+  position: absolute;
+  text-align: center;
+  font-family: sans-serif;
+  left: 0px;
+  right: 0px;
+  top: 5%;
+  color: white;
+}
+
+/*-----------------------------------------------------------------------------
+Shields
+-----------------------------------------------------------------------------*/
+main#shield {
+  z-index: 1;
+  display: block;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  opacity: 0.10;
+  filter: alpha(opacity=10);
+  background-color: blue;
+  cursor: none;
+}
+
+/*-----------------------------------------------------------------------------
+Galactic Chart
+-----------------------------------------------------------------------------*/
+main#chart {
+  z-index: 3;
+  display: block;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  text-align: center;
+  color: white;
+}
+main#chart div {
+  position: absolute;
+  display: block;
+  border: 1px solid white;
+}
+main#chart div span {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  margin: auto;
+  width: 100%;
+  height: 1em;
+}
+main#chart div.cursor {
+  width: auto;
+  height: auto;
+  border: none;
+  color: yellow;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+}
+
+/*-----------------------------------------------------------------------------
+Hyperwarp and Hyperspace
+-----------------------------------------------------------------------------*/
+
+/* Hyperwarp Target.  */
+main#hyperwarptarget {
+  z-index: 4;
+  color: white;
+  background: none;
+  display: block;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  cursor: none;
+}
+/* Four div's that form the cross.  */
+main#hyperwarptarget div {
+  position: absolute;
+  display: block;
+  width: 35%;
+  height: 35%;
+  cursor: none;
+}
+main#hyperwarptarget div#hyperwarptarget_sub0 {
+  /* upper left.  */
+  left: 0px;
+  top: 0px;
+  border-bottom: 2px solid white;
+  border-right: 2px solid white;
+}
+main#hyperwarptarget div#hyperwarptarget_sub1 {
+  /* upper right.  */
+  right: 0px;
+  top: 0px;
+  border-bottom: 2px solid white;
+  border-left: 2px solid white;
+}
+main#hyperwarptarget div#hyperwarptarget_sub2 {
+  /* lower left.  */
+  left: 0px;
+  bottom: 0px;
+  border-top: 2px solid white;
+  border-right: 2px solid white;
+}
+main#hyperwarptarget div#hyperwarptarget_sub3 {
+  /* lower right.  */
+  right: 0px;
+  bottom: 0px;
+  border-top: 2px solid white;
+  border-left: 2px solid white;
+}
+
+/* Hyperspace - covers the field from view.  */
+main#hyperspace {
+  z-index: 0;
+  position: absolute;
+  display: block;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background: black;
+  cursor: none;
+}
+
+/*-----------------------------------------------------------------------------
+Long-range scan
+-----------------------------------------------------------------------------*/
+
+main#lrsship {
+  z-index: 0;
+  position: absolute;
+  display: block;
+  cursor: none;
+  color: white;
+  background: none;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+}
+
+/*-----------------------------------------------------------------------------
+Attack Computer
+-----------------------------------------------------------------------------*/
+
+main#attackcomputer {
+  z-index: 6;
+  position: absolute;
+  display: block;
+  cursor: none;
+  color: #00ff00;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+main#attackcomputer div.cursor {
+  cursor: none;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+}
+main#attackcomputer div.crosshairHoriz {
+  cursor: none;
+  display: block;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  height: 2px;
+  overflow: hidden;
+}
+main#attackcomputer div.crosshairHoriz div.crosshairHoriz0 {
+  display: block;
+  background: #00ff00;
+  width: 40%;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+main#attackcomputer div.crosshairHoriz div.crosshairHoriz1 {
+  display: block;
+  background: #00ff00;
+  width: 40%;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+main#attackcomputer div.crosshairVert {
+  cursor: none;
+  display: block;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  width: 2px;
+  overflow: hidden;
+}
+main#attackcomputer div.crosshairVert div.crosshairVert0 {
+  display: block;
+  background: #00ff00;
+  height: 33%;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+}
+main#attackcomputer div.crosshairVert div.crosshairVert1 {
+  display: block;
+  background: #00ff00;
+  height: 33%;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+main#attackcomputer div.direction {
+  display: block;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  color: #00ff00;
+}

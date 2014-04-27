@@ -1,0 +1,39 @@
+{
+
+  // node-webkit information
+  "main": "index.html",
+  "window": {
+    "title": "XSR1",
+    "toolbar": false,
+    "fullscreen": true
+  },
+  "webkit": {
+    "page-cache": true
+  },
+
+  // general package information
+  "name": "xsr1-game",
+  "description":
+  "A clone of the classic Atari Star Raiders.",
+  "version": "0.1.1",
+  "keywords": ["game", "action", "node-webkit"],
+  "maintainers": [
+    {
+      "name": "Alan Manuel K. Gloria",
+      "email": "almkglor@gmail.com"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Alan Manuel K. Gloria",
+      "email": "almkglor@gmail.com"
+    }
+  ],
+  "bugs": "mailto:almkglor@gmail.com",
+  "licenses": [
+    {
+      "type": "GPLv3+",
+      "url": "http://www.gnu.org/licenses/gpl.txt"
+    }
+  ]
+}
