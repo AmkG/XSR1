@@ -26,8 +26,8 @@
  * for the JavaScript code in this page.
  *
  */
-define(['signal','resize','warpCosts'],
-function(signal , resize , warpCosts) {
+define(['signal','resize','warpCosts','console'],
+function(signal , resize , warpCosts , console) {
 "use strict";
 
 /* Cursor movement speed, in sectors per second.  */
@@ -300,10 +300,44 @@ Model.prototype._canMoveInto = function (s) {
 /* Called to check if starbases are surrounded after
    the enemy moves.  */
 Model.prototype._surroundStarbase = function () {
-    // TODO: when the enemy successfully destroys a starbase,
-    // send a 'nylozDestroyStarbase' message with the sector
-    // number after setting the sector to 2 enemies.
+    var sectors = this.sectors;
+    var s = 0;
+    var isSurrounded = false;
+
+    for (s = 0; s < 128; ++s) {
+        // If not a starbase, skip.
+        if (sectors[s] >= 0) {
+            continue;
+        }
+        // Check if surrounded
+        if (this._isSurrounded(s)) {
+            --sectors[s];
+            if (sectors[s] < -4) {
+                // destroy it.  The Nyloz get two extra ships.
+                sectors[s] = 2;
+                signal.raise('nylozKillStarbase', s);
+            } else {
+                isSurrounded = true;
+            }
+        } else {
+            // reset counter
+            sectors[s] = -1;
+        }
+    }
+    // If surrounded, call our chart.
+    if (isSurrounded) {
+        this.chart._starbaseSurrounded();
+    }
+
     return this;
+};
+/* Check if the sector is surrounded by Nyloz.  */
+Model.prototype._isSurrounded = function (s) {
+    var sectors = this.sectors;
+    return sectors[sectorOffset(s,  0, -1)] > 0 &&
+           sectors[sectorOffset(s,  0,  1)] > 0 &&
+           sectors[sectorOffset(s, -1,  0)] > 0 &&
+           sectors[sectorOffset(s,  1,  0)] > 0;
 };
 /* Called at the start of the game.  */
 Model.prototype.newGame = function (difficulty) {
@@ -467,6 +501,9 @@ function Chart() {
 
     this._state = FIXED;
 
+    /* Set if we already sent a "Starbase destroyed" message.  */
+    this._messagedStarbaseDestroyed = false;
+
     /* DOM nodes.  */
     this._dom = null;
     this._doms = new Array(128);
@@ -563,6 +600,9 @@ Chart.prototype.jumpCost = function () {
 /* Called each clock tick.  */
 Chart.prototype.update = function (seconds) {
     var s;
+    /* Clear the messaging flag.  */
+    this._messagedStarbaseDestroyed = false;
+
     /* If we were just enabled, then update
        from model.  */
     if (this._display && !this._pdisplay && this._state === FIXED) {
@@ -737,9 +777,10 @@ Chart.prototype._starbaseSurrounded = function () {
     }
 };
 /* Called when a starbase is destroyed by Nyloz,
-   triggered by the 'nylozDestroyStarbase' signal.  */
-Chart.prototype.nylozDestroyStarbase = function (s) {
-    if (this._state !== DESTROYED) {
+   triggered by the 'nylozKillStarbase' signal.  */
+Chart.prototype.nylozKillStarbase = function (s) {
+    if (this._state !== DESTROYED && !this._messagedStarbaseDestroyed) {
+        this._messageStarbaseDestroyed = true;
         console.write(
             "<font color=#ff0000><b>STARBASE DESTROYED</b></font>"
         );
@@ -796,7 +837,7 @@ function Galaxy() {
     signal('newGame', this.newGame.bind(this));
     signal('mainMenu', this.mainMenu.bind(this));
     signal('playerDestroyStarbase', this.playerDestroyStarbase.bind(this));
-    signal('nylozDestroyStarbase', this.nylozDestroyStarbase.bind(this));
+    signal('nylozKillStarbase', this.nylozKillStarbase.bind(this));
     signal('killNyloz', this.killNyloz.bind(this));
 
     signal('fix', this.chart.fix.bind(this.chart));
@@ -823,8 +864,8 @@ Galaxy.prototype.playerDestroyStarbase = function () {
     this._m.playerDestroyStarbase();
     return this;
 };
-Galaxy.prototype.nylozDestroyStarbase = function (s) {
-    this.chart.nylozDestroyStarbase(s);
+Galaxy.prototype.nylozKillStarbase = function (s) {
+    this.chart.nylozKillStarbase(s);
     return this;
 };
 Galaxy.prototype.killNyloz = function () {
