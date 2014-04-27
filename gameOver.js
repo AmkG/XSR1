@@ -32,10 +32,16 @@ var console = require('console');
 var engines = require('engines');
 var field = require('field');
 var galaxy = require('galaxy');
+var numStarbases = require('numStarbases');
 var panel = require('panel');
 var shield = require('shield');
 var signal = require('signal');
 var viewControl = require('viewControl');
+
+/* Number of starbases remaining.  */
+var starbasesRemaining = 0;
+/* Number of enemies remaining.  */
+var enemiesRemaining = 0;
 
 /* Figure out the player's rank.  */
 function getRank() {
@@ -47,7 +53,7 @@ function getRank() {
 function toAll(happened, posthumous) {
     console .
     writeWait("IRATAN MISSION CONTROL TO ALL UNITS:") .
-    writeWait("Star Raider 7 " + happened) .
+    writeWait(happened) .
     writeWait(posthumous ? "Posthumous rank is:" : "Rank is:") .
     writeWait("&nbsp; &nbsp; &nbsp; " + getRank()) .
     writeWait("&nbsp").writeWait("&nbsp").writeWait("&nbsp") .
@@ -69,7 +75,7 @@ function shipDestroy() {
 /* Handle being killed by Nyloz.  */
 function deathByNyloz() {
     shipDestroy();
-    toAll("destroyed by Nyloz fire.", true);
+    toAll("Star Rider 7 destroyed by Nyloz fire.", true);
     gameOver();
 }
 
@@ -77,8 +83,43 @@ function gameOver() {
     signal.raise('gameOver');
 }
 
-/* TODO: other game over conditions.  */
+function newGame(difficulty) {
+    starbasesRemaining = numStarbases[difficulty];
+    enemiesRemaining = starbasesRemaining * 9;
+}
+
+function nylozKillStarbase() {
+    --starbasesRemaining;
+    enemiesRemaining += 2; // Nyloz create 2 new ships from the debris
+    checkStarbases();
+}
+function playerDestroyStarbase() {
+    --starbasesRemaining;
+    checkStarbases();
+}
+function checkStarbases() {
+    if (starbasesRemaining === 0) {
+        toAll("Iratan starbases eliminated, Iratan Federation surrenders", false);
+        viewControl.fore();
+        gameOver();
+    }
+}
+function killNyloz() {
+    --enemiesRemaining;
+    if (enemiesRemaining === 0) {
+        toAll("Nyloz navy eliminated, Nyloz Regime surrenders", false);
+        viewControl.fore();
+        gameOver();
+    }
+}
+
+/* TODO: check out-of-energy ship destruction condition.  */
 signal('nylozKillPlayer', deathByNyloz);
+signal('nylozKillStarbase', nylozKillStarbase);
+signal('playerDestroyStarbase', playerDestroyStarbase);
+signal('killNyloz', killNyloz);
+
+signal('newGame', newGame);
 
 return gameOver;
 });
