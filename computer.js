@@ -298,6 +298,7 @@ Attack.prototype.update = function (seconds) {
     if (this._timeStep > 1.0) {
         this._timeStep -= 1.0;
     }
+    /* TODO: Computer lock-on.  */
     return this;
 };
 Attack.prototype.render = function () {
