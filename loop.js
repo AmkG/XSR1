@@ -54,6 +54,7 @@ function mainMenuUpdate(seconds) {
             break;
         case 'HELP':
             window.location.href = 'help.html';
+            loop.enterMainMenu();
             return;
         default:
             loop.enterGameplay(opt);
