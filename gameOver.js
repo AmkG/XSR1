@@ -36,12 +36,15 @@ var numStarbases = require('numStarbases');
 var panel = require('panel');
 var shield = require('shield');
 var signal = require('signal');
+var vars = require('vars');
 var viewControl = require('viewControl');
 
 /* Number of starbases remaining.  */
 var starbasesRemaining = 0;
 /* Number of enemies remaining.  */
 var enemiesRemaining = 0;
+
+var endedFlag = false;
 
 /* Figure out the player's rank.  */
 function getRank() {
@@ -80,12 +83,14 @@ function deathByNyloz() {
 }
 
 function gameOver() {
+    endedFlag = true;
     signal.raise('gameOver');
 }
 
 function newGame(difficulty) {
     starbasesRemaining = numStarbases[difficulty];
     enemiesRemaining = starbasesRemaining * 9;
+    endedFlag = false;
 }
 
 function nylozKillStarbase() {
@@ -113,11 +118,22 @@ function killNyloz() {
     }
 }
 
-/* TODO: check out-of-energy ship destruction condition.  */
+function update() {
+    if (endedFlag) {
+        return;
+    }
+    if (vars.energy.toString() === '0000') {
+        shipDestroy();
+        toAll("Star Rider 7 self-destructed due to lack of energy", true);
+        gameOver();
+    }
+}
+
 signal('nylozKillPlayer', deathByNyloz);
 signal('nylozKillStarbase', nylozKillStarbase);
 signal('playerDestroyStarbase', playerDestroyStarbase);
 signal('killNyloz', killNyloz);
+signal('update', update);
 
 signal('newGame', newGame);
 
