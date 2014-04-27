@@ -44,7 +44,17 @@ var starbasesRemaining = 0;
 /* Number of enemies remaining.  */
 var enemiesRemaining = 0;
 
+/* Set when game ended.  */
 var endedFlag = false;
+
+/* The message and rank to send.  */
+var finalMessage = '';
+var finalRank = '';
+var finalPosthumous = false;
+/* Duration between messages.  */
+var durationMessage = 18.0;
+/* Remaining duration.  */
+var time = 0.0;
 
 /* Figure out the player's rank.  */
 function getRank() {
@@ -54,11 +64,18 @@ function getRank() {
 
 /* Inform all units about the player's failure or victory.  */
 function toAll(happened, posthumous) {
+    finalMessage = happened;
+    finalPosthumous = posthumous;
+    finalRank = getRank();
+    time = 0.0;
+}
+/* Actually send the message.  */
+function sendMessageToAll() {
     console .
     writeWait("IRATAN MISSION CONTROL TO ALL UNITS:") .
-    writeWait(happened) .
-    writeWait(posthumous ? "Posthumous rank is:" : "Rank is:") .
-    writeWait("&nbsp; &nbsp; &nbsp; " + getRank()) .
+    writeWait(finalMessage) .
+    writeWait(finalPosthumous ? "Posthumous rank is:" : "Rank is:") .
+    writeWait("&nbsp; &nbsp; &nbsp; " + finalRank) .
     writeWait("&nbsp").writeWait("&nbsp").writeWait("&nbsp") .
     writeWait("(Press [ESC] to return to main menu)");
 }
@@ -118,14 +135,19 @@ function killNyloz() {
     }
 }
 
-function update() {
+function update(seconds) {
     if (endedFlag) {
-        return;
-    }
-    if (vars.energy.toString() === '0000') {
-        shipDestroy();
-        toAll("Star Rider 7 self-destructed due to lack of energy", true);
-        gameOver();
+        time -= seconds;
+        if (time <= 0.0) {
+            time += durationMessage;
+            sendMessageToAll();
+        }
+    } else {
+        if (vars.energy.toString() === '0000') {
+            shipDestroy();
+            toAll("Star Rider 7 self-destructed due to lack of energy", true);
+            gameOver();
+        }
     }
 }
 
