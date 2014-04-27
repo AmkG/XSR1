@@ -72,7 +72,7 @@ Nyloz Photon Manager
  * to maximize the use of it.
  */
 
-var nylozRefireRate = 0.5;
+var nylozRefireRate = 0.6;
 
 function PhotonManager() {
     // Array of photon objects that will indicate firing.
