@@ -102,6 +102,8 @@ function asmModule(stdlib) {
 }
 var asm = asmModule(window);
 var sectorOffset = asm.sectorOffset;
+var sectorXDiff = asm.sectorXDiff;
+var sectorYDiff = asm.sectorYDiff;
 
 /*-----------------------------------------------------------------------------
 Model of the Galaxy
@@ -129,6 +131,8 @@ function Model() {
 
     /* The enemy target sector.  */
     this._target = 0;
+    /* Scratch space.  */
+    this._ar = [];
 
     /* Player location in x and y coordinates of the map
        as well as the player's sector.  */
@@ -158,8 +162,140 @@ Model.prototype.update = function (seconds) {
 };
 /* Called at each time that the enemy moves.  */
 Model.prototype._enemyMove = function () {
-    // TODO
+    var sectors = this.sectors;
+    var target = this._target;
+    var dateMaj = this.dateMaj;
+    var dateMin = this.dateMin;
+    var ar = this._ar;
+
+    var s = 0; // current sector
+    var sector = 0; // contents of sector
+    var dx = 0; // distance to target, x and y
+    var dy = 0;
+    var adx = 0; // absolute distance to target, x and y
+    var ady = 0;
+    var to_s = 0; // desired destination for a fleet
+
+    var s_begin = 0; // sector we start iterating
+    var s_end = 0; // sector we end iterating
+    var s_step = 0; // direction to iterate
+
+    // Select a new target.  Do this if the current
+    // target is invalid, or randomly change targets
+    if (sectors[target] >= 0 || Math.random() < 0.1) {
+        /* Create a candidate array.  */
+        ar.length = 0;
+        for (s = 0; s < 128; ++s) {
+            if (sectors[s] < 0) {
+                ar.push(s);
+            }
+        }
+        /* No candidates?  Only happens at game end.  */
+        if (ar.length === 0) {
+            return this;
+        }
+        /* Pick a candidate target at random.  */
+        target = this._target = ar[Math.floor(Math.random() * ar.length)];
+        ar.length = 0;
+    }
+
+    // Iterate upwards or downwards at random.
+    if (Math.random() < 0.5) {
+        s_begin = 0;
+        s_end = 128;
+        s_step = 1;
+    } else {
+        s_begin = 127;
+        s_end = -1;
+        s_step = -1;
+    }
+
+    // Go through all sectors and move Nyloz fleets.
+    // We mark already-moved Nyloz fleets by adding
+    // 128
+    for (s = s_begin; s !== s_end; s += s_step) {
+        // Don't move the fleet in the player's sector
+        if (s === this.ps) {
+            continue;
+        }
+        sector = sectors[s];
+        // Make sure it's a Nyloz fleet.
+        if (sector <= 0) {
+            continue;
+        }
+        // Don't move if already moved.
+        if (sector > 128) {
+            continue;
+        }
+        // size-3 and above only move on
+        // dates ending at .00
+        if (sector >= 3 && dateMin !== 0)  {
+            continue;
+        }
+        // size-4 only move on even major
+        // dates.
+        if (sector === 4 && dateMaj % 2 !== 0) { 
+            continue;
+        }
+        // get distance to target
+        dx = sectorXDiff(target, s);
+        dy = sectorYDiff(target, s);
+        adx = Math.abs(dx);
+        ady = Math.abs(dy);
+        // don't move if beside target already
+        if ((adx === 0 && ady === 1) || (adx === 1 && ady === 0)) {
+            continue;
+        }
+        // Go towards the target.
+        if (adx > ady) {
+            // Prioritize going in the X direction.
+            to_s = sectorOffset(s, dx < 0 ? -1 : 1, 0);
+            if (!this._canMoveInto(to_s)) {
+                to_s = sectorOffset(s, 0, dy < 0 ? -1 : 1);
+            }
+        } else {
+            // Prioritize going in the Y direction.
+            to_s = sectorOffset(s, 0, dy < 0 ? -1 : 1);
+            if (!this._canMoveInto(to_s)) {
+                to_s = sectorOffset(s, dx < 0 ? -1 : 1, 0);
+            }
+        }
+        // If the destination to_s is invalid, or just randomly,
+        // go to any open sector beside this sector.
+        if (!this._canMoveInto(to_s) || Math.random() < 0.1) {
+            ar.length = 0;
+            to_s = sectorOffset(s,  0,  1);
+            if (this._canMoveInto(to_s)) ar.push(to_s);
+            to_s = sectorOffset(s,  0, -1);
+            if (this._canMoveInto(to_s)) ar.push(to_s);
+            to_s = sectorOffset(s,  1,  0);
+            if (this._canMoveInto(to_s)) ar.push(to_s);
+            to_s = sectorOffset(s, -1,  0);
+            if (this._canMoveInto(to_s)) ar.push(to_s);
+            if (ar.length === 0) {
+                // Can't move anyway
+                continue;
+            }
+            to_s = ar[Math.floor(Math.random() * ar.length)];
+        }
+
+        // move into the destination
+        sectors[to_s] = sectors[s] + 128; // mark as moved.
+        sectors[s] = 0;
+    }
+
+    // Clear the 128
+    for (s = 0; s < 128; ++s) {
+        if (sectors[s] > 128) {
+            sectors[s] -= 128;
+        }
+    }
+
     return this;
+};
+/* Check if the specified sector can be moved into.  */
+Model.prototype._canMoveInto = function (s) {
+    return !(s === this.ps || this.sectors[s] !== 0);
 };
 /* Called to check if starbases are surrounded after
    the enemy moves.  */
@@ -587,7 +723,7 @@ Chart.prototype.isShown = function () {
    actually enabled and the chart is fixed.  */
 Chart.prototype._modelChange = function () {
     if (this._display && this._state === FIXED) {
-        this._updateFromModel;
+        this._updateFromModel();
     }
     return this;
 };
