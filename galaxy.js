@@ -430,8 +430,6 @@ Model.prototype.playerDestroyStarbase = function () {
         ).write("sectors[ps] = " + sectors[ps]);
     } else {
         sectors[ps] = 0;
-        // TODO: if the current starbase is the Nyloz target,
-        // select a new target.
     }
     return this;
 };
