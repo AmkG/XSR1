@@ -39,6 +39,7 @@ var viewControl = require('viewControl');
 
 /* Figure out the player's rank.  */
 function getRank() {
+    // TODO: implement scoring and ranking.
     return "(ranking not yet implemented)";
 }
 
@@ -76,6 +77,7 @@ function gameOver() {
     signal.raise('gameOver');
 }
 
+/* TODO: other game over conditions.  */
 signal('nylozKillPlayer', deathByNyloz);
 
 return gameOver;
