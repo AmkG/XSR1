@@ -230,5 +230,7 @@ Sector.prototype.update = function () {
     return this;
 };
 
+// TODO: asteroids
+
 return new Sector();
 });
