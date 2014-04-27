@@ -26,8 +26,8 @@
  * for the JavaScript code in this page.
  *
  */
-define(['signal','resize','warpCosts','console'],
-function(signal , resize , warpCosts , console) {
+define(['signal','resize','warpCosts','console','numStarbases'],
+function(signal , resize , warpCosts , console , numStarbases) {
 "use strict";
 
 /* Cursor movement speed, in sectors per second.  */
@@ -354,12 +354,7 @@ Model.prototype.newGame = function (difficulty) {
     var n = 0;
     var valid = false;
 
-    switch (difficulty) {
-    case 'NOVICE':      number = 3; break;
-    case 'PILOT':       number = 4; break;
-    case 'WARRIOR':     number = 5; break;
-    case 'COMMANDER':   number = 6; break;
-    }
+    number = numStarbases[difficulty];
 
     /* Clear map.  */
     for (s = 0; s < 128; ++s) {
