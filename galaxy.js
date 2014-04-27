@@ -182,7 +182,7 @@ Model.prototype._enemyMove = function () {
 
     // Select a new target.  Do this if the current
     // target is invalid, or randomly change targets
-    if (sectors[target] >= 0 || Math.random() < 0.1) {
+    if (sectors[target] >= 0 || Math.random() < 0.05) {
         /* Create a candidate array.  */
         ar.length = 0;
         for (s = 0; s < 128; ++s) {
