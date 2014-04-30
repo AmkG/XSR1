@@ -39,6 +39,7 @@ energy.consume = function (v) {
     if (e < 0.0) {
         e = 0.0;
     }
+    signal.raise('energyConsume', v);
     return this;
 };
 energy.isEmpty = function () {

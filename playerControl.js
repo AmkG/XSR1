@@ -133,6 +133,9 @@ function onUpdate() {
     if (isGameOver) {
         field.pitch = 0;
         field.yaw = 0;
+        chart.movex = 0;
+        chart.movey = 0;
+        photons.fire = false;
         if (keys.key === '\e') {
             loop.enterPause();
         }

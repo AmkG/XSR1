@@ -886,6 +886,9 @@ Galaxy.prototype.getPlayerSectorContents = function () {
 Galaxy.prototype.getPlayerSector = function () {
     return this._m.ps;
 };
+Galaxy.prototype.getDateMaj = function () {
+    return this._m.dateMaj;
+};
 Galaxy.prototype.sectorOffset = sectorOffset;
 
 return new Galaxy();
