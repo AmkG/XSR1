@@ -65,20 +65,20 @@ var m = 0; // Mission completed/aborted, starship deestroyed.
 var mWin = {
     "NOVICE": 80,
     "PILOT": 76,
-    "WARRIOR": 111,
-    "COMMANDER": 60
+    "WARRIOR": 60,
+    "COMMANDER": 111
 };
 var mLost = {
     "NOVICE": 60,
     "PILOT": 60,
-    "WARRIOR": 100,
-    "COMMANDER": 50
+    "WARRIOR": 50,
+    "COMMANDER": 100
 };
 var mDestroyed = {
     "NOVICE": 40,
     "PILOT": 50,
-    "WARRIOR": 90,
-    "COMMANDER": 40
+    "WARRIOR": 40,
+    "COMMANDER": 90
 };
 
 /* Number of opponents destroyed.  */
