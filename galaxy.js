@@ -117,6 +117,9 @@ this.dateMaj and this.dateMin.
 function Model() {
     var i;
 
+    /* If set, game has ended.  */
+    this._gameOver = false;
+
     /* Stardate major and minor date.  */
     this.dateMin = 0;
     this.dateMaj = 0;
@@ -144,6 +147,11 @@ function Model() {
     this.chart = null;
 }
 Model.prototype.update = function (seconds) {
+    // At game end, don't update.
+    if (this._gameOver) {
+        return this;
+    }
+
     this._sec += seconds;
     if (this._sec > 1.0) {
         this._sec -= 1.0;
@@ -354,6 +362,9 @@ Model.prototype.newGame = function (difficulty) {
     var n = 0;
     var valid = false;
 
+    /* Clear _gameOver flag.  */
+    this._gameOver = false;
+
     number = numStarbases[difficulty];
 
     /* Clear map.  */
@@ -440,6 +451,11 @@ Model.prototype.killNyloz = function () {
     } else {
         --sectors[ps];
     }
+    return this;
+};
+/* Called when the game ends.  */
+Model.prototype.gameOver = function () {
+    this._gameOver = true;
     return this;
 };
 
@@ -832,6 +848,7 @@ function Galaxy() {
     signal('playerDestroyStarbase', this.playerDestroyStarbase.bind(this));
     signal('nylozKillStarbase', this.nylozKillStarbase.bind(this));
     signal('killNyloz', this.killNyloz.bind(this));
+    signal('gameOver', this.gameOver.bind(this));
 
     signal('fix', this.chart.fix.bind(this.chart));
 }
@@ -864,6 +881,9 @@ Galaxy.prototype.nylozKillStarbase = function (s) {
 Galaxy.prototype.killNyloz = function () {
     this._m.killNyloz();
     return this;
+};
+Galaxy.prototype.gameOver = function () {
+    this._m.gameOver();
 };
 Galaxy.prototype.getPlayerPosition = function (ar2d) {
     ar2d[0] = this._m.px;
