@@ -29,6 +29,7 @@ define(function (require) {
 
 var computer = require('computer');
 var console = require('console');
+var engines = require('engines');
 var field = require('field');
 var galaxy = require('galaxy');
 var shield = require('shield');
@@ -134,21 +135,110 @@ var teachEngines = new Node();
 teachEngines.text = [
     "Let's start learning about your Engines.",
     "Your Engines let you travel through normal space.",
-    "Use your [0] to [9] keys to control your Engines.",
-    "Now, turn off your engines using [0]."
+    "Your [0] to [9] keys control your Engines speed.",
+    "&nbsp;"
 ];
-teachEngines.nag = "Please press [0] to turn off engines.";
 teachEngines.checkAbort = startNode.checkAbort;
 teachEngines.checkNext = function () {
-    if (field.speed === 0) {
-        return teachEngines0;
+    return teachEngines0;
+};
+
+var teachEngines0 = (function () {
+var i = 0;
+var teachEngines = new Array(10);
+for (i = 0; i < 10; ++i) {
+    teachEngines[i] = new Node();
+    if (i === 0) {
+        teachEngines[i].text = [
+            "Now press [0] to stop your Engines.",
+            "You'll see your velocity or 'V:' go to '00'."
+        ];
+    } else if (i === 1) {
+        teachEngines[i].text = [
+            "Good!  Press [1] to run at the slowest speed setting."
+        ];
+    } else if (i === 2) {
+        teachEngines[i].text = [
+            "At speed [1] and [2], you are moving at very slow speed.",
+            "Although your velocity or 'V:' is '00', you're still moving.",
+            "Watch the stars closely!",
+            "Now press [2] to go to the next speed setting."
+        ];
+    } else if (i === 3) {
+        teachEngines[i].text = [
+            "Good!  Notice the stars are moving very slightly faster.",
+            "For fine control, use [1] and [2] speed settings.",
+            "Now press [3] to go to the next speed setting."
+        ];
+    } else {
+        teachEngines[i].text = [
+            "Good!  Press [" + i + "] to go to the next speed setting."
+        ];
+    }
+    teachEngines[i].nag = "Press [" + i + "] to change your Engines speed.";
+    teachEngines[i].checkAbort = startNode.checkAbort;
+    teachEngines[i].checkNext = (function (i) {
+        return function () {
+            if (engines.getSetSpeed() === i && engines.atTargetSpeed()) {
+                if (i < 9) {
+                    return teachEngines[i + 1];
+                } else {
+                    return returnToNormalEngines;
+                }
+            }
+            return null;
+        };
+    })(i);
+}
+return teachEngines[0];
+})();
+
+var returnToNormalEngines = new Node();
+returnToNormalEngines.text = [
+    "Good!  Now you know how to control your Engines.",
+    "The normal cruise speed is [6], which is at 12 metrons per second",
+    "It is the most energy-efficient speed setting.",
+    "Now press [6] to return to the cruise speed."
+];
+returnToNormalEngines.nag = "Press [6] to return to the cruise speed.";
+returnToNormalEngines.checkAbort = startNode.checkAbort;
+returnToNormalEngines.checkNext = function () {
+    if (engines.getSetSpeed() === 6 && engines.atTargetSpeed()) {
+        return teachAftFore;
     }
     return null;
 };
 
-var teachEngines0 = new Node();
-teachEngines0.text = ["Tutorial TODO."];
-teachEngines0.terminal = true;
+var teachAftFore = new Node();
+teachAftFore.text = [
+    "Good!",
+    "&nbsp;",
+    "Let's start learning about your [A]ft and [F]ore views.",
+    "Press [A] to switch to Aft View."
+];
+teachAftFore.nag = "Press [A] to switch to Aft View.";
+teachAftFore.checkAbort = startNode.checkAbort;
+teachAftFore.checkNext = function () {
+    if (field.display && field.currentView === 'aft') {
+        return discussAft;
+    }
+    return null;
+};
+
+var discussAft = new Node();
+discussAft.text = [
+    "Notice how the stars streak away from you in Aft View.",
+    "The Aft View is like a 'rear-view mirror'.",
+    "&nbsp;"
+];
+discussAft.checkAbort = startNode.checkAbort;
+discussAft.checkNext = function () {
+    return teachFore;
+};
+
+var teachFore = new Node();
+teachFore.text = ["Tutorial TODO."];
+teachFore.terminal = true;
 
 /* The tutorial has been derailed.  */
 var derailed = new Node();
