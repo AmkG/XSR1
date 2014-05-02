@@ -54,6 +54,13 @@ engines.setSpeed(n)
   will saturate to 1.
 - cancels hyperwarp mode.
 
+engines.getSetSpeed()
+- returns the value given to setSpeed().
+
+engines.atTargetSpeed()
+- return true if running at the speed
+  targeted by setSpeed().
+
 engines.hyperwarp(fun)
 - fun is a function to be called when
   speed reaches 100.
@@ -123,6 +130,7 @@ Engines.prototype.initialize = function () {
     this._inhyperspace = false;
     this._warpcb = nullFun;
     this._warpspeed = 0.0;
+    this._speedsetting = 0;
 
     this._curspeed = 0.0;
     this._actualspeed = 0.0;
@@ -162,7 +170,14 @@ Engines.prototype.setSpeed = function (n) {
     this._enerate = rates[n];
     this._warping = false;
     this._warpcb = nullFun;
+    this._speedsetting = n;
     return this;
+};
+Engines.prototype.getSetSpeed = function () {
+    return this._speedsetting;
+};
+Engines.prototype.atTargetSpeed = function () {
+    return this._targetspeed === this._actualspeed;
 };
 Engines.prototype.hyperwarp = function (f) {
     if (this._inhyperspace) {
@@ -172,6 +187,7 @@ Engines.prototype.hyperwarp = function (f) {
     this._enerate = hyperwarprate;
     this._warping = true;
     this._warpcb = f;
+    this._speedsetting = -1;
     return this;
 };
 Engines.prototype.isHyperwarp = function () {
@@ -262,6 +278,7 @@ Engines.prototype._onMainMenu = function () {
     this._warpspeed = 0.0;
     this._warpcb = nullFun;
     this._state = FIXED;
+    this._speedsetting = 6;
     return this;
 };
 Engines.prototype._onNewGame = function () {
