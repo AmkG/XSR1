@@ -204,15 +204,63 @@ returnToNormalEngines.nag = "Press [6] to return to the cruise speed.";
 returnToNormalEngines.checkAbort = startNode.checkAbort;
 returnToNormalEngines.checkNext = function () {
     if (engines.getSetSpeed() === 6 && engines.atTargetSpeed()) {
-        return teachAftFore;
+        return teachTurning;
     }
     return null;
 };
 
+var teachTurning = new Node();
+teachTurning.text = [
+    "Good!  Now let's take your ship for a spin!",
+    "Use the arrow keys [&larr;] and [&rarr;] to turn your ship."
+];
+teachTurning.nag = "Press [&larr;] and [&rarr;] to turn.";
+teachTurning.checkAbort = startNode.checkAbort;
+teachTurning.checkNext = function () {
+    if (field.yaw !== 0) {
+        return discussTurning;
+    }
+    return null;
+};
+
+var discussTurning = new Node();
+discussTurning.text = [
+    "Good!  Now you know how to turn your ship around.",
+    "This is of course vital when chasing and hunting down the Nyloz!",
+    "&nbsp;"
+];
+discussTurning.checkAbort = startNode.checkAbort;
+discussTurning.checkNext = function () {
+    return teachDiveClimb;
+};
+
+var teachDiveClimb = new Node();
+teachDiveClimb.text = [
+    "Now use the arrow keys [&uarr;] and [&darr;] " +
+        "to make your ship dive and climb."
+];
+teachDiveClimb.nag = "Press [&uarr;] and [&darr;] to dive and climb.";
+teachDiveClimb.checkAbort = startNode.checkAbort;
+teachDiveClimb.checkNext = function () {
+    if (field.pitch !== 0) {
+        return discussDiveClimb;
+    }
+    return null;
+};
+
+var discussDiveClimb = new Node();
+discussDiveClimb.text = [
+    "Good!  Notice how [&uarr;] makes you dive (your ship's nose goes down).",
+    "And notice how [&darr;] makes you climb (your ship's nose goes up).",
+    "&nbsp;"
+];
+discussDiveClimb.checkAbort = startNode.checkAbort;
+discussDiveClimb.checkNext = function () {
+    return teachAftFore;
+};
+
 var teachAftFore = new Node();
 teachAftFore.text = [
-    "Good!",
-    "&nbsp;",
     "Let's start learning about your [A]ft and [F]ore views.",
     "Press [A] to switch to Aft View."
 ];
@@ -220,25 +268,53 @@ teachAftFore.nag = "Press [A] to switch to Aft View.";
 teachAftFore.checkAbort = startNode.checkAbort;
 teachAftFore.checkNext = function () {
     if (field.display && field.currentView === 'aft') {
-        return discussAft;
+        return turningAft;
     }
     return null;
 };
 
-var discussAft = new Node();
-discussAft.text = [
+var turningAft = new Node();
+turningAft.text = [
     "Notice how the stars streak away from you in Aft View.",
     "The Aft View is like a 'rear-view mirror'.",
-    "&nbsp;"
+    "&nbsp;",
+    "At high levels, the Nyloz can attack you from behind!",
+    "Good STAR COMMANDER CLASS 1 pilots " +
+        "can quickly dispatch such sneaky foes.",
+    "&nbsp;",
+    "Now try using the arrow keys [&uarr;] [&darr;] [&larr;] [&rarr;]."
 ];
-discussAft.checkAbort = startNode.checkAbort;
-discussAft.checkNext = function () {
-    return teachFore;
+turningAft.nag =
+    "Press the arrow keys [&uarr;] [&darr;] [&larr;] [&rarr;] while in Aft.";
+turningAft.checkAbort = startNode.checkAbort;
+turningAft.checkNext = function () {
+    if (field.display && field.currentView === 'aft' &&
+        (field.pitch !== 0 || field.yaw !== 0)) {
+        return discussTurningAft;
+    }
+    return null;
 };
 
-var teachFore = new Node();
-teachFore.text = ["Tutorial TODO."];
-teachFore.terminal = true;
+var discussTurningAft = new Node();
+discussTurningAft.text = [
+    "Good!  Notice how the direction keys seem to work 'in reverse'.",
+    "That's because the Aft view is like a rear-view mirror.",
+    "Always be aware of which view you're in!",
+    "&nbsp;",
+    "To go back to Fore view, press [F]."
+];
+discussTurningAft.nag = "Press [F] to return to Fore view.";
+discussTurningAft.checkAbort = startNode.checkAbort;
+discussTurningAft.checkNext = function () {
+    if (field.display && field.currentView === 'front') {
+        return teachGalacticChart;
+    }
+    return null;
+};
+
+var teachGalacticChart = new Node();
+teachGalacticChart.text = ["Tutorial TODO."];
+teachGalacticChart.terminal = true;
 
 /* The tutorial has been derailed.  */
 var derailed = new Node();
