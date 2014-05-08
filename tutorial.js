@@ -313,8 +313,89 @@ discussTurningAft.checkNext = function () {
 };
 
 var teachGalacticChart = new Node();
-teachGalacticChart.text = ["Tutorial TODO."];
-teachGalacticChart.terminal = true;
+teachGalacticChart.text = [
+   "Good!",
+   "Right now, you're traveling through normal space.",
+   "It's impossible to travel to other sectors this way.",
+   "We need to use the [G]alactic Chart to see other sectors.",
+   "Press [G] to bring up the [G]alactic Chart."
+];
+teachGalacticChart.nag =
+   "Press [G] to bring up the Galactic Chart.";
+teachGalacticChart.checkAbort = startNode.checkAbort;
+teachGalacticChart.checkNext = function () {
+    if (galaxy.chart.isShown()) {
+        return moveCursorInChart;
+    }
+    return null;
+};
+
+var moveCursorInChart = new Node();
+moveCursorInChart.text = [
+    "Good!  The Galaxy is divided into sectors, as you can see on the chart.",
+    "Notice that some sectors have a &diams; while some have lines.",
+    "&nbsp;",
+    "The &diams; are allied starbases.",
+    "You can dock at starbases to repair and recharge your ship.",
+    "&nbsp;",
+    "The lines are Nyloz ships.",
+    "Sectors with 2 lines have 2 Nyloz ships, 3 lines means 3 ships, " +
+        "and so on.",
+    "&nbsp;",
+    "We'll teach you how to get to them later!",
+    "For now, move the yellow cursor using your arrow keys."
+];
+moveCursorInChart.nag =
+    "Use the arrow keys [&uarr;] [&darr;] [&larr;] [&rarr;] " +
+        "to move the cursor in the Galactic Chart.";
+moveCursorInChart.checkAbort = startNode.checkAbort;
+moveCursorInChart.checkNext = function () {
+    if (galaxy.chart.movex !== 0 || galaxy.chart.movey !== 0) {
+        return discussChart;
+    }
+    return null;
+};
+
+discussChart = new Node();
+discussChart.text = [
+    "As you can see, there are really two yellow cursors.",
+    "The one you can move around is your hyperwarp target.",
+    "The one that stays still is your current sector location.",
+    "&nbsp;",
+    "Your 'TARGETS:' indicator specifies the number of enemies in a sector.",
+    "The Nyloz will continually try to surround allied starbases.",
+    "If an allied starbase is surrounded too long, it will be destroyed!",
+    "For now, the Nyloz have agreed not to move during the tutorial.",
+    "The Nyloz will never move from or into the sector you're in.",
+    "&nbsp;",
+    "Notice the 'STAR DATE:' indicator.",
+    "It indicates how long it has been since your mission started.",
+    "&nbsp;",
+    "Finally, notice the 'DC:' or Damage Control indicator.",
+    "It indicates the status of each ship component.",
+    "Green means OK, yellow means damaged, red means destroyed.",
+    "The components are 'P'hotons, 'E'ngines, 'S'hield, 'C'omputer, " +
+        "'L'ong-range scan, and 'R'adio.",
+    "Components can get damaged if you are hit by Nyloz photons.",
+    "To fix damaged or destroyed components, dock at a starbase.",
+    "&nbsp;",
+    "Let's try docking!",
+    "Point your hyperwarp target at a &diams; sector."
+];
+discussChart.nag =
+    "Point your hyperwarp target at a starbase &diams; sector.";
+discussChart.checkAbort = startNode.checkAbort;
+discussChart.checkNext = function () {
+    if (galaxy.chart.isTargetStarbase()) {
+        return teachHyperwarp;
+    }
+    return null;
+};
+
+var teachHyperwarp = new Node();
+teachHyperwarp.text = ["Tutorial TODO."];
+teachHyperwarp.terminal = true;
+
 
 /* The tutorial has been derailed.  */
 var derailed = new Node();

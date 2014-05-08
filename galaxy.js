@@ -593,6 +593,13 @@ Chart.prototype.targets = function () {
         return sectors[s].toString();
     }
 };
+/* Query if the targeted sector is a starbase.  Used by the
+   tutorial.  */
+Chart.prototype.isTargetStarbase = function () {
+    var sectors = this._m.sectors;
+    var s = sectorOffset(0, Math.floor(this._cx), Math.floor(this._cy));
+    return (sectors[s] < 0);
+};
 /* Query cost of jump.  */
 Chart.prototype.jumpCost = function () {
     var cost = warpCosts(this._m.px, this._m.py, this._cx, this._cy);
