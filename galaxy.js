@@ -137,6 +137,9 @@ function Model() {
     /* Scratch space.  */
     this._ar = [];
 
+    /* Set if the player is playing the tutorial mission.  */
+    this._tutorial = false;
+
     /* Player location in x and y coordinates of the map
        as well as the player's sector.  */
     this.px = 0.0;
@@ -170,6 +173,10 @@ Model.prototype.update = function (seconds) {
 };
 /* Called at each time that the enemy moves.  */
 Model.prototype._enemyMove = function () {
+    /* In tutorial mode, don't move the Nyloz.  */
+    if (this._tutorial) {
+        return this;
+    }
     var sectors = this.sectors;
     var target = this._target;
     var dateMaj = this.dateMaj;
@@ -456,6 +463,15 @@ Model.prototype.killNyloz = function () {
 /* Called when the game ends.  */
 Model.prototype.gameOver = function () {
     this._gameOver = true;
+    return this;
+};
+/* Called to enter and exit tutorial mode.  */
+Model.prototype.startTutorial = function () {
+    this._tutorial = true;
+    return this;
+};
+Model.prototype.endTutorial = function () {
+    this._tutorial = false;
     return this;
 };
 
@@ -856,6 +872,8 @@ function Galaxy() {
     signal('nylozKillStarbase', this.nylozKillStarbase.bind(this));
     signal('killNyloz', this.killNyloz.bind(this));
     signal('gameOver', this.gameOver.bind(this));
+    signal('startTutorial', this.startTutorial.bind(this));
+    signal('endTutorial', this.endTutorial.bind(this));
 
     signal('fix', this.chart.fix.bind(this.chart));
 }
@@ -891,6 +909,14 @@ Galaxy.prototype.killNyloz = function () {
 };
 Galaxy.prototype.gameOver = function () {
     this._m.gameOver();
+};
+Galaxy.prototype.startTutorial = function () {
+    this._m.startTutorial();
+    return this;
+};
+Galaxy.prototype.endTutorial = function () {
+    this._m.endTutorial();
+    return this;
 };
 Galaxy.prototype.getPlayerPosition = function (ar2d) {
     ar2d[0] = this._m.px;
