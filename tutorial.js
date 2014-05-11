@@ -32,6 +32,7 @@ var console = require('console');
 var engines = require('engines');
 var field = require('field');
 var galaxy = require('galaxy');
+var hyperwarp = require('hyperwarp');
 var shield = require('shield');
 var signal = require('signal');
 
@@ -55,6 +56,9 @@ Node.prototype.terminal = false;
 /*-----------------------------------------------------------------------------
 Tutorial Data
 -----------------------------------------------------------------------------*/
+
+// temporary array for 3d points
+var ar3d = [0.1, 0.1, 0.1];
 
 var startNode = new Node();
 startNode.text = [
@@ -387,15 +391,119 @@ discussChart.nag =
 discussChart.checkAbort = startNode.checkAbort;
 discussChart.checkNext = function () {
     if (galaxy.chart.isTargetStarbase()) {
+        return prepareTeachHyperwarp;
+    }
+    return null;
+};
+
+var prepareTeachHyperwarp = new Node();
+prepareTeachHyperwarp.text = [
+    "Okay!  Don't move it away!  Switch to [F]ore view."
+];
+prepareTeachHyperwarp.nag =
+    "Press [F] to switch to [F]ore view.";
+prepareTeachHyperwarp.checkAbort = startNode.checkAbort;
+prepareTeachHyperwarp.checkNext = function () {
+    if (field.display && field.currentView === 'front') {
         return teachHyperwarp;
     }
     return null;
 };
 
 var teachHyperwarp = new Node();
-teachHyperwarp.text = ["Tutorial TODO."];
-teachHyperwarp.terminal = true;
+teachHyperwarp.text = [
+    "Now press [H] to engage your hyperwarp engines!"
+];
+teachHyperwarp.nag = "Press [H] to engage hyperwarp.";
+teachHyperwarp.checkAbort = function () {
+    if (engines.isHyperwarp()) {
+        return waitHyperwarp;
+    }
+    return null;
+};
 
+var waitHyperwarp = new Node();
+waitHyperwarp.text = [
+    "Whee!!  Keep the cursor centered!"
+];
+waitHyperwarp.checkAbort = function () {
+    if (hyperwarp.inHyperspace()) {
+        return inHyperspace;
+    } else if (!engines.isHyperwarp()){
+        return retryHyperwarp;
+    }
+    return null;
+};
+
+// If the player disengages from hyperwarp.
+var retryHyperwarp = new Node();
+retryHyperwarp.text = [
+    "Oops!  Don't cancel hyperwarp!",
+    "Pressing [H] multiple times or pressing an engine key aborts hyperwarp.",
+    "Press [H] <em>now</em> to re-engage hyperwarp engines."
+];
+retryHyperwarp.nag = teachHyperwarp.nag;
+retryHyperwarp.checkAbort = teachHyperwarp.checkAbort;
+
+var inHyperspace = new Node();
+inHyperspace.checkAbort = function () {
+    if (!hyperwarp.inHyperspace()) {
+        if (galaxy.getPlayerSectorContents() <= -1) {
+            if (computer.attack.isEnabled()) {
+                return teachDocking;
+            } else {
+                return enableComputerBeforeTeachDocking;
+            }
+        } else {
+            return derailed;
+        }
+    }
+    return null;
+};
+
+var enableComputerBeforeTeachDocking = new Node();
+enableComputerBeforeTeachDocking.text = [
+    "You need the Attack Computer to help locate starbases.  Turn it on."
+];
+enableComputerBeforeTeachDocking.nag =
+   "Press [C] to turn on the Attack Computer.";
+enableComputerBeforeTeachDocking.checkAbort = function () {
+    if (galaxy.getPlayerSectorContents() > -1) {
+        return derailed;
+    }
+    return null;
+};
+enableComputerBeforeTeachDocking.checkNext = function () {
+    if (computer.attack.isEnabled()) {
+        return teachDocking;
+    }
+    return null;
+};
+
+var teachDocking = new Node();
+teachDocking.text = [
+    "Okay!  You're in a sector with a starbase.",
+    "Notice that your Attack Computer is indicating a direction.",
+    "Turn in that direction to turn towards the starbase."
+];
+teachDocking.checkAbort = function () {
+    if (galaxy.getPlayerSectorContents() > -1) {
+        return derailed;
+    }
+    return null;
+};
+teachDocking.checkNext = function () {
+    field.getBogeyPosition(0, ar3d);
+    if (Math.abs(ar3d[0] < 0.5) && (Math.abs(ar3d[1]) < 0.5) &&
+        ar3d[2] >= 0.0) {
+        return dockWithStarbase;
+    }
+    return null;
+};
+
+var dockWithStarbase = new Node();
+dockWithStarbase.text = ['Tutorial TODO.'];
+dockWithStarbase.terminal = true;
 
 /* The tutorial has been derailed.  */
 var derailed = new Node();
