@@ -229,11 +229,7 @@ Engines.prototype.update = function (seconds) {
     } else if (this._state === DAMAGED) {
         this._actualspeed = this._curspeed * Math.random();
     } else {
-        this._curspeed = this._curspeed * 0.1;
-        if (this._curspeed >= 1.5625) {
-            this._curspeed = 1.5625;
-        }
-        this._actualspeed = this._curspeed;
+        this._actualspeed = this._curspeed * 0.1;
     }
 
     /* Update warp engines.  */
