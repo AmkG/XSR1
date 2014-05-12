@@ -712,7 +712,7 @@ Chart.prototype.render = function () {
     sz = Math.floor(resize.scale / 8);
     /* Upper-left corner.  */
     x = resize.cenx - sz * 8;
-    y = resize.ceny - sz * 4;
+    y = resize.ceny - sz * 4 - sz * 2;
 
     /* Update if needed.  */
     if (this._domRefresh ||
