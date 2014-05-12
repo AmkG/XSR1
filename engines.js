@@ -108,7 +108,7 @@ var rates = [
     11.25,
     15.0
 ];
-var hyperwarprate = 18.0;
+var hyperwarprate = 15.5;
 
 var acceleration = 15.0;
 
