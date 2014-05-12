@@ -418,7 +418,7 @@ Pilot.prototype._think = function (pos) {
             // far enough away.
             this._state = IDLE;
             engines.setZ(0).setDir(NONE);
-        } else if (dist <= 120.0 || Math.random () < 0.3) {
+        } else if (dist <= 120.0 || Math.random () < 0.15) {
             // player caught up with us, or we got bored
             // escaping, so attack.
             this._state = ATTACK;
