@@ -484,11 +484,17 @@ var teachDocking = new Node();
 teachDocking.text = [
     "Okay!  You're in a sector with a starbase.",
     "Notice that your Attack Computer is indicating a direction.",
-    "Turn in that direction to turn towards the starbase."
+    "Turn in that direction to turn towards the starbase.",
+    "Keep your Engines at [0] for now!"
 ];
+teachDocking.nag =
+    "Follow the Attack Computer direction to center the starbase.";
 teachDocking.checkAbort = function () {
     if (galaxy.getPlayerSectorContents() > -1) {
         return derailed;
+    }
+    if (field.speed !== 0.0) {
+        return teachDockingEnsure0;
     }
     return null;
 };
@@ -496,7 +502,49 @@ teachDocking.checkNext = function () {
     field.getBogeyPosition(0, ar3d);
     if (Math.abs(ar3d[0] < 0.5) && (Math.abs(ar3d[1]) < 0.5) &&
         ar3d[2] >= 0.0) {
-        return dockWithStarbase;
+        return teachLRS;
+    }
+    return null;
+};
+
+var teachDockingEnsure0 = new Node();
+teachDockingEnsure0.text = [
+    "Hold your horses!  Press [0] to keep your Engines at full stop."
+];
+teachDockingEnsure0.nag =
+    "Press [0] to keep your Engines at full stop.";
+teachDockingEnsure0.checkAbort = function () {
+    if (galaxy.getPlayerSectorContents() > -1) {
+        return derailed;
+    }
+    return null;
+};
+teachDockingEnsure0.checkNext = function () {
+    if (field.speed === 0.0) {
+        return teachDocking;
+    }
+    return null;
+};
+
+var teachLRS = new Node();
+teachLRS.text = [
+    "Good!  Now's a good time to teach you about the LRS.",
+    "The LRS or Long-Range Scan gives you " +
+        "a &quot;bird&apos;s eye view&quot; of your ship.",
+    "It's a useful navigation aid if your Attack Computer is destroyed.",
+    "Press [L] to enable your Long-Range Scan."
+];
+teachLRS.nag =
+    "Press [L] to enable your Long-Range Scan.";
+teachLRS.checkAbort = function () {
+    if (galaxy.getPlayerSectorContents() > -1) {
+        return derailed;
+    }
+    return null;
+};
+teachLRS.checkNext = function () {
+    if (field.display && field.currentView === 'lrs') {
+        // TODO;
     }
     return null;
 };
