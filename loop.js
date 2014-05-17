@@ -25,15 +25,16 @@
  * for the JavaScript code in this page.
  *
  */
-define( ['signal', 'keys', 'field', 'menu', 'engines', 'console', 'label'],
-function (signal ,  keys ,  field ,  menu ,  engines ,  console ,  label) {
+define( ['signal','keys','field','menu','engines','console','label','tutorial'],
+function (signal , keys , field , menu , engines , console , label , tutorial) {
 "use strict";
 
 /*-----------------------------------------------------------------------------
 Main Menu
 -----------------------------------------------------------------------------*/
 
-var menuItems = ['NOVICE', 'PILOT', 'WARRIOR', 'COMMANDER', 'HELP'];
+var menuItems = [/*'TUTORIAL', */'NOVICE', 'PILOT', 'WARRIOR', 'COMMANDER',
+    'HELP'];
 if (typeof process !== 'undefined') {
     menuItems.push('EXIT');
 }
@@ -55,6 +56,10 @@ function mainMenuUpdate(seconds) {
         case 'HELP':
             window.location.href = 'help.html';
             loop.enterMainMenu();
+            return;
+        case 'TUTORIAL':
+            loop.enterGameplay('NOVICE');
+            signal.raise('startTutorial');
             return;
         default:
             loop.enterGameplay(opt);

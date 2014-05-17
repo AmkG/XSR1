@@ -418,7 +418,7 @@ Pilot.prototype._think = function (pos) {
             // far enough away.
             this._state = IDLE;
             engines.setZ(0).setDir(NONE);
-        } else if (dist <= 120.0 || Math.random () < 0.3) {
+        } else if (dist <= 120.0 || Math.random () < 0.15) {
             // player caught up with us, or we got bored
             // escaping, so attack.
             this._state = ATTACK;
@@ -460,11 +460,11 @@ Pilot.prototype._think = function (pos) {
         if (!this._shootFromBehind && pos[2] < 0.0) {
             // Can't shoot from behind, so get in front.
             engines.setZ(1).setDir(ZP);
-        } else if (dist > 400.0 && (Math.random() < 0.1)) {
+        } else if (dist > 240.0 && (Math.random() < 0.2)) {
             // Randomly escape or idle
             this._state = (Math.random() < 0.5) ? IDLE : ESCAPE;
             engines.setZ(0).setDir(0);
-        } else if (dist > 40.0) {
+        } else if (dist > 50.0) {
             // Try to approach.
             engines.setZ(
                 pos[2] > 0.0 ? -1 : 1

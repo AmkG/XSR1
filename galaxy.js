@@ -117,6 +117,9 @@ this.dateMaj and this.dateMin.
 function Model() {
     var i;
 
+    /* If set, game has ended.  */
+    this._gameOver = false;
+
     /* Stardate major and minor date.  */
     this.dateMin = 0;
     this.dateMaj = 0;
@@ -134,6 +137,9 @@ function Model() {
     /* Scratch space.  */
     this._ar = [];
 
+    /* Set if the player is playing the tutorial mission.  */
+    this._tutorial = false;
+
     /* Player location in x and y coordinates of the map
        as well as the player's sector.  */
     this.px = 0.0;
@@ -144,6 +150,11 @@ function Model() {
     this.chart = null;
 }
 Model.prototype.update = function (seconds) {
+    // At game end, don't update.
+    if (this._gameOver) {
+        return this;
+    }
+
     this._sec += seconds;
     if (this._sec > 1.0) {
         this._sec -= 1.0;
@@ -162,6 +173,10 @@ Model.prototype.update = function (seconds) {
 };
 /* Called at each time that the enemy moves.  */
 Model.prototype._enemyMove = function () {
+    /* In tutorial mode, don't move the Nyloz.  */
+    if (this._tutorial) {
+        return this;
+    }
     var sectors = this.sectors;
     var target = this._target;
     var dateMaj = this.dateMaj;
@@ -354,6 +369,9 @@ Model.prototype.newGame = function (difficulty) {
     var n = 0;
     var valid = false;
 
+    /* Clear _gameOver flag.  */
+    this._gameOver = false;
+
     number = numStarbases[difficulty];
 
     /* Clear map.  */
@@ -440,6 +458,20 @@ Model.prototype.killNyloz = function () {
     } else {
         --sectors[ps];
     }
+    return this;
+};
+/* Called when the game ends.  */
+Model.prototype.gameOver = function () {
+    this._gameOver = true;
+    return this;
+};
+/* Called to enter and exit tutorial mode.  */
+Model.prototype.startTutorial = function () {
+    this._tutorial = true;
+    return this;
+};
+Model.prototype.endTutorial = function () {
+    this._tutorial = false;
     return this;
 };
 
@@ -577,6 +609,13 @@ Chart.prototype.targets = function () {
         return sectors[s].toString();
     }
 };
+/* Query if the targeted sector is a starbase.  Used by the
+   tutorial.  */
+Chart.prototype.isTargetStarbase = function () {
+    var sectors = this._m.sectors;
+    var s = sectorOffset(0, Math.floor(this._cx), Math.floor(this._cy));
+    return (sectors[s] < 0);
+};
 /* Query cost of jump.  */
 Chart.prototype.jumpCost = function () {
     var cost = warpCosts(this._m.px, this._m.py, this._cx, this._cy);
@@ -673,7 +712,7 @@ Chart.prototype.render = function () {
     sz = Math.floor(resize.scale / 8);
     /* Upper-left corner.  */
     x = resize.cenx - sz * 8;
-    y = resize.ceny - sz * 4;
+    y = resize.ceny - sz * 4 - sz * 2;
 
     /* Update if needed.  */
     if (this._domRefresh ||
@@ -832,6 +871,9 @@ function Galaxy() {
     signal('playerDestroyStarbase', this.playerDestroyStarbase.bind(this));
     signal('nylozKillStarbase', this.nylozKillStarbase.bind(this));
     signal('killNyloz', this.killNyloz.bind(this));
+    signal('gameOver', this.gameOver.bind(this));
+    signal('startTutorial', this.startTutorial.bind(this));
+    signal('endTutorial', this.endTutorial.bind(this));
 
     signal('fix', this.chart.fix.bind(this.chart));
 }
@@ -863,6 +905,17 @@ Galaxy.prototype.nylozKillStarbase = function (s) {
 };
 Galaxy.prototype.killNyloz = function () {
     this._m.killNyloz();
+    return this;
+};
+Galaxy.prototype.gameOver = function () {
+    this._m.gameOver();
+};
+Galaxy.prototype.startTutorial = function () {
+    this._m.startTutorial();
+    return this;
+};
+Galaxy.prototype.endTutorial = function () {
+    this._m.endTutorial();
     return this;
 };
 Galaxy.prototype.getPlayerPosition = function (ar2d) {
