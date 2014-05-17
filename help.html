@@ -2,7 +2,7 @@
 <html lang=en>
 <head>
 <meta charset=utf-8>
-<title>XSR1</title>
+<title>Manual - XSR1</title>
 <link rel=stylesheet type=text/css href=help.css>
 <script src='extern-nw.js'></script>
 </head>
@@ -185,7 +185,7 @@ Pressing the left button
 turns your ship to port
 (left side of the ship facing forward).
 Pressing the right button
-turns your ship to starbase
+turns your ship to starboard
 (right side of the ship facing forward).
 </p>
 <!-- TODO: some kind of example indicator -->
@@ -193,6 +193,827 @@ turns your ship to starbase
 the <strong>front view</strong> of the ship.
 When using the <strong>aft</strong> view,
 directions are reversed.
+</p>
+</section>
+
+<section id='controls' name='controls'>
+<h1>Control Keys</h1>
+<p>
+The Star Rider controls are mapped
+onto a standard keyboard.
+These controls mimic the operation and location
+of actual control buttons on a Star Rider fighter.
+</p>
+<p><table class=keycontrol>
+<tr>
+  <td class=key>0-9</td>
+  <td class=control>Twin Pulsed-Ion Engine Control.<br>Also aborts hyperwarp.</td>
+</tr>
+<tr>
+  <td class=key>A</td>
+  <td class=control>Aft View</td>
+</tr>
+<tr>
+  <td class=key>C</td>
+  <td class=control>Attack Computer Enable/Disable</td>
+</tr>
+<tr>
+  <td class=key>F</td>
+  <td class=control>Fore View</td>
+</tr>
+<tr>
+  <td class=key>G</td>
+  <td class=control>Galactic Chart View</td>
+</tr>
+<tr>
+  <td class=key>H</td>
+  <td class=control>Hyperwarp Engines Engage/Disengage</td>
+</tr>
+<tr>
+  <td class=key>L</td>
+  <td class=control>Long-Range Scan View</td>
+</tr>
+<tr>
+  <td class=key>M</td>
+  <td class=control>Manual Target Switching</td>
+</tr>
+<tr>
+  <td class=key>S</td>
+  <td class=control>Shield Enable/Disable</td>
+</tr>
+<tr>
+  <td class=key>T</td>
+  <td class=control>Auto-Tracking Enable/Disable</td>
+</tr>
+<tr>
+  <td class=key>P/[Esc]</td>
+  <td class=control>Pause Simulation</td>
+</tr>
+</table></p>
+<p>
+In addition, the <strong>space bar</strong> serves
+as your Photon fire button.
+Holding the <strong>space bar</strong> down
+causes your simulated Star Rider to fire
+at maximum rate.
+</p>
+
+<h2 id='enginecontrol'>Twin Pulsed-Ion Engines Control (0-9)</h2>
+<p>
+The Twin Pulsed-Ion engines are used
+to maneuver your Star Rider within a sector
+while pursuing or evading the enemy.
+Use these keys to select the velocity or speed
+at which your domination fighter travels.
+The corresponding speed is displayed
+as the <strong>V:</strong> indicator on your panel.
+</p>
+<p>
+Your ship always moves forward.
+The optimum cruise speed is key 6 (V: 12).
+Nyloz starships have a maximum speed slightly less than 7 (V: 25).
+</p>
+<p><table class=keycontrol>
+<tr> <td class=key>0</td> <td class=control>V: 00</td> </tr>
+<tr> <td class=key>1</td> <td class=control>V: 00</td> </tr>
+<tr> <td class=key>2</td> <td class=control>V: 00</td> </tr>
+<tr> <td class=key>3</td> <td class=control>V: 01</td> </tr>
+<tr> <td class=key>4</td> <td class=control>V: 03</td> </tr>
+<tr> <td class=key>5</td> <td class=control>V: 06</td> </tr>
+<tr> <td class=key>6</td> <td class=control>V: 12</td> </tr>
+<tr> <td class=key>7</td> <td class=control>V: 25</td> </tr>
+<tr> <td class=key>8</td> <td class=control>V: 37</td> </tr>
+<tr> <td class=key>9</td> <td class=control>V: 43</td> </tr>
+</table></p>
+
+<h2 id='aftview'>Aft View (A)</h2>
+<p>Shows view of space behind your fighter.
+When in this view, photons are fired backwards.</p>
+
+<h2 id='attackcomputer'>Attack Computer Enable/Disable (C)</h2>
+<p>
+Enables or disables the Attack Computer.
+The Attack Computer projects crosshairs in the Fore and Aft View.
+It also predicts the approximate visible location of objects
+beyond normal human viewing range,
+and projects a spinning cursor in the predicted location.
+</p>
+<p>
+Whether or not the Attack Computer is enabled,
+your on-board Instruments Computer will update
+the vertical (<strong>&theta;:</strong>),
+the horizontal (<strong>&Phi;:</strong>),
+and the range (<strong>R:</strong>)
+indicators on your panel
+to match the readings from your instruments.
+These indicate the position of attacking Nyloz starships
+and allied starbases in the same sector
+relative to your Star Rider.
+</p>
+<h2 id='frontview'>Front View (F)</h2>
+<p>Shows view of space in front of your fighter.</p>
+<h2 id='galacticchart'>Galactic Chart View (G)</h2>
+<p>
+The Galactic Chart is a vital tool
+in your mission.
+It gives you an overview of the sectors
+in the relevant octant of the galaxy
+under threat of Nyloz invasion.
+Sectors may contain a Nyloz starship group,
+a friendly allied Iratan starbase,
+or nothing at all.
+</p>
+<!-- TODO: Image for Galactic Chart. -->
+<p>
+On the Galactic Chart,
+sectors with <strong>&diams;</strong>
+contain a friendly starbase
+where you can dock
+to repair and refuel your fighter.
+Sectors with lines contain a number of
+Nyloz starships.
+</p>
+<p>
+There are also two yellow dots
+on the Galactic Chart.
+One of these indicates your current position,
+while the other dot
+(which you can control via the Direction Control Pad)
+indicates your hyperwarp target.
+</p>
+<p>
+To travel to another sector,
+move the hyperwarp target dot
+to the target sector
+and then <a href='#hyperwarp'>"hyperwarp"</a> into that sector.
+</p>
+<p>
+It is vital to your mission to frequently check the Galactic Chart.
+It not only indicates the progress of your mission
+to eliminate the Nyloz threat,
+it also shows enemy force movements.
+The Nyloz will move around the octant
+in an effort
+to surround and destroy starbases.
+Fortunately, the Nyloz will always focus
+on only one starbase at a time.
+They will not attempt to scatter to attack
+multiple starbases.
+</p>
+<p>
+Groups of Nyloz starships
+move at different speeds
+based on their size.
+Groups of 1 or 2 ships move fastest.
+Groups of 3 move at half that.
+Groups of 4 move at approximately 1/8
+the speed
+of groups of 1 or 2.
+</p>
+<p>
+When a starbase is surrounded,
+you will receive a message
+via your Sub-Space Radio.
+You have about 2 minutes
+(to be precise 150 centons)
+to save the starbase.
+A starbase is surrounded
+if all 4 sectors directly beside it
+have Nyloz starship groups.
+</p>
+<!-- TODO: example image of surrounded starbase. -->
+<p>
+To prevent destruction
+of the allied Irata starbase,
+you must clear
+at least one sector beside it
+of Nyloz starships.
+</p>
+<p>
+It is imperative to <em>stop</em> the Nyloz
+from destroying starbases.
+If all starbases in the mission
+have been destroyed,
+you will be considered as having failed the mission.
+</p>
+<p>
+Aside from the enemy disposition,
+the Galactic Chart View
+displays additional information.
+As you move the hyperwarp target dot,
+the amount of energy needed to hyperwarp
+is displayed by the
+<strong>WARP ENERGY:</strong> indicator.
+In addition, the number of enemy targets
+that occupy the target sector is displayed
+by the <strong>TARGETS:</strong> indicator.
+</p>
+<p>
+The <strong>STAR DATE:</strong> indicator
+shows the elapsed time during a mission.
+It is based on units called centons.
+The Nyloz will only move
+on a <strong>STAR DATE:</strong>
+ending in .50 or .00.
+</p>
+<p>
+Finally, there is the damage control or
+<strong>DC:</strong> indicator.
+It's shown as <strong>DC:PESCLR</strong>.
+Each letter corresponds
+to various components
+of your ship.
+</p>
+<!-- TODO: image of damage control -->
+<p><table class=keycontrol>
+<tr>
+  <td class=key>P</td>
+  <td class=control>Photons</td>
+</tr>
+<tr>
+  <td class=key>E</td>
+  <td class=control>Engines</td>
+</tr>
+<tr>
+  <td class=key>S</td>
+  <td class=control>Shield</td>
+</tr>
+<tr>
+  <td class=key>C</td>
+  <td class=control>Computer</td>
+</tr>
+<tr>
+  <td class=key>L</td>
+  <td class=control>Long-Range Scan</td>
+</tr>
+<tr>
+  <td class=key>R</td>
+  <td class=control>Sub-Space Radio</td>
+</tr>
+</table></p>
+<p>
+The status of each component is defined
+by the color of its letter.
+A green letter indicates a fully working component.
+A yellow letter indicates a damaged component
+while a red letter indicates a completely destroyed component.
+</p>
+<p>
+The engines will still work even after they have been destroyed
+thanks to a backup pseudo-pulse system,
+although progress will be very slow.
+The shields will flicker when damaged,
+and if you are hit by Nyloz photons
+while the shield happens to have flickered off,
+your fighter will be destroyed.
+When the computer is damaged,
+coordinate information
+<strong>&theta;:</strong>, <strong>&Phi;:</strong>, and <strong>R:</strong>
+is not updated.
+When the computer is destroyed,
+no computer functions
+will operate.
+If the Long-Range Scan is damaged,
+it will show a mirrored image in addition
+to the normal image of the sector scan
+(see the section on <a href='#longrangescan'>Long-Range Scan</a>).
+</p>
+
+<h2 id='hyperwarp'>Hyperwarp Engines Engage/Disengage (H)</h2>
+<p>
+You must engage hyperwarp in order to move
+from one sector to another.
+First, switch to the <a href='#galacticchart'>Galactic Chart View</a>
+and use the Direction Control Pad
+to move your hyperwarp target cursor
+to the desired sector.
+Then turn to the <a href='#frontview'>Fore View</a>
+and engage hyperwarp by pressing the 'H' key.
+</p>
+<p>
+In <strong>NOVICE</strong> level,
+there is no need to steer while in hyperwarp.
+However,
+in <strong>PILOT</strong>, <strong>WARRIOR</strong>,
+and <strong>COMMANDER</strong> levels,
+you must steer in hyperwarp.
+When hyperwarp is engaged,
+a hyperwarp target marker is displayed
+on your front view.
+</p>
+<!-- TODO: hyperwarp marker -->
+<p>
+Use the Direction Control Pad
+to keep the hyperwarp target marker centered
+as closely as possible.
+Enabling the Attack Computer
+will assist you greatly
+in determining the center.
+If you get too far out of alignment,
+you will end up in the wrong sector.
+</p>
+<p>
+A red warning will be displayed
+if you enter a sector
+with enemy Nyloz starships.
+</p>
+<p>
+The closer your cursor is to the center,
+the closer you will be to your target sector.
+You can abort hyperwarp
+by pressing any of the Engine control keys
+or by pressing 'H' again.
+</p>
+<p>
+As hyperwarp will accelerate you into hyperspace,
+it can be used as a quick escape
+in emergencies
+as well as for travel through normal space
+if your main engines are destroyed.
+</p>
+
+<h2 id='longrangescan'>Long-Range Scan View (L)</h2>
+<p>
+Shows you a top view of the sector
+you are currently in.
+Your Star Rider fighter
+will be located in the center
+and all other objects in the sector
+rotate around it.
+Any Nyloz starships or starbases
+will be identified and appear
+in the Long-Range Scan.
+</p>
+<p>
+A simple way to use the Long-Range Scan is:
+</p>
+<p><ol>
+  <li>Select a target.</li>
+  <li>Push the Direction Control Pad's left button
+      (which causes all objects to rotate around you)
+      until the target is directly in front of your fighter.</li>
+  <li>Push the Direction Control Pad's up or down button
+      so that the target is as far away from you as possible.
+      Which you should press (up or down) depends on which one
+      moves the target away from you.</li>
+  <li>Use the engines to approach the target.</li>
+  <li>Stop and make course corrections as you approach
+      your target.
+      Repeat steps 2 to 4 if necessary.</li>
+  <li>When the target is close to your ship, stop the engines.
+      The target should now be visible in the front view.</li>
+</ol></p>
+<!-- TODO: LRS example -->
+<p>
+If you cannot find the target on the Long-Range Scan at all,
+and you know the target is immobile
+in the sector
+(for example a starbase or an evading Nyloz ship),
+use the following procedure:
+</p>
+<p><ol>
+  <li>Push the Direction Control Pad's down button
+      until you've performed a 180-degree turn,
+      or you've located the target
+      on the Long-Range Scan.
+      Use the stars as a guide to how much you've turned.</li>
+  <li>Push the Direction Control Pad's left button
+      until you've performed a 90-degree turn.
+      Again, use the stars as a guide.
+      If a star is to your ship's right, for example,
+      you know you've made a 90-degree turn if it ends up
+      behind you.
+      Try to make a precise 90-degree turn here.</li>
+  <li>Push the Direction Control Pad's down button again,
+      and make another 180-degree turn.
+      The target should appear on this turn if it didn't
+      already appear in the previous turnings.</li>
+  <li>Once you've located the target,
+      perform the previous procedure to approach it.</li>
+</ol></p>
+<p>
+When the Long-Range Scan
+is damaged (but not destroyed),
+then you will also see a mirror image
+of everything scanned
+in the sector.
+One object will be a reflection.
+Select one image and attempt to move towards it.
+If it instead moves away from you,
+you have chosen the reflection
+instead of the actual target
+and should turn around.
+</p>
+<!-- TODO: Damaged LRS example -->
+
+<h2 id='manualtargetswitching'>Manual Target Switching (M)</h2>
+<p>
+Generally, up to two Nyloz will attack at one time.
+They are designated as targets 0 and 1,
+displayed as <strong>T:0</strong> and <strong>T:1</strong>
+on the panel.
+The computer will default to targeting <strong>T:0</strong>
+until you eliminate it,
+then switch to <strong>T:1</strong>.
+</p>
+<p>
+Pressing the 'M' key lets you switch between targets manually.
+</p>
+<p>
+Damage to your computer may prevent it
+from switching targets automatically.
+You will need to use the manual switching
+in that case.
+</p>
+<p>
+When tracking a friendly starbase,
+it is counted as <strong>T:0</strong>.
+</p>
+<!-- TODO: example of why manual switching is sometimes good -->
+
+<h2 id='shields'>Shield Enable/Disable (S)</h2>
+<p>
+The Star Rider's Shield protects the fighter from destruction.
+When enabled, there will be a bluish tint to space.
+When disabled, space will be the normal black.
+The Star Rider will be destroyed by Nyloz photons
+if hit while the Shield is down.
+</p>
+<p>
+The Shield does not perfectly protect the fighter
+from <em>all</em> damage.
+Ship components may still be damaged by incoming enemy fire.
+As the Shield itself is a component of the ship,
+this means you can still be destroyed in two hits:
+one to disable your shield,
+the second to destroy you.
+Avoid or shoot down incoming enemy missiles!
+</p>
+
+<h2 id='tracking'>Auto-Tracking Enable/Disable (T)</h2>
+<p>
+When Auto-Tracking is enabled,
+your computer will automatically track
+the current target
+when it moves from behind you to in front of you,
+and vice versa,
+and switches automatically
+between Fore View and Aft View
+as appropriate.
+This is useful in higher difficulty levels,
+as the Nyloz can attack you from behind.
+</p>
+<p>
+Note however that it is possible to be caught in a cross-fire
+with one Nyloz in front of you and another behind you.
+The Nyloz can then fire alternately,
+and the computer will automatically re-target
+the enemy starship that most recently fired.
+This can cause rapid switches in view.
+</p>
+<p>
+Despite the above problem,
+many ace Star Rider pilots swear by Auto-Tracking.
+A particularly vocal few, however,
+have managed to achieve high kill rates
+even with Auto-Tracking disabled.
+It is thus kept as an option that may be enabled or disabled
+at the pilot's discretion.
+</p>
+<p>
+Auto-Tracking starts out disabled.
+If you depend on it,
+remember to turn it on at the start of each mission.
+</p>
+<p>
+Damage to the computer may prevent Auto-Tracking
+from working.
+You will then need to manually switch between
+Aft View and Fore View.
+</p>
+
+<h2 id='pause'>Pause (P/Esc)</h2>
+<p>
+Pauses the simulation.
+A small menu is shown,
+which allows you to resume the simulation
+or return to the difficulty level selection.
+</p>
+
+<h2 id='controlpanel'>Control Panel Display</h2>
+<!-- TODO: image of control panel -->
+<p>
+The control panel display,
+visible in the Fore View, Aft View, and Long-Range Scan View,
+displays information about your ship.
+</p>
+<p><table class=keycontrol>
+<tr>
+  <td class=key>V:</td>
+  <td class=control>Velocity</td>
+</tr>
+<tr>
+  <td class=key>K:</td>
+  <td class=control>Number of Nyloz killed this mission</td>
+</tr>
+<tr>
+  <td class=key>E:</td>
+  <td class=control>Energy Left</td>
+</tr>
+<tr>
+  <td class=key>T:</td>
+  <td class=control>Target Selected</td>
+</tr>
+<tr>
+  <td class=key>&theta;:</td>
+  <td class=control>Horizontal offset of target</td>
+</tr>
+<tr>
+  <td class=key>&Phi;:</td>
+  <td class=control>Vertical offset of target</td>
+</tr>
+<tr>
+  <td class=key>R:</td>
+  <td class=control>Range of target from ship.
+                    Positive means front of ship,
+                    negative means behind.</td>
+</tr>
+</table></p>
+
+<h2 id=subspaceradio>Sub-Space Radio</h2>
+<p>
+The Sub-Space Radio is the ship component
+that keeps your Galactic Chart up-to-date.
+When you select the Galactic Chart View,
+the Sub-Space Radio is automatically enabled
+to get the latest information
+on enemy ship movements.
+It is otherwise a passive component
+capable only of receiving high-power broadcast messages,
+particularly "STARBASE SURROUNDED" and "STARBASE DESTROYED" messages.
+</p>
+<p>
+If the Sub-Space Radio is damaged,
+the Galactic Chart cannot be updated,
+but it is still possible to receive broadcast messages
+as well as make specific queries
+about the contents of specific sectors
+(i.e. the <strong>TARGETS:</strong> indicator will still work).
+However if the Sub-Space Radio is destroyed,
+no communications is possible.
+</p>
+</section>
+
+<section id='starbasedocking' name='starbasedocking'>
+<h1>Docking With Starbases</h1>
+<p>
+Starbases are your military support
+in addition to being assets under your protection.
+During your mission,
+you may dock at any starbase
+at any time
+to repair and refuel your fighter.
+</p>
+<p>
+In order to initiate docking,
+you must have the starbase centered in front of you
+with a range <strong>R:</strong> indicator
+of less than +006,
+and with engines stopped completely
+(engine key 0).
+</p>
+<p>
+Once docking is initiated,
+the starbase will dispatch
+a repair bot
+containing fresh Star Rider modular components
+and a full supply of energy.
+This repair bot is programmed
+to approach a fixed location only,
+so moving will abort the docking process.
+</p>
+<!-- TODO: Image of docked starbase -->
+<p>
+Below is a general procedure for initiating docking.
+As you are likely to need docking if your fighter is damaged,
+make sure to also practice this procedure with Attack Computer off
+and using only the Long-Range Scan.
+</p>
+<p><ol>
+<li>Locate the starbase using your Attack Computer
+    or Long-Range Scan so that it is directly
+    in front of you.</li>
+<li>If the starbase is not within sight
+    (range <strong>R:</strong> is greater than +120)
+    set engines to key 6 (<strong>V:12</strong>)
+    until the starbase comes into range.
+    Make any needed course corrections
+    especially if you are using the Long-Range Scan
+    to locate the starbase.</li>
+<li>When the starbase is just within sight,
+    drop your speed to engines key 5 (<strong>V:06</strong>)
+    for easier navigation.
+    Make any needed course corrections
+    to ensure the starbase is centered.</li>
+<li>As you approach the starbase,
+    drop your engines to key 3 or 4.  </li>
+<li>When the starbase is very near,
+    drop your engines to key 1 or 2
+    until your range is within <strong>R:+006</strong>
+    or less.</li>
+<li>Stop engines (engine key 0) and wait
+    to be repaired and refueled.</li>
+</ol></p>
+</section>
+
+<section id='energy' name='energy'>
+<h1>Energy Consumption Rates</h1>
+<p>
+In addition to being judged by your mission completion speed,
+number of surviving starbases,
+and mission difficulty level,
+you are judged according to your energy usage
+during the mission.
+</p>
+<p>
+Turning off components
+(such as turning off the Shield in a starbase or empty sector,
+or turning off the Attack Computer while docked
+or not attacking the Nyloz)
+is part of the standard strategy employed
+by ace Star Rider pilots
+to conserve energy.
+In addition,
+avoiding or shooting down incoming photons
+helps reduce energy consumption,
+since being hit with the Shield enabled
+drains your energy.
+</p>
+<p>
+Some passive energy consumption is needed
+for life support
+and for maintaining the alignment
+of the Distributed Hyperwarp Struts.
+Loss of energy equates to destruction of the fighter,
+as misalignment of the struts
+will destroy the fighter's skeleton.
+</p>
+<table class=energy>
+<tr>
+  <td class=item>Life Support and Alignment Maintenance</td>
+  <td class=rate>0.25/second</td>
+</tr>
+<tr>
+  <td class=item>Shield Maintenance</td>
+  <td class=rate>2/second</td>
+</tr>
+<tr>
+  <td class=item>Attack Computer</td>
+  <td class=rate>1/second</td>
+</tr>
+<tr>
+  <td class=item>Firing Photons</td>
+  <td class=rate>10/photon</td>
+</tr>
+<tr>
+  <td class=item>Incoming Photons Absorbed by Shield</td>
+  <td class=rate>100/photon</td>
+</tr>
+<tr>
+  <td class=item>Engines Key 0</td>
+  <td class=rate>0.0/second</td>
+</tr>
+<tr>
+  <td class=item>Engines Key 1</td>
+  <td class=rate>1.0/second</td>
+</tr>
+<tr>
+  <td class=item>Engines Key 2</td>
+  <td class=rate>1.5/second</td>
+</tr>
+<tr>
+  <td class=item>Engines Key 3</td>
+  <td class=rate>2.0/second</td>
+</tr>
+<tr>
+  <td class=item>Engines Key 4</td>
+  <td class=rate>2.5/second</td>
+</tr>
+<tr>
+  <td class=item>Engines Key 5</td>
+  <td class=rate>3.0/second</td>
+</tr>
+<tr>
+  <td class=item>Engines Key 6</td>
+  <td class=rate>3.5/second</td>
+</tr>
+<tr>
+  <td class=item>Engines Key 7</td>
+  <td class=rate>7.5/second</td>
+</tr>
+<tr>
+  <td class=item>Engines Key 8</td>
+  <td class=rate>11.25/second</td>
+</tr>
+<tr>
+  <td class=item>Engines Key 9</td>
+  <td class=rate>15.0/second</td>
+</tr>
+</table>
+</section>
+
+<section id=history name=history>
+<h1>History of the XSR1 Game</h1>
+<p>
+I pretty much inherited my father's Atari 800XL,
+and started learning programming
+on the excellent Atari Logo system.
+I started programming maybe in 1993.
+In addition, the Atari 800XL
+was my main gaming computer,
+and two of the best games I'd ever experienced
+were the two Star Raider games;
+the first Star Raider for gameplay,
+the second for excellent graphics.
+</p>
+<p>
+In around the early 21st century, sadly,
+that Atari 800XL was on its last legs.
+The Atari 1050 Floppy Disk Drive that came with it
+was beginning to growl funny,
+and the Atari 800XL's keyboard
+was starting to not detect pressed keys.
+Opening the machine
+revealed that the flexible PCB
+that was the keyboard's base
+was beginning to oxidize and decay.
+The guiderails for the 1050's disk head
+were getting rusty.
+In time, I would no longer be able
+to actually utilize the machine
+and its mechanical peripherals.
+</p>
+<p>
+That's when I hit upon the rather amazing idea
+to write an HTML+Javascript implementation
+of the first Star Raider game.
+</p>
+<p>
+(mind you,
+this was before HTML5 was even a glimmer
+in anyone's eye,
+and hence no <code>&lt;canvas&gt;</code> &mdash;
+and no fancy Star Raider II graphics)
+</p>
+<p>
+So I opened my WinXP box
+(I hadn't transitioned to a full GNU/Linux system
+as yet then)
+and started hacking together
+<code>XSR1.html</code>.
+As all the HTML, CSS, and Javascript
+was in a single file,
+it quickly became unwieldy.
+I was able to implement the stars,
+the engines,
+the shield,
+firing photons,
+and starbase docking,
+but not the enemies,
+attack computer,
+or the galactic chart.
+This was some time in the early 2000's.
+</p>
+<p>
+Eventually, I lost interest in that particular implementation.
+Sadly, I can no longer locate that version &mdash;
+it is probably much more accurate to the original Star Raiders,
+since I could still run and operate
+the game on the Atari 800XL side-by-side
+with the HTML+Javascript version
+to compare.
+</p>
+<p>
+Time passed,
+and while Javascript didn't really change all that much,
+attitudes toward it did change.
+In particular,
+the rise of <a class=extern href='http://nodejs.org/'>NodeJS</a>
+and <a class=extern href='http://commonjs.org/'>CommonJS</a>
+begat the Asynchronous Module Definition
+(the foremost implementation
+being <a class=extern href='http://requirejs.org/'>RequireJS</a>).
+</p>
+<p>
+I'd always known that the main failing of <code>XSR1.html</code>
+had been the lack of proper modularization
+of the game.
+Armed with RequireJS,
+I reimplemented XSR1
+into a holding HTML file,
+a support CSS file,
+and several Javascript files;
+the version you are now playing today.
 </p>
 </section>
 
@@ -225,6 +1046,10 @@ along with this program.  If not, see
   <li><a href='index.html'>Return to Game</a></li>
   <li><a href='#introduction'>Introduction</a></li>
   <li><a href='#directioncontrol'>Direction Control</a></li>
+  <li><a href='#controls'>Control Keys</a></li>
+  <li><a href='#starbasedocking'>Starbase Docking</a></li>
+  <li><a href='#energy'>Energy</a></li>
+  <li><a href='#history'>XSR1 History</a></li>
   <li><a href='#legal'>Legal Information</a></li>
   <script>
 // @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPLv3+
