@@ -110,7 +110,7 @@ var rates = [
 ];
 var hyperwarprate = 15.5;
 
-var acceleration = 15.0;
+var acceleration = 15.5;
 
 function nullFun() { }
 
@@ -271,6 +271,7 @@ Engines.prototype._onMainMenu = function () {
     this._targetspeed = speeds[6];
     this._enerate = 0.0;
     this._warping = false;
+    this._inhyperspace = false;
     this._warpspeed = 0.0;
     this._warpcb = nullFun;
     this._state = FIXED;

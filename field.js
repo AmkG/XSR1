@@ -76,17 +76,17 @@ var actualDebrisSpeed = debrisSpeed * speedFactor;
 var debrisTime = 5.0;
 
 /* Size of bogeys and missiles (for collision detection).  */
-var bogeySize = 1.0;
-var missileSize = 0.75;
+var bogeySize = 0.75;
+var missileSize = 1.0;
 
 /* Size of the player (for collision detection),
    according to difficulty.
    (larger size is greater difficulty)  */
 var playerSizes = {
-    'NOVICE':       1.0,
-    'PILOT':        1.25,
-    'WARRIOR':      1.5,
-    'COMMANDER':    1.75
+    'NOVICE':       0.75,
+    'PILOT':        1.0,
+    'WARRIOR':      1.25,
+    'COMMANDER':    1.5
 };
 
 function nullFun() { }

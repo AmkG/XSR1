@@ -45,10 +45,10 @@ var energy = vars.energy;
 var reportTime = 20.0;
 
 var damageProbabilities = {
-    'NOVICE':       0.150,
-    'PILOT':        0.175,
-    'WARRIOR':      0.200,
-    'COMMANDER':    0.225
+    'NOVICE':       0.125,
+    'PILOT':        0.150,
+    'WARRIOR':      0.175,
+    'COMMANDER':    0.200
 };
 
 /* Various damage points.  */
