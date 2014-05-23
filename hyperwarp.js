@@ -144,6 +144,12 @@ Hyperwarp.prototype._onHyperwarp = function () {
         this._ar2[0], this._ar2[1],
         this._targetX, this._targetY
     );
+    /* Subtract the energy required to go through hyperwarp.
+       If the energy required goes below 0.1, force to 0.1.  */
+    energy -= 100.0;
+    if (energy < 0.1) {
+        energy = 0.1;
+    }
     /* Compute hyperspace time.  */
     this._hyperspaceTime = energy / energyConsumeRate;
 

@@ -110,7 +110,7 @@ var rates = [
 ];
 var hyperwarprate = 15.5;
 
-var acceleration = 15.0;
+var acceleration = 15.5;
 
 function nullFun() { }
 
