@@ -133,8 +133,8 @@ function getRank() {
     }
 
     // Compute the score.
-    score = m + 6 * enemiesDestroyed - Math.floor(energyConsumed / 100) -
-            galaxy.getDateMaj() - 18 * starbasesByNyloz - 3 * starbasesByPlayer;
+    score = m + (6 * enemiesDestroyed) - Math.floor(energyConsumed / 256) -
+            galaxy.getDateMaj() - (18 * starbasesByNyloz) - (3 * starbasesByPlayer);
 
     // Is the player a complete failure?
     if (score < rankingTable[0].min) {
@@ -191,7 +191,7 @@ function shipDestroy() {
 
     field.explosion(0.0, 0.0, 0.0);
 
-    m -= mDestroyed[difficulty];
+    m = mDestroyed[difficulty];
 }
 
 /* Handle being killed by Nyloz.  */
