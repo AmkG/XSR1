@@ -255,7 +255,7 @@ Attack.prototype.update = function (seconds) {
     var y = 0.0;
     var ax = 0.0;
     var ay = 0.0;
-    if (this._enabled) {
+    if (this._enabled && this._fixed) {
         vars.energy.consume(0.5 * seconds);
     }
     if (this._enabled && this._fixed) {
