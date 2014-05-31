@@ -106,7 +106,7 @@ Shield.prototype.protectionCheck = function () {
 };
 
 Shield.prototype.update = function (seconds) {
-    if (this._enabled) {
+    if (this._enabled && this._status !== DESTROYED) {
         vars.energy.consume(2 * seconds);
     }
 

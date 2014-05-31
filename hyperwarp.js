@@ -161,6 +161,7 @@ Hyperwarp.prototype._onHyperwarp = function () {
     return this;
 };
 Hyperwarp.prototype.update = function (seconds) {
+    var mov = 0.0;
     /* Drain energy while travelling in hyperspace.  */
     if (this._hyperspaceTime > 0.0) {
         if (this._hyperspaceTime > seconds) {
@@ -180,7 +181,34 @@ Hyperwarp.prototype.update = function (seconds) {
         }
     }
     /* Offset the target at random in hyperwarp.  */
-    if (this._needSteer && engines.isHyperwarp()) {
+    if (engines.isHyperwarp()) {
+        /* Auto-correct offset if need not steer.  */
+        if (!this._needSteer) {
+            mov = seconds * targetSpeed;
+            if (this._offsetX < 0.0) {
+                this._offsetX += mov;
+                if (this._offsetX > 0.0) {
+                    this._offsetX = 0.0;
+                }
+            } else if (this._offsetX > 0.0) {
+                this._offsetX -= mov;
+                if (this._offsetX < 0.0) {
+                    this._offsetX = 0.0;
+                }
+            }
+            if (this._offsetY < 0.0) {
+                this._offsetY += mov;
+                if (this._offsetY > 0.0) {
+                    this._offsetY = 0.0;
+                }
+            } else if (this._offsetY > 0.0) {
+                this._offsetY -= mov;
+                if (this._offsetY < 0.0) {
+                    this._offsetY = 0.0;
+                }
+            }
+        }
+
         this._offsetX += (Math.random() - 0.5) * seconds * targetSpeed * 2.0;
         this._offsetY += (Math.random() - 0.5) * seconds * targetSpeed * 2.0;
     }
