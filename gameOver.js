@@ -140,7 +140,7 @@ function getRank() {
     if (score < rankingTable[0].min) {
         rank = failRanks[Math.floor(Math.random() * failRanks.length)];
         classD = rankingTable[0].min / 5;
-        classN = 5 - Math.floor(score / classD);
+        classN = Math.floor(score / classD) + 1;
         return returnRank();
     }
 
@@ -150,7 +150,7 @@ function getRank() {
         if (entry.min <= score && score <= entry.max) {
             rank = entry.rank;
             classD = (entry.max - entry.min) / 5;
-            classN = Math.floor((score - entry.min) / classD) + 1;
+            classN = 5 - Math.floor((score - entry.min) / classD);
             return returnRank();
         }
     }
