@@ -46,6 +46,8 @@ function Starbase() {
     this._pdocked = false;
     /* Docking sequence completed.  */
     this._finished = false;
+    /* Time since repair bot finished docking.  */
+    this._bottime = 0.0;
 }
 Starbase.prototype.html = "&ndash;=&equiv;=&ndash;";
 Starbase.prototype.sizeFactor = 3.0;
@@ -72,7 +74,7 @@ Starbase.prototype._onupdate = function (pos, vec, seconds) {
         if (docked && !this._pdocked) {
             console.write('Docking initiated.');
             field.setBogey(1,
-                pos[0] + 0.4, pos[1] + 0.4, 6.0,
+                pos[0] + 0.4, pos[1] + 0.4, 5.0,
                 this.onbotupdate, this.onbotcollide, this.bothtml,
                 this.botsizeFactor
             );
@@ -109,10 +111,12 @@ Starbase.prototype._onbotupdate = function (pos, vec, seconds) {
             console.write("Repair and recharge completed.");
             signal.raise('fix');
             this._finished = true;
+            this._bottime = 0.0;
         }
     } else {
+        this._bottime += seconds;
         vec[2] = 0.4;
-        if (pos[2] >= 6.0) {
+        if (pos[2] >= 5.0 || this._bottime > 6.0) {
             field.clearBogey(1);
         }
     }
