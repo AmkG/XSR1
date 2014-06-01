@@ -267,6 +267,76 @@ table.energy tr td.rate {
   text-align: center;
 }
 
+/*-----------------------------------------------------------------------------
+Image Gallery style
+-----------------------------------------------------------------------------*/
+
+div.gallery {
+  overflow: hidden; /* Stops floating of inner containers.  */
+}
+div.gallery div.box {
+  width: 20%;
+  padding-bottom: 20%;
+  position: relative;
+  float: left;
+}
+div.gallery div.box div.img {
+  position: absolute;
+  left: 1em;
+  right: 1em;
+  top: 1em;
+  bottom: 1em;
+  border: 1px solid black;
+}
+div.gallery div.box div.img div.title {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  text-align: center;
+  color: black;
+  background: white;
+  opacity: 0.50;
+  filter: alpha(opacity=50);
+}
+div.gallery div.box:hover div.img div.title {
+  opacity: 1.0;
+  filter: alpha(opacity=100);
+}
+div.gallery div.box div.img img {
+  width: 100%;
+  height: 100%;
+}
+
+/* Responsive!  */
+
+/* One tile.  */
+@media only screen and (max-width : 600px) {
+  div.gallery div.box {
+    width: 100%;
+    padding-bottom: 100%;
+  }
+}
+/* Two tiles.  */
+@media only screen and (max-width : 840px) and (min-width : 601px) {
+  div.gallery div.box {
+    width: 50%;
+    padding-bottom: 50%;
+  }
+}
+/* Three tiles.  */
+@media only screen and (max-width : 1120px) and (min-width : 841px) {
+  div.gallery div.box {
+    width: 33.33%;
+    padding-bottom: 33.33%;
+  }
+}
+/* Four tiles.  */
+@media only screen and (max-width : 1290px) and (min-width : 1121px) {
+  div.gallery div.box {
+    width: 25%;
+    padding-bottom: 25%;
+  }
+}
 
 /*-----------------------------------------------------------------------------
 Footer Style
