@@ -447,6 +447,13 @@ Pilot.prototype._think = function (pos) {
         }
     }
 
+    // If behind the player, be more aggressive.
+    if (pos[2] < 0.0 && this._state !== ATTACK) {
+        if (Math.random() < 0.1) {
+            this._state = ATTACK;
+        }
+    }
+
     if (this._state === ATTACK) {
         /* Fire if we could hit the player.  */
         if (Math.abs(pos[0]) < 5.0 && Math.abs(pos[1]) < 5.0 &&
