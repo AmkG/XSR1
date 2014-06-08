@@ -15,18 +15,18 @@ window.require = {
 // @license-end
 </script>
 <script src="extern/require.js"></script>
+</head>
+<body>
+<p>XSR1 is a clone of the classic 1979 Atari Star Raiders.  <a href=help.html>XSR1 Manual</a>.</p>
+<noscript><p>Your browser does not seem to have Javascript enabled.</p></noscript>
+<img src=images/XSR1.png></img>
+</body>
 <script>
 // @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&dn=gpl-3.0.txt GPLv3+
-require(['main'], function (main) {
 document.body.innerHTML = '';
+require(['main'], function (main) {
 main();
 });
 // @license-end
 </script>
-</head>
-<body>
-<p>XSR1 is a clone of the classic 1979 Atari Star Raiders</p>
-<noscript><p>Your browser does not seem to have Javascript enabled.</p></noscript>
-<img src=images/XSR1.png></img>
-</body>
 </html>

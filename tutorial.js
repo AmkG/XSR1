@@ -529,9 +529,9 @@ teachDockingEnsure0.checkNext = function () {
 var teachLRS = new Node();
 teachLRS.text = [
     "Good!  Now's a good time to teach you about the LRS.",
-    "The LRS or Long-Range Scan gives you " +
+    "The Long-Range Scan gives you " +
         "a &quot;bird&apos;s eye view&quot; of your ship.",
-    "It's a useful navigation aid if your Attack Computer is destroyed.",
+    "It's a backup navigation aid.",
     "Press [L] to enable your Long-Range Scan."
 ];
 teachLRS.nag =
