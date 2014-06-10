@@ -372,6 +372,10 @@ Model.prototype.newGame = function (difficulty) {
     /* Clear _gameOver flag.  */
     this._gameOver = false;
 
+    /* Reset star date to 0.  */
+    this.dateMaj = 0;
+    this.dateMin = 0;
+
     number = numStarbases[difficulty];
 
     /* Clear map.  */
