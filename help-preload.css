@@ -1,0 +1,17 @@
+body:after {
+content:
+  url(images/nyloz-fighter.png)
+  url(images/nyloz-cruiser.png)
+  url(images/nyloz-basestar.png)
+  url(images/starbase-only.png)
+  url(images/repar-bot-only.png)
+  url(images/crosshair-fore.png)
+  url(images/crosshair-aft.png)
+  url(images/computer-cursor.png)
+  url(images/galchart.png)
+  url(images/starbase-surrounded.png)
+  url(images/starbase-destroyed.png)
+  url(images/starbase-saved.png)
+  ;
+display: none;
+}
