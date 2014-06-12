@@ -339,6 +339,35 @@ div.gallery div.box div.img img {
 }
 
 /*-----------------------------------------------------------------------------
+Screenshot Image style
+-----------------------------------------------------------------------------*/
+div.screenshot {
+  width: 100%;
+  text-align: center;
+}
+div.screenshot div.img {
+  width: 90%;
+  left: 5%;
+  position: relative;
+}
+div.screenshot div.img img {
+  width: 100%;
+}
+div.screenshot div.img div.title {
+  width: 100%;
+  text-align: center;
+  color: black;
+  background: white;
+  padding-bottom: 1em;
+}
+
+@media only screen and (max-width : 1120px) {
+  div.screenshot div.img {
+    width: 100%;
+    left: 0px;
+  }
+}
+/*-----------------------------------------------------------------------------
 Footer Style
 -----------------------------------------------------------------------------*/
 footer {
