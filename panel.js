@@ -107,6 +107,11 @@ Panel.prototype.render = function () {
             this._v.innerHTML = engines;
             this._k.innerHTML = vars.kills;
             this._e.innerHTML = vars.energy;
+            if (vars.energy.toString().charAt(0) === '0') {
+                this._e.style.backgroundColor = "red";
+            } else {
+                this._e.style.backgroundColor = "transparent";
+            }
             this._t.innerHTML = computer.instruments.panelT();
             this._y.innerHTML = computer.instruments.panelY();
             this._x.innerHTML = computer.instruments.panelX();
