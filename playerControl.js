@@ -106,10 +106,10 @@ keytable['c'] = keytable['C'] = function () {
 /* Shields.  */
 keytable['s'] = keytable['S'] = function () {
     if (shield.isEnabled()) {
-        console.write('Shields Disabled.');
+        console.write('Shields disabled.');
         shield.disable();
     } else {
-        console.write('Shields Enabled.');
+        console.write('Shields enabled.');
         shield.enable();
     }
 };
