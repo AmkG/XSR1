@@ -4,7 +4,7 @@
  * @licstart  The following is the entire license notice for the 
  *  JavaScript code in this page.
  *
- * Copyright (C) 2014  Alan Manuel K. Gloria
+ * Copyright (C) 2014, 2015  Alan Manuel K. Gloria
  *
  *
  * The JavaScript code in this page is free software: you can
@@ -129,7 +129,7 @@ loop.enterMainMenu = function () {
     console
     .clear()
     .writeWait('XSR1, a clone of 1979 Atari Star Raiders')
-    .writeWait('Copyright &copy; 2014 Alan Manuel K. Gloria')
+    .writeWait('Copyright &copy; 2014, 2015 Alan Manuel K. Gloria')
     .writeWait('License GPLv3+: GNU GPL version 3 or later')
     .writeWait('This game is free software: ' +
         'you are free to change and redistribute it.'
