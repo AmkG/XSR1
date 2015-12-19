@@ -158,7 +158,7 @@ function getRank() {
     // If we reached this point, the player is even better
     // than we expected.
     rank = rankingTable[rankingTable.length - 1].rank;
-    classN = 5;
+    classN = 1;
     return returnRank();
 }
 
