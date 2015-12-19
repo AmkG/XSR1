@@ -447,7 +447,7 @@ retryHyperwarp.checkAbort = teachHyperwarp.checkAbort;
 
 var inHyperspace = new Node();
 inHyperspace.checkAbort = function () {
-    if (!hyperwarp.inHyperspace()) {
+    if (!hyperwarp.inHyperspace() && field.speed == 0) {
         if (galaxy.getPlayerSectorContents() <= -1) {
             if (computer.attack.isEnabled()) {
                 return teachDocking;
@@ -500,7 +500,7 @@ teachDocking.checkAbort = function () {
 };
 teachDocking.checkNext = function () {
     field.getBogeyPosition(0, ar3d);
-    if (Math.abs(ar3d[0] < 0.5) && (Math.abs(ar3d[1]) < 0.5) &&
+    if ((Math.abs(ar3d[0]) < 5) && (Math.abs(ar3d[1]) < 5) &&
         ar3d[2] >= 0.0) {
         return teachLRS;
     }
@@ -544,7 +544,7 @@ teachLRS.checkAbort = function () {
 };
 teachLRS.checkNext = function () {
     if (field.display && field.currentView === 'lrs') {
-        // TODO;
+        return dockWithStarbase;
     }
     return null;
 };
