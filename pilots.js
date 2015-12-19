@@ -4,7 +4,7 @@
  * @licstart  The following is the entire license notice for the 
  *  JavaScript code in this page.
  *
- * Copyright (C) 2014  Alan Manuel K. Gloria
+ * Copyright (C) 2014, 2015  Alan Manuel K. Gloria
  *
  *
  * The JavaScript code in this page is free software: you can
@@ -570,7 +570,7 @@ Pilot.prototype._think = function (pos) {
                 engines.setNudge(ZP); break;
             }
             break;
-        case 3:
+        case 4:
             switch (dir) {
             case ZP: case ZN:
                 engines.setNudge(YN); break;

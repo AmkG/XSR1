@@ -4,7 +4,7 @@
  * @licstart  The following is the entire license notice for the 
  *  JavaScript code in this page.
  *
- * Copyright (C) 2014  Alan Manuel K. Gloria
+ * Copyright (C) 2014, 2015  Alan Manuel K. Gloria
  *
  *
  * The JavaScript code in this page is free software: you can
@@ -344,7 +344,7 @@ Attack.prototype.render = function () {
         }
 
         /* Cursor indicators.  */
-        if (this._cursorshow) {
+        if (this._fixed && this._cursorshow) {
             // There are 8 cursor indicators, at 45deg each.
             // Since Math.sin and Math.cos accept radians,
             // that amounts to 1/4 pi each.
