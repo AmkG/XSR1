@@ -344,7 +344,7 @@ Attack.prototype.render = function () {
         }
 
         /* Cursor indicators.  */
-        if (this._cursorshow) {
+        if (this._fixed && this._cursorshow) {
             // There are 8 cursor indicators, at 45deg each.
             // Since Math.sin and Math.cos accept radians,
             // that amounts to 1/4 pi each.
