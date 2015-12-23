@@ -29,6 +29,14 @@ define(['signal','field'],
 function(signal , field ) {
 
 /*-----------------------------------------------------------------------------
+Nyloz Engine Speeds
+-----------------------------------------------------------------------------*/
+
+var nylozZEngine = 12.6;
+var nylozDirEngine = 5.9;
+var nylozNudgeEngine = 3.0;
+
+/*-----------------------------------------------------------------------------
 Nyloz Ship Types
 -----------------------------------------------------------------------------*/
 var fighterType = {
@@ -266,9 +274,9 @@ function apply(vec) {
     vec[0] = 0.0;
     vec[1] = 0.0;
     vec[2] = 0.0;
-    tb[this._dir](vec, 7.0);
-    tb[this._nudge](vec, 2.0);
-    vec[2] += this._z * 12.5;
+    tb[this._dir](vec, nylozDirEngine);
+    tb[this._nudge](vec, nylozNudgeEngine);
+    vec[2] += this._z * nylozZEngine;
     return this;
 }
 
