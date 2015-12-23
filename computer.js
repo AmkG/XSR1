@@ -195,6 +195,9 @@ function Attack(instruments) {
     /* Direction of the indicator.  */
     this._direction = NONE;
 
+    /* State updates.  */
+    this._prev_fieldView = 'fore';
+
     /* Time control for computer animations.  */
     this._timeStep = 0.0;
 
@@ -266,8 +269,14 @@ Attack.prototype.update = function (seconds) {
             this._direction = NONE;
         } else {
             field.getBogeyPosition(targetNum, ar3d);
-            /* Update cursor position.  */
-            this._cursorshow = field.project(cursor, ar3d);
+            /* Update cursor position if view hasn't changed.  */
+            if (field.currentView === this._prev_fieldView &&
+                field.currentView !== 'lrs') {
+              this._cursorshow = field.project(cursor, ar3d);
+            } else {
+              /* Avoid race conditions while view transitions.  */
+              this._cursorshow = false;
+            }
             /* Update direction information.  */
             x = ar3d[0];
             y = ar3d[1];
@@ -299,6 +308,9 @@ Attack.prototype.update = function (seconds) {
         this._timeStep -= 1.0;
     }
     /* TODO: Computer lock-on.  */
+
+    /* Update previous.  */
+    this._prev_fieldView = field.currentView;
     return this;
 };
 Attack.prototype.render = function () {
