@@ -101,6 +101,9 @@ Instruments.prototype.autotrackDisable = function () {
     this._autotrack = false;
     return this;
 };
+Instruments.prototype.getTargetNum = function () {
+    return this._targetNum;
+};
 /* Target switching.  */
 Instruments.prototype.switchTarget = function () {
     if (this._targetNum === 0) {
@@ -182,9 +185,9 @@ var directionCode = [
 var lockonCode = '&#9711';
 
 /* Max X/Y for lock-on.  */
-var lockonXY = 3.5;
+var lockonXY = 5.0;
 /* Max Z for lock-on.  */
-var lockonZ = 35.0;
+var lockonZ = 59.0;
 
 function Attack(instruments) {
     /* Connection to other computer.  */
