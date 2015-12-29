@@ -371,7 +371,7 @@ Pilot.prototype.create = function () {
     // Randomize state of the Nyloz ship.
     this._state = Math.floor(Math.random() * 3);
     this._thinkDelay = Math.random() * this._thinkCycle;
-    this._backstabber = Math.random() < 0.5;
+    this._backstabber = Math.random() < 0.3;
 
     // Randomize location of the Nyloz ship.
     x = Math.random() * 100.0 - 50.0;
