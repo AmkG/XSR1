@@ -634,7 +634,7 @@ Pilot.prototype._collideBogey = function () {
     field.getBogeyPosition(num, ar3d);
     /* Judge the pleyer missile's power according to the Nyloz's
        distance to the player.  */
-    if (ar3d[2] < 25.0) {
+    if (ar3d[2] < 35.0) {
         missilePower = 2;
     } else {
         missilePower = 1;
