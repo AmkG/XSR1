@@ -33,7 +33,7 @@ define(['resize', 'signal'], function (resize, signal) {
 var numStars = 24; // number
 var starSizeFactor = 4; // pixel factor
 
-var turnSpeed = 0.4; // radians per second
+var turnSpeed = 0.45; // radians per second
 
 var missileSpeed = 75.0; // metrons per second
 var missileLifetime = 1.8; // seconds
