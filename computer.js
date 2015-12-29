@@ -325,6 +325,7 @@ Attack.prototype.update = function (seconds) {
                             ar3d[2] < lockonZ);
         }
     } else {
+      this._cursorshow = false;
       this._lockon = false;
     }
     /* Increment for animation.  */
