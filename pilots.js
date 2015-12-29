@@ -32,9 +32,9 @@ function(signal , field ) {
 Nyloz Engine Speeds
 -----------------------------------------------------------------------------*/
 
-var nylozZEngine = 12.6;
-var nylozDirEngine = 5.9;
-var nylozNudgeEngine = 3.0;
+var nylozZEngine = 12.5;
+var nylozDirEngine = 5.8;
+var nylozNudgeEngine = 3.2;
 
 /*-----------------------------------------------------------------------------
 Nyloz Ship Types
