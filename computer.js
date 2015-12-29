@@ -187,7 +187,7 @@ var lockonCode = '&#9711';
 /* Max X/Y for lock-on.  */
 var lockonXY = 5.0;
 /* Max Z for lock-on.  */
-var lockonZ = 59.0;
+var lockonZ = 59.9;
 
 function Attack(instruments) {
     /* Connection to other computer.  */
