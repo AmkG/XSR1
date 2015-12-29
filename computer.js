@@ -101,6 +101,9 @@ Instruments.prototype.autotrackDisable = function () {
     this._autotrack = false;
     return this;
 };
+Instruments.prototype.getTargetNum = function () {
+    return this._targetNum;
+};
 /* Target switching.  */
 Instruments.prototype.switchTarget = function () {
     if (this._targetNum === 0) {
@@ -179,6 +182,12 @@ var directionCode = [
     '&#9664;', // LEFT
     '&#9654;'  // RIGHT
 ];
+var lockonCode = '&#9711';
+
+/* Max X/Y for lock-on.  */
+var lockonXY = 5.0;
+/* Max Z for lock-on.  */
+var lockonZ = 59.9;
 
 function Attack(instruments) {
     /* Connection to other computer.  */
@@ -187,6 +196,9 @@ function Attack(instruments) {
     this._fixed = true;
     this._enabled = false;
 
+    /* Lock on.  */
+    this._lockon = false;
+
     /* Scratch space.  */
     this._ar3d = [0.0, 0.0];
     /* Position of the cursor.  */
@@ -194,6 +206,9 @@ function Attack(instruments) {
     this._cursorshow = false;
     /* Direction of the indicator.  */
     this._direction = NONE;
+
+    /* State updates.  */
+    this._prev_fieldView = 'fore';
 
     /* Time control for computer animations.  */
     this._timeStep = 0.0;
@@ -232,6 +247,9 @@ Attack.prototype.disable = function () {
 Attack.prototype.isEnabled = function () {
     return this._enabled;
 };
+Attack.prototype.isLockedOn = function () {
+    return this._lockon;
+};
 /* Events.  */
 Attack.prototype.mainMenu = function () {
     this.fix().disable();
@@ -264,10 +282,17 @@ Attack.prototype.update = function (seconds) {
         if (!field.isBogeyValid(targetNum)) {
             this._cursorshow = false;
             this._direction = NONE;
+            this._lockon = false;
         } else {
             field.getBogeyPosition(targetNum, ar3d);
-            /* Update cursor position.  */
-            this._cursorshow = field.project(cursor, ar3d);
+            /* Update cursor position if view hasn't changed.  */
+            if (field.currentView === this._prev_fieldView &&
+                field.currentView !== 'lrs') {
+              this._cursorshow = field.project(cursor, ar3d);
+            } else {
+              /* Avoid race conditions while view transitions.  */
+              this._cursorshow = false;
+            }
             /* Update direction information.  */
             x = ar3d[0];
             y = ar3d[1];
@@ -291,14 +316,30 @@ Attack.prototype.update = function (seconds) {
                     this._direction = DOWN;
                 }
             }
+
+            /* Computer lock-on.  */
+            this._lockon = (field.currentView === 'front' &&
+                            ar3d[2] > 0.0 &&
+                            ax < lockonXY &&
+                            ay < lockonXY &&
+                            ar3d[2] < lockonZ);
         }
+    } else {
+      this._cursorshow = false;
+      this._lockon = false;
     }
     /* Increment for animation.  */
-    this._timeStep += seconds;
-    if (this._timeStep > 1.0) {
-        this._timeStep -= 1.0;
+    if (this._lockon) {
+      this._timeStep = 0.125;
+    } else {
+      this._timeStep += seconds;
+      if (this._timeStep > 1.0) {
+          this._timeStep -= 1.0;
+      }
     }
-    /* TODO: Computer lock-on.  */
+
+    /* Update previous.  */
+    this._prev_fieldView = field.currentView;
     return this;
 };
 Attack.prototype.render = function () {
@@ -356,6 +397,7 @@ Attack.prototype.render = function () {
             cursorfontsize = Math.floor(resize.maxsize / 2) + 'px';
             for (i = 0; i < 8; ++i) {
                 dom = this._domCursor[i];
+                dom.style.color = this._lockon ? "#ff0000" : "#00ff00";
                 dom.style.display = 'block';
                 dom.style.fontSize = cursorfontsize;
                 dom.style.left = Math.floor(x +
@@ -380,7 +422,9 @@ Attack.prototype.render = function () {
             dom.style.left = Math.floor(resize.cenx) + 'px';
             dom.style.top = Math.floor(resize.ceny) + 'px';
             dom.style.fontSize = Math.floor(resize.maxsize / 4) + 'px';
-            dom.innerHTML = directionCode[this._direction];
+            dom.style.color = this._lockon ? "#ff0000" : "#00ff00";
+            dom.innerHTML = this._lockon ? lockonCode :
+                                           directionCode[this._direction];
         } else {
             this._domDirection.style.display = 'none';
         }

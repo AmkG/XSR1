@@ -29,6 +29,14 @@ define(['signal','field'],
 function(signal , field ) {
 
 /*-----------------------------------------------------------------------------
+Nyloz Engine Speeds
+-----------------------------------------------------------------------------*/
+
+var nylozZEngine = 12.5;
+var nylozDirEngine = 5.8;
+var nylozNudgeEngine = 3.2;
+
+/*-----------------------------------------------------------------------------
 Nyloz Ship Types
 -----------------------------------------------------------------------------*/
 var fighterType = {
@@ -72,7 +80,7 @@ Nyloz Photon Manager
  * to maximize the use of it.
  */
 
-var nylozRefireRate = 0.6;
+var nylozRefireRate = 0.5;
 
 function PhotonManager() {
     // Array of photon objects that will indicate firing.
@@ -266,9 +274,9 @@ function apply(vec) {
     vec[0] = 0.0;
     vec[1] = 0.0;
     vec[2] = 0.0;
-    tb[this._dir](vec, 7.0);
-    tb[this._nudge](vec, 2.0);
-    vec[2] += this._z * 12.5;
+    tb[this._dir](vec, nylozDirEngine);
+    tb[this._nudge](vec, nylozNudgeEngine);
+    vec[2] += this._z * nylozZEngine;
     return this;
 }
 
@@ -330,6 +338,8 @@ function Pilot(num) {
     // Will the pilot shoot the player from behind?
     // (false on NOVICE and PILOT)
     this._shootFromBehind = true;
+    // Does this pilot prefer to attack from behind?
+    this._backstabber = false;
     // How often does the pilot think?
     this._thinkCycle = 1.0;
     // How much time before the next decision point?
@@ -361,6 +371,7 @@ Pilot.prototype.create = function () {
     // Randomize state of the Nyloz ship.
     this._state = Math.floor(Math.random() * 3);
     this._thinkDelay = Math.random() * this._thinkCycle;
+    this._backstabber = Math.random() < 0.3;
 
     // Randomize location of the Nyloz ship.
     x = Math.random() * 100.0 - 50.0;
@@ -476,33 +487,63 @@ Pilot.prototype._think = function (pos) {
             engines.setZ(
                 pos[2] > 0.0 ? -1 : 1
             );
-            // Find which of X, Y, or Z has largest component.
-            ax = Math.abs(pos[0]);
-            ay = Math.abs(pos[1]);
-            az = Math.abs(pos[2]);
-            if (az > ay) {
-                if (ax > az) {
-                    comp = 0;
-                } else {
-                    comp = 2;
-                }
-            } else {
+            if (this._backstabber && pos[2] > 0.0) {
+                // Be evasive when backstabbing and approaching from
+                // the front.
+                // Find whether X or Y is larger, then evade.
+                ax = Math.abs(pos[0]);
+                ay = Math.abs(pos[1]);
                 if (ax > ay) {
-                    comp = 0;
+                  // Evade in X direction.
+                  engines.setDir(pos[0] > 0.0 ? XP : XN);
                 } else {
-                    comp = 1;
+                  // Evade in Y direction.
+                  engines.setDir(pos[1] > 0.0 ? YP : YN);
                 }
-            }
-            if (comp === 0) {
-                engines.setDir(pos[0] > 0.0 ? XN : XP);
-            } else if (comp === 1) {
-                engines.setDir(pos[1] > 0.0 ? YN : YP);
             } else {
-                engines.setDir(pos[2] > 0.0 ? ZN : ZP);
+                // Find which of X, Y, or Z has largest component.
+                ax = Math.abs(pos[0]);
+                ay = Math.abs(pos[1]);
+                az = Math.abs(pos[2]);
+                if (az > ay) {
+                    if (ax > az) {
+                        comp = 0;
+                    } else {
+                        comp = 2;
+                    }
+                } else {
+                    if (ax > ay) {
+                        comp = 0;
+                    } else {
+                        comp = 1;
+                    }
+                }
+                if (comp === 0) {
+                    engines.setDir(pos[0] > 0.0 ? XN : XP);
+                } else if (comp === 1) {
+                    engines.setDir(pos[1] > 0.0 ? YN : YP);
+                } else {
+                    engines.setDir(pos[2] > 0.0 ? ZN : ZP);
+                }
             }
         } else {
-            // Go with the player
-            engines.setZ(1);
+            // Go with the player unless backstabbing or player
+            // is idle.
+            if (this._shootFromBehind && this._backstabber &&
+                pos[2] > 0.0) {
+                engines.setZ(-1);
+            } else if (dist < 15.0) {
+                /* Don't get too near to the player.  */
+                if (this._shootFromBehind && this._backstabber) {
+                    engines.setZ(-1);
+                } else {
+                    engines.setZ(1);
+                }
+            } else if (field.speed < 12.0) {
+                engines.setZ(0);
+            } else {
+                engines.setZ(1);
+            }
             // strafe the player.
             dir = engines.getDir();
             if ((dir === ZP && pos[2] > 10.0) ||
@@ -593,7 +634,7 @@ Pilot.prototype._collideBogey = function () {
     field.getBogeyPosition(num, ar3d);
     /* Judge the pleyer missile's power according to the Nyloz's
        distance to the player.  */
-    if (ar3d[2] < 25.0) {
+    if (ar3d[2] < 35.0) {
         missilePower = 2;
     } else {
         missilePower = 1;

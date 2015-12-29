@@ -4,7 +4,7 @@
  * @licstart  The following is the entire license notice for the 
  *  JavaScript code in this page.
  *
- * Copyright (C) 2014  Alan Manuel K. Gloria
+ * Copyright (C) 2014, 2015  Alan Manuel K. Gloria
  *
  *
  * The JavaScript code in this page is free software: you can
@@ -45,10 +45,10 @@ var energy = vars.energy;
 var reportTime = 20.0;
 
 var damageProbabilities = {
-    'NOVICE':       0.125,
-    'PILOT':        0.150,
-    'WARRIOR':      0.175,
-    'COMMANDER':    0.200
+    'NOVICE':       0.100,
+    'PILOT':        0.125,
+    'WARRIOR':      0.150,
+    'COMMANDER':    0.175
 };
 
 /* Various damage points.  */

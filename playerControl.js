@@ -4,7 +4,7 @@
  * @licstart  The following is the entire license notice for the 
  *  JavaScript code in this page.
  *
- * Copyright (C) 2014  Alan Manuel K. Gloria
+ * Copyright (C) 2014, 2015  Alan Manuel K. Gloria
  *
  *
  * The JavaScript code in this page is free software: you can
@@ -106,10 +106,10 @@ keytable['c'] = keytable['C'] = function () {
 /* Shields.  */
 keytable['s'] = keytable['S'] = function () {
     if (shield.isEnabled()) {
-        console.write('Shields Disabled.');
+        console.write('Shields disabled.');
         shield.disable();
     } else {
-        console.write('Shields Enabled.');
+        console.write('Shields enabled.');
         shield.enable();
     }
 };

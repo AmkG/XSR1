@@ -33,11 +33,12 @@ define(['resize', 'signal'], function (resize, signal) {
 var numStars = 24; // number
 var starSizeFactor = 4; // pixel factor
 
-var turnSpeed = 0.4; // radians per second
+var turnSpeed = 0.45; // radians per second
 
 var missileSpeed = 75.0; // metrons per second
 var missileLifetime = 1.8; // seconds
 var missileSizeFactor = 4; // pixel factor
+var missileLockonSpeed = 15.0; // metrons per second
 
 var speedFactor = 2.5; // multiplier for base speed.
 /* Note: Although the original game claims the velocity
@@ -49,6 +50,7 @@ var speedFactor = 2.5; // multiplier for base speed.
    from the range value in about 2 seconds.  */
 
 var actualMissileSpeed = missileSpeed * speedFactor;
+var actualMissileLockonSpeed = missileLockonSpeed * speedFactor;
 
 /* Observer distance factor.  Not in the original game.
    (or, more properly, 1 in the original game, but not
@@ -431,6 +433,9 @@ function Field() {
     /* Current view.  */
     this.currentView = '';
 
+    /* Lock on of player missiles.  */
+    this._lockOnTarget = -1;
+
     /* Register.  */
     signal('update', this.update.bind(this));
     signal('render', this.render.bind(this));
@@ -604,6 +609,15 @@ Field.prototype.generateStars = function () {
 
     return this;
 };
+/* Set and clear lockon target.  */
+Field.prototype.setLockonTarget = function (target) {
+    this._lockOnTarget = target;
+    return this;
+};
+Field.prototype.clearLockonTarget = function () {
+    this._lockOnTarget = -1;
+    return this;
+};
 Field.prototype.update = function (seconds) {
     var mov = this.speed * seconds * speedFactor;
     var debrismov = 0.0;
@@ -678,6 +692,7 @@ Field.prototype.update = function (seconds) {
         updateLoc(loc, mov, isRot, sinRot, cosRot, this.yaw, this.pitch);
     }
 
+    /* Update missiles.  */
     for (i = 0; i < 3; ++i) {
         missile = missiles[i];
         loc = missile.loc;
@@ -689,6 +704,24 @@ Field.prototype.update = function (seconds) {
             if (missile.lifetime <= 0.0) {
                 missile.lifetime = 0.0;
                 loc.display = false;
+            }
+            /* Player missiles have lockon.  */
+            if (i < 2 && this._lockOnTarget >= 0) {
+                bogey = this._lockOnTarget == 0 ? this._bogey0 :
+                                                  this._bogey1 ;
+                /* Only lock on if missile hasn't passed the target.  */
+                if (loc.pos[2] <= bogey.loc.pos[2]) {
+                    if (bogey.loc.pos[0] < loc.pos[0]) {
+                        loc.pos[0] -= actualMissileLockonSpeed * seconds;
+                    } else {
+                        loc.pos[0] += actualMissileLockonSpeed * seconds;
+                    }
+                    if (bogey.loc.pos[1] < loc.pos[1]) {
+                        loc.pos[1] -= actualMissileLockonSpeed * seconds;
+                    } else {
+                        loc.pos[1] += actualMissileLockonSpeed * seconds;
+                    }
+                }
             }
         }
     }
@@ -781,6 +814,9 @@ Field.prototype.update = function (seconds) {
                 pos = this._bogey0.loc.pos;
                 this.explosion(pos[0], pos[1], pos[2]);
                 loc.display = false;
+                if (this._lockOnTarget == 0) {
+                    this._lockOnTarget = -1;
+                }
                 this._bogey0.oncollideMissile();
             } else if (this._bogey1.loc.display &&
                 collides(pos, missileSize,
@@ -788,6 +824,9 @@ Field.prototype.update = function (seconds) {
                 pos = this._bogey1.loc.pos;
                 this.explosion(pos[0], pos[1], pos[2]);
                 loc.display = false;
+                if (this._lockOnTarget == 1) {
+                    this._lockOnTarget = -1;
+                }
                 this._bogey1.oncollideMissile();
             }
         }

@@ -25,7 +25,8 @@
  * for the JavaScript code in this page.
  *
  */
-define(['signal', 'field', 'vars'], function (signal, field, vars) {
+define(['signal', 'field', 'vars', 'computer'],
+function(signal ,  field ,  vars ,  computer) {
 
 /* Refire rate for an individual tube.  */
 var tubeRefire = 0.5;
@@ -132,14 +133,51 @@ Photons.prototype.update = function (seconds) {
     /* Handle firing of photons.  */
     if (this.fire && this._state !== DESTROYED) {
         if (this._shipRefire <= 0.0) {
-            if (this._priority === LEFT) {
-                this._tryFireLeft() || this._tryFireRight();
+            if (computer.attack.isLockedOn()) {
+                this._tryLockedFire();
             } else {
-                this._tryFireRight() || this._tryFireLeft();
+                if (this._priority === LEFT) {
+                    this._tryFireLeft() || this._tryFireRight();
+                } else {
+                    this._tryFireRight() || this._tryFireLeft();
+                }
             }
         }
     }
 
+    return this;
+};
+Photons.prototype._tryLockedFire = function () {
+    var dir = 0;
+    var decideLeft = false;
+    var decideRight = false;
+    if (this.canFireLeft()) {
+        decideLeft = this._leftRefire <= 0.0;
+    } else {
+        decideLeft = true;
+    }
+    if (this.canFireRight()) {
+        decideRight = this._rightRefire <= 0.0;
+    } else {
+        decideRight = true;
+    }
+    if (decideLeft && decideRight) {
+        this._leftRefire = tubeRefire;
+        this._rightRefire = tubeRefire;
+        this._shipRefire = mainRefire;
+        dir =
+            (field.currentView === 'aft' && field.display) ?    -1 :
+            /*otherwise*/                                       1 ;
+        field.setLockonTarget(computer.instruments.getTargetNum());
+        if (this.canFireLeft()) {
+            field.fireMissile(0, leftTubeX, tubeY, 0.0, dir);
+            vars.energy.consume(photonEnergy);
+        }
+        if (this.canFireRight()) {
+            field.fireMissile(1, rightTubeX, tubeY, 0.0, dir);
+            vars.energy.consume(photonEnergy);
+        }
+    }
     return this;
 };
 Photons.prototype._tryFireLeft = function () {
@@ -150,6 +188,7 @@ Photons.prototype._tryFireLeft = function () {
         dir =
             (field.currentView === 'aft' && field.display) ?    -1 :
             /*otherwise*/                                       1 ;
+        field.clearLockonTarget();
         field.fireMissile(0, leftTubeX, tubeY, 0.0, dir);
         this._priority = RIGHT;
         vars.energy.consume(photonEnergy);
@@ -166,6 +205,7 @@ Photons.prototype._tryFireRight = function () {
         dir =
             (field.currentView === 'aft' && field.display) ?    -1 :
             /*otherwise*/                                       1 ;
+        field.clearLockonTarget();
         field.fireMissile(1, rightTubeX, tubeY, 0.0, dir);
         this._priority = LEFT;
         vars.energy.consume(photonEnergy);
