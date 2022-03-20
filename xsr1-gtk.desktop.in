@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Terminal=false
+Exec=@bindir@/xsr1-gtk
+Icon=@pkgdatadir@/images/computer-lockon.png
+Name=XSR1
+Comment=A clone of the 1979 Atari game Star Raiders
+Categories=Game;ActionGame
