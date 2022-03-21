@@ -205,6 +205,57 @@ static gboolean destroy_browser(WebKitWebView* _, GtkWidget* window) {
 	gtk_widget_destroy(window);
 	return TRUE;
 }
+static void
+ignore_javascript_result(GObject* _, GAsyncResult* __, gpointer ___) {
+	return;
+}
+
+/* This is invoked whenever the browser has a load event, i.e.
+ * "load-changed" signal.  */
+static void
+run_javascript_injection(WebKitWebView* browser,
+			 WebKitLoadEvent type,
+			 char const* start_url) {
+	char const* curr_url;
+
+	/* Only invoke this when the game has finished loading.  */
+	if (type != WEBKIT_LOAD_FINISHED)
+		return;
+	/* Make sure it is the actual game, not another URL (such as
+	 * the help doc).  */
+	curr_url = webkit_web_view_get_uri(browser);
+	if (0 != strcmp(start_url, curr_url))
+		return;
+
+	webkit_web_view_run_javascript(browser,
+				       "document.isWebKitGtk = true;",
+				       NULL, &ignore_javascript_result, NULL);
+}
+
+/* This is invoked whenever the title is changed.
+ * If the JavaScript code says "EXIT", quit it.
+ *
+ * This hack is needed since window.close() will only
+ * work if the document was loaded via JavaScript.
+ * webkit_web_view_load_uri counts as being loaded via
+ * JavaScript, but if the user selects "HELP" then we
+ * load the help.html page, and the return to the game
+ * from help.html is a "normal" link that the WebKit
+ * engine thinks is "not via JavaScript", so
+ * window.close() will stop working.
+ * However, changing title is still allowed and we
+ * can still see that over here in C-land.
+ */
+static void
+on_title_changed(WebKitWebView* browser,
+		 GParamSpec* _, gpointer __) {
+	char const* curr_title;
+
+	curr_title = webkit_web_view_get_title(browser);
+	if (0 == strcmp(curr_title, "EXIT")) {
+		gtk_main_quit();
+	}
+}
 
 int main(int argc, char** argv) {
 	int exit_code = 1;
@@ -258,6 +309,8 @@ int main(int argc, char** argv) {
 		/* Build the browser.  */
 		browser = WEBKIT_WEB_VIEW(webkit_web_view_new());
 		g_signal_connect(browser, "close", G_CALLBACK(&destroy_browser), window);
+		g_signal_connect(browser, "load-changed", G_CALLBACK(&run_javascript_injection), (gpointer) start_url);
+		g_signal_connect(browser, "notify::title", G_CALLBACK(&on_title_changed), NULL);
 		webkit_web_view_load_uri(browser, start_url);
 
 		/* Put the browser in the window.  */
