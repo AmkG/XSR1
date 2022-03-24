@@ -4,7 +4,7 @@
  * @licstart  The following is the entire license notice for the 
  *  JavaScript code in this page.
  *
- * Copyright (C) 2014, 2015  Alan Manuel K. Gloria
+ * Copyright (C) 2014, 2015, 2022  Alan Manuel K. Gloria
  *
  *
  * The JavaScript code in this page is free software: you can
@@ -271,6 +271,18 @@ DC.prototype.gameOver = function () {
     this._report = false;
     this._reportTime = 0.0;
     return this;
+};
+
+/* Used in the tutorial.  */
+DC.prototype.hasAnyDamage = function () {
+    var i = 0;
+    var l = 0;
+    l = components.length;
+    for (i = 0; i < l; ++i) {
+        if (components[i].component.colorState() !== 'green')
+            return true;
+    }
+    return false;
 };
 
 return new DC();
