@@ -4,7 +4,7 @@
  * @licstart  The following is the entire license notice for the 
  *  JavaScript code in this page.
  *
- * Copyright (C) 2014  Alan Manuel K. Gloria
+ * Copyright (C) 2014, 2022  Alan Manuel K. Gloria
  *
  *
  * The JavaScript code in this page is free software: you can
@@ -43,7 +43,7 @@ function Starbase() {
     this.onbotupdate = this._onbotupdate.bind(this);
     this.onbotcollide = this._onbotcollide.bind(this);
     /* Status if docked or not.  */
-    this._pdocked = false;
+    this.docked = false;
     /* Docking sequence completed.  */
     this._finished = false;
     /* Time since repair bot finished docking.  */
@@ -52,7 +52,7 @@ function Starbase() {
 Starbase.prototype.html = "&ndash;=&equiv;=&ndash;";
 Starbase.prototype.sizeFactor = 3.0;
 Starbase.prototype.create = function (x, y, z) {
-    this._pdocked = false;
+    this.docked = false;
     this._finished = false;
     field.setBogey(0, x, y, z, this.onupdate, this.oncollide, this.html,
         this.sizeFactor
@@ -61,8 +61,8 @@ Starbase.prototype.create = function (x, y, z) {
 };
 /* Behavior of star bases.  */
 Starbase.prototype._onupdate = function (pos, vec, seconds) {
-    var docked = true;
-    docked = field.speed === 0.0 &&
+    var ndocked = true;
+    ndocked = field.speed === 0.0 &&
         (0.0 < pos[2] && pos[2] < 6.0) &&
         (-0.5 < pos[0] && pos[0] < 0.5) &&
         (-0.5 < pos[1] && pos[1] < 0.5) &&
@@ -71,7 +71,7 @@ Starbase.prototype._onupdate = function (pos, vec, seconds) {
 
     if (!this._finished) {
         /* On initiate of docking.  */
-        if (docked && !this._pdocked) {
+        if (ndocked && !this.docked) {
             console.write('Docking initiated.');
             field.setBogey(1,
                 pos[0] + 0.4, pos[1] + 0.4, 5.0,
@@ -80,7 +80,7 @@ Starbase.prototype._onupdate = function (pos, vec, seconds) {
             );
         }
         /* On breaking-off of docking.  */
-        if (!docked && this._pdocked) {
+        if (!ndocked && this.docked) {
             console.write('Docking aborted.');
             field.clearBogey(1);
         }
@@ -90,7 +90,7 @@ Starbase.prototype._onupdate = function (pos, vec, seconds) {
     vec[1] = 0.0;
     vec[2] = 0.0;
 
-    this._pdocked = docked;
+    this.docked = ndocked;
     return this;
 };
 /* Reaction to being hit.  */
@@ -236,5 +236,8 @@ Sector.prototype.update = function () {
 
 // TODO: asteroids
 
-return new Sector();
+var sector = new Sector();
+sector.starbase = starbase;
+
+return sector;
 });

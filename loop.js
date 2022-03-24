@@ -4,7 +4,7 @@
  * @licstart  The following is the entire license notice for the 
  *  JavaScript code in this page.
  *
- * Copyright (C) 2014, 2015  Alan Manuel K. Gloria
+ * Copyright (C) 2014, 2015, 2022  Alan Manuel K. Gloria
  *
  *
  * The JavaScript code in this page is free software: you can
@@ -33,10 +33,13 @@ function (signal , keys , field , menu , engines , console , label , tutorial) {
 Main Menu
 -----------------------------------------------------------------------------*/
 
-var menuItems = [/*'TUTORIAL', */'NOVICE', 'PILOT', 'WARRIOR', 'COMMANDER',
+var haveExit = false;
+
+var menuItems = ['TUTORIAL', 'NOVICE', 'PILOT', 'WARRIOR', 'COMMANDER',
     'HELP'];
-if (typeof process !== 'undefined') {
+if (typeof process !== 'undefined' || typeof document.isWebKitGtk !== 'undefined') {
     menuItems.push('EXIT');
+    haveExit = true;
 }
 
 /* Main menu update.  */
@@ -47,11 +50,25 @@ function mainMenuUpdate(seconds) {
     engines.update(seconds);
     field.update(seconds);
 
+    /* We do not know when the xsr1-gtk wrapper will actually
+     * be able to inject this flag, so also check it in the
+     * update.  */
+    if (!haveExit && typeof document.isWebKitGtk !== 'undefined') {
+        menuItems.push('EXIT');
+        menu.show(menuItems);
+        haveExit = true;
+    }
+
     opt = menu.update();
     if (opt !== '') {
         switch(opt) {
         case 'EXIT':
-            process.exit(0);
+            /* Try to exit by node-webkit.  */
+            if (typeof process !== 'undefined')
+		    process.exit(0);
+            /* Try to exit by xsr1-gtk.  */
+            document.title = "EXIT";
+            window.close();
             break;
         case 'HELP':
             window.location.href = 'help.html';
@@ -129,7 +146,7 @@ loop.enterMainMenu = function () {
     console
     .clear()
     .writeWait('XSR1, a clone of 1979 Atari Star Raiders')
-    .writeWait('Copyright &copy; 2014, 2015 Alan Manuel K. Gloria')
+    .writeWait('Copyright &copy; 2014, 2015, 2022 Alan Manuel K. Gloria')
     .writeWait('License GPLv3+: GNU GPL version 3 or later')
     .writeWait('This game is free software: ' +
         'you are free to change and redistribute it.'

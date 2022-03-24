@@ -4,7 +4,7 @@
  * @licstart  The following is the entire license notice for the 
  *  JavaScript code in this page.
  *
- * Copyright (C) 2014, 2015  Alan Manuel K. Gloria
+ * Copyright (C) 2014, 2015, 2022  Alan Manuel K. Gloria
  *
  *
  * The JavaScript code in this page is free software: you can
@@ -29,10 +29,13 @@ define(function (require) {
 
 var computer = require('computer');
 var console = require('console');
+var damageControl = require('damageControl');
 var engines = require('engines');
 var field = require('field');
 var galaxy = require('galaxy');
 var hyperwarp = require('hyperwarp');
+var photons = require('photons');
+var sector = require('sector');
 var shield = require('shield');
 var signal = require('signal');
 
@@ -48,7 +51,7 @@ function Node() {
     this.terminal = Node.prototype.terminal;
 }
 Node.prototype.text = [];
-Node.prototype.nag = '';
+Node.prototype.nag = '&nbsp;';
 Node.prototype.checkAbort = function () { return null; };
 Node.prototype.checkNext = function () { return null; };
 Node.prototype.terminal = false;
@@ -63,7 +66,12 @@ var ar3d = [0.1, 0.1, 0.1];
 var startNode = new Node();
 startNode.text = [
     "Welcome to the tutorial!",
-    "First things first: turn on your [S]hield and your Attack [C]omputer."
+    "First things first: you can press " +
+        "[P] <strong>or</strong> [Esc] at any time " +
+        "to pause the game.",
+    "From the [P]ause menu, you can abort this " +
+        "tutorial game and return to the main menu.",
+    "Now turn on your [S]hield and your Attack [C]omputer."
 ];
 startNode.nag =
     "Please press [S] to turn on your Shield, " +
@@ -126,7 +134,7 @@ shieldComputerDiscuss.text = [
     "Both these components consume your 'E:' or energy.",
     "You can turn them off while you are safe in an empty sector " +
         "to conserve energy.",
-    "&nbsp;",
+    "To turn them off, simply press [S] or [C] again.",
     "&nbsp;"
 ];
 shieldComputerDiscuss.checkAbort = startNode.checkAbort;
@@ -311,6 +319,60 @@ discussTurningAft.nag = "Press [F] to return to Fore view.";
 discussTurningAft.checkAbort = startNode.checkAbort;
 discussTurningAft.checkNext = function () {
     if (field.display && field.currentView === 'front') {
+        return teachPhotons;
+    }
+    return null;
+};
+
+var teachPhotons = new Node();
+teachPhotons.text = [
+    "Good!  Let's now learn about your weapon.",
+    "You have two Photon tubes which you can fire by " +
+       "holding down [Space]."
+];
+teachPhotons.nag = "Press [Space] to fire photon missiles.";
+teachPhotons.checkAbort = startNode.checkAbort;
+teachPhotons.checkNext = function () {
+    if (photons.fire) {
+        return teachPhotonsAft;
+    }
+    return null;
+};
+
+var teachPhotonsAft = new Node();
+teachPhotonsAft.text = [
+    "You can also fire backwards.  Just set to [A]ft view and press [Space]."
+];
+teachPhotonsAft.nag = "Set to [A]ft view and [Space] to fire photon missiles.";
+teachPhotonsAft.checkAbort = startNode.checkAbort;
+teachPhotonsAft.checkNext = function () {
+    if (field.display && field.currentView === 'aft' &&
+        photons.fire) {
+        return discussPhotons;
+    }
+    return null;
+};
+
+var discussPhotons = new Node();
+discussPhotons.text = [
+    "Photon missiles are the sole weapon in this game.",
+    "Even enemy Nyloz ships will fire photon missiles at you.",
+    "If you are not [S]hielded, just one photon missile hitting you is a game over!",
+    "Even if you <strong>are</strong> [S]hielded, " +
+        "one photon missile can destroy the Shield and the next will destroy you!",
+    "Though the risk of any particular hit destroying the " +
+        "[S]hield is low, try to avoid incoming fire as much as you can!",
+    "&nbsp;",
+    "More importantly, you have allies in this game!",
+    "You can shoot them down, and all it takes is one shot to " +
+        "destroy an allied starbase.",
+    "Obviously, you do <strong>not</strong> want to do that too often!",
+    "&nbsp;"
+];
+discussPhotons.nag = "Ceasefire!  Ceasefire!  Take your finger off [Space]!";
+discussPhotons.checkAbort = startNode.checkAbort;
+discussPhotons.checkNext = function () {
+    if (!photons.fire) {
         return teachGalacticChart;
     }
     return null;
@@ -318,7 +380,7 @@ discussTurningAft.checkNext = function () {
 
 var teachGalacticChart = new Node();
 teachGalacticChart.text = [
-   "Good!",
+   "Let's discuss strategy!",
    "Right now, you're traveling through normal space.",
    "It's impossible to travel to other sectors this way.",
    "We need to use the [G]alactic Chart to see other sectors.",
@@ -531,7 +593,8 @@ teachLRS.text = [
     "Good!  Now's a good time to teach you about the LRS.",
     "The Long-Range Scan gives you " +
         "a &quot;bird&apos;s eye view&quot; of your ship.",
-    "It's a backup navigation aid.",
+    "It's a backup navigation aid, for use in case your " +
+        "attack computer is destroyed!",
     "Press [L] to enable your Long-Range Scan."
 ];
 teachLRS.nag =
@@ -544,20 +607,390 @@ teachLRS.checkAbort = function () {
 };
 teachLRS.checkNext = function () {
     if (field.display && field.currentView === 'lrs') {
+        return teachLRSLeftRight;
+    }
+    return null;
+};
+
+var teachLRSLeftRight = new Node();
+teachLRSLeftRight.text = [
+    "Now try out how turning with [&larr;] and [&rarr;] " +
+        "looks like in the LRS."
+];
+teachLRSLeftRight.nag =
+    "Press [&larr;] and [&rarr;] to turn while in the LRS."
+teachLRSLeftRight.checkAbort = teachLRS.checkAbort;
+teachLRSLeftRight.checkNext = function () {
+    if (field.display && field.currentView === 'lrs' &&
+        field.yaw !== 0) {
+        return teachLRSUpDown;
+    }
+    return null;
+};
+
+var teachLRSUpDown = new Node();
+teachLRSUpDown.text = [
+    "Good!  Notice how the stars moved while turning " +
+        "in the LRS screen.",
+    "Now use the [&uarr;] and [&darr;] arrows to " +
+        "dive and climb, while still in the LRS."
+];
+teachLRSUpDown.nag =
+    "Press [&uarr;] and [&darr;] to dive and climb while in the LRS.";
+teachLRSUpDown.checkAbort = teachLRS.checkAbort;
+teachLRSUpDown.checkNext = function () {
+    if (field.display && field.currentView === 'lrs' &&
+        field.pitch !== 0) {
+        return teachLRSLast;
+    }
+    return null;
+};
+
+var teachLRSLast = new Node();
+teachLRSLast.text = [
+    "Good!  Notice how the stars moved while diving and " +
+        "climbing in the LRS screen.",
+    "It is important to be familiar with using the LRS.",
+    "Take some time now to be comfortable with navigating via LRS.",
+    "Your Attack Computer is better for locating targets, but " +
+        "enemy fire can damage it!",
+    "If your Attack Computer is destroyed, you have to use the LRS.",
+    "The LRS can also be damaged!",
+    "If the LRS is damaged but not completely destroyed, " +
+        "it will glitch and show both an inverted and correct image.",
+    "&nbsp;",
+    "&nbsp;"
+];
+teachLRSLast.checkAbort = teachLRS.checkAbort;
+teachLRSLast.checkNext = function () {
+    return dockWithStarbase;
+};
+
+/* Keep track of signals.  */
+var playerDestroyedStarbase = false;
+var fixed = false;
+var killedNyloz = false;
+function resetFlags() {
+    playerDestroyedStarbase = false;
+    fixed = false;
+    killedNyloz = false;
+}
+signal('newGame', resetFlags);
+signal('startTutorial', resetFlags);
+signal('playerDestroyStarbase', function () {
+    playerDestroyedStarbase = true;
+});
+signal('fix', function () {
+    fixed = true;
+});
+signal('killNyloz', function () {
+    killedNyloz = true;
+});
+
+var dockWithStarbase = new Node();
+dockWithStarbase.checkAbort = function () {
+    if (playerDestroyedStarbase) {
+        playerDestroyedStarbase = false;
+        return retryStarbaseDocking;
+    }
+    return teachLRS.checkAbort();
+};
+dockWithStarbase.checkNext = function () {
+    /* Check the state and dispatch to the correct tutorial node.  */
+    if (!(field.display && field.currentView === 'front')) {
+        return dockWithStarbaseFore;
+    }
+    if (!(computer.attack.isEnabled())) {
+        return dockWithStarbaseComputer;
+    }
+    field.getBogeyPosition(0, ar3d);
+    if (!((Math.abs(ar3d[0]) < 5) && (Math.abs(ar3d[1]) < 5) &&
+          ar3d[2] >= 0.0)) {
+        return dockWithStarbaseAim;
+    }
+    if (!(sector.starbase.docked)) {
+        return dockWithStarbaseApproach;
+    }
+    fixed = false;
+    return dockWithStarbaseWaitFix;
+};
+
+var retryStarbaseDocking = new Node();
+retryStarbaseDocking.text = [
+    "Oh no!  You managed to wreck the starbase.  " +
+        "Go back to [G]alactic Chart and [H]yperwarp to another &diams;!"
+];
+retryStarbaseDocking.nag =
+    "Open the [G]alactic Chart, find another &diams; starbase, and [H]yperwarp to it.";
+retryStarbaseDocking.checkAbort = function () {
+    /* Abort if the player went out and started fightning Nyloz.  */
+    if (galaxy.getPlayerSectorContents() > 0)
+        return derailed;
+    return null;
+};
+retryStarbaseDocking.checkNext = function () {
+    if (galaxy.getPlayerSectorContents() <= -1)
+        return dockWithStarbase;
+    return null;
+};
+
+var dockWithStarbaseFore = new Node();
+dockWithStarbaseFore.text = [
+    "Okay, let's get to the [F]ore view with the [C]omputer on, " +
+        "and get us aimed at the starbase!"
+];
+dockWithStarbaseFore.nag = "Please switch to [F]ore view.";
+dockWithStarbaseFore.checkAbort = dockWithStarbase.checkAbort;
+dockWithStarbaseFore.checkNext = function () {
+    if (field.display && field.currentView === 'front') {
         return dockWithStarbase;
     }
     return null;
 };
 
-var dockWithStarbase = new Node();
-dockWithStarbase.text = ['Tutorial TODO.'];
-dockWithStarbase.terminal = true;
+var dockWithStarbaseComputer = new Node();
+dockWithStarbaseComputer.text = [
+    "Now turn on the Attack [C]omputer, so it is easier to navigate."
+];
+dockWithStarbaseComputer.nag = "Please turn on the Attack [C]omputer.";
+dockWithStarbaseComputer.checkAbort = dockWithStarbase.checkAbort;
+dockWithStarbaseComputer.checkNext = function () {
+    if (computer.attack.isEnabled())
+        return dockWithStarbase;
+    return null;
+};
+
+var dockWithStarbaseAim = new Node();
+dockWithStarbaseAim.text = [
+    "Follow your Attack Computer and aim at the starbase.  Make sure not to shoot it!"
+];
+dockWithStarbaseAim.nag = "Follow the Attack Computer's direction and aim at the starbase.";
+dockWithStarbaseAim.checkAbort = dockWithStarbase.checkAbort;
+dockWithStarbaseAim.checkNext = function () {
+    field.getBogeyPosition(0, ar3d);
+    if ((Math.abs(ar3d[0]) < 5) && (Math.abs(ar3d[1]) < 5) &&
+        ar3d[2] >= 0.0) {
+        return dockWithStarbase;
+    }
+    return null;
+};
+
+var dockWithStarbaseApproach = new Node();
+dockWithStarbaseApproach.text = [
+    "Now, we have to approach the starbase to dock with it.",
+    "Notice your panel below has an indicator with 'R:' on it.",
+    "That is your Range or distance to the target, i.e. the starbase.",
+    "You have to <strong><em>stop</em></strong> (i.e. Engines [0]), " +
+        "facing the starbase, within 'R: +005' of it.",
+    "You have to be completely stopped &mdash; turning will abort docking!",
+    "&nbsp;",
+    "Right now you are too far from the starbase, so get your " +
+        "Engines to [6] or so.",
+    "When you are below 'R: +020' or so, approach with lower " +
+        "Engines, like [3], [2], or [1].",
+    "Then once you have gone to 'R: +005' or less, stop with [0]!"
+];
+dockWithStarbaseApproach.nag =
+    "Approach the starbase within " +
+        "'&theta;: &plusmn;00 &Phi;: &plusmn;00 R: +005'" +
+        ", then stop ([0]) completely, and do not turn!"
+;
+dockWithStarbaseApproach.checkAbort = function () {
+    var rv = dockWithStarbase.checkAbort();
+    if (rv)
+        return rv;
+    /* Let the player skip the entire discussion if they could
+       dock right now, which is why we use checkAbort here.  */
+    if (sector.starbase.docked) {
+        fixed = false;
+        return dockWithStarbaseWaitFix;
+    }
+    /* If the player manages to overshoot, turn around and try again.  */
+    field.getBogeyPosition(0, ar3d);
+    if (ar3d[2] < 0.0)
+        return dockWithStarbaseOvershot;
+    return null;
+};
+
+var dockWithStarbaseOvershot = new Node();
+dockWithStarbaseOvershot.text = [
+    "Oops!  Went past the starbase!  Stop Engines now [0] and try again!"
+];
+dockWithStarbaseOvershot.checkAbort = dockWithStarbase.checkAbort;
+dockWithStarbaseOvershot.checkNext = function () {
+    return dockWithStarbase;
+};
+
+var dockWithStarbaseWaitFix = new Node();
+dockWithStarbaseWaitFix.text = [
+    "Great!  Just wait for the " + sector.starbase.bothtml + " repairbot to approach you.",
+    "Once it does, it will immediately recharge your 'E:' and repair all components."
+];
+dockWithStarbaseWaitFix.nag = "";
+dockWithStarbaseWaitFix.checkAbort = function () {
+    var rv = dockWithStarbase.checkAbort();
+    if (rv)
+        return rv;
+    if (!sector.starbase.docked) {
+        return dockWithStarbaseAborted;
+    }
+    if (fixed) {
+        fixed = false;
+        return discussDockWithStarbase;
+    }
+    return null;
+};
+
+var dockWithStarbaseAborted = new Node();
+dockWithStarbaseAborted.text = [
+    "Oops!  Do not move your ship from [0] or " +
+       "turn with [&larr;] [&rarr;] [&uarr;] [&darr;].  " +
+       "As you just saw, that aborts docking!"
+];
+dockWithStarbaseAborted.checkAbort = function () {
+    return dockWithStarbaseApproach;
+};
+
+var discussDockWithStarbase = new Node();
+discussDockWithStarbase.text = [
+    "Great!  Now you know about docking at starbases!",
+    "Remember to dock at starbases to refill your 'E:'nergy meter, " +
+         "or if 'DC:' in the Galactic Chart shows damage to your components.",
+    "While docking, you do not have to watch the bot in [F]ore view, " +
+         "you just have to stay still and not shoot down the starbase.",
+    "Wise STAR COMMANDER CLASS 1 pilots will pull up the [G]alactic Chart " +
+         "while waiting for repairs.",
+    "&nbsp;"
+];
+discussDockWithStarbase.checkNext = function () {
+    return fightNyloz;
+};
+
+var fightNyloz = new Node();
+fightNyloz.text = [
+    "Let's get down to business: fighting the Nyloz!",
+    "You win the game by eliminating all Nyloz ships.",
+    "The Nyloz are afraid of your awesomeness and won't go to you.  " +
+        "Bring the fight them!"
+];
+fightNyloz.checkNext = function () {
+    /* Make sure player has shields and computer enabled before fighting!  */
+    if (!(shield.isEnabled() && computer.attack.isEnabled()))
+        return fightNylozEnableCS;
+    return fightNylozGalactic;
+};
+
+var fightNylozEnableCS = new Node();
+fightNylozEnableCS.text = [
+    "Keep your [S]hields enabled while fightning Nyloz.",
+    "And your Attack [C]omputer really helps target them."
+];
+fightNylozEnableCS.nag =
+    "Turn on [S]hields and Attack [C]omputer."
+;
+fightNylozEnableCS.checkAbort = function () {
+    if (shield.isEnabled() && computer.attack.isEnabled())
+       return fightNylozGalactic;
+    /* Did they go off fighting without Compputer and shields already?  */
+    if (galaxy.getPlayerSectorContents() > 0)
+        return derailed;
+    return null;
+};
+
+var fightNylozGalactic = new Node();
+fightNylozGalactic.nag =
+    "Open the [G]alactic Chart and use [&larr;] [&rarr;] [&uarr;] [&darr;] " +
+        "to select a sector with 'Targets:' 2 or more."
+;
+fightNylozGalactic.checkAbort = function () {
+    var targets = galaxy.chart.targets();
+    if (targets !== '0')
+        return fightNylozHyperwarp;
+    return null;
+};
+
+var fightNylozHyperwarp = new Node();
+fightNylozHyperwarp.text = [
+    "Now switch to [F]ore view and [H]yperwarp to the Nyloz!"
+];
+fightNylozHyperwarp.nag =
+    "Switch to [F]ore view and enable [H]yperwarp to fight the Nyloz."
+;
+fightNylozHyperwarp.checkAbort = function () {
+    /* The player might have moved targets to another sector.  */
+    var targets = galaxy.chart.targets();
+    if (targets === '0')
+        return fightNylozGalactic;
+    if (engines.isHyperwarp())
+        return fightNylozWaitHyperwarp;
+    return null;
+};
+
+var fightNylozWaitHyperwarp = new Node();
+fightNylozWaitHyperwarp.text = [
+    "Whee!  Get ready for the Nyloz!"
+];
+fightNylozWaitHyperwarp.checkAbort = function () {
+    if (hyperwarp.inHyperspace())
+        return fightNylozInHyperspace;
+    else if (!engines.isHyperwarp())
+        return fightNylozHyperwarp;
+    return null;
+};
+
+var fightNylozInHyperspace = new Node();
+fightNylozInHyperspace.checkAbort = function () {
+    if (!hyperwarp.inHyperspace()) {
+        if (galaxy.getPlayerSectorContents() <= 0)
+            return fightNylozGalactic;
+        return fightNylozCombat;
+    }
+    return null;
+};
+
+var fightNylozCombat = new Node();
+fightNylozCombat.text = [
+    "The Nyloz are here!  Chase them and shoot them down with your photons!"
+];
+fightNylozCombat.nag = "Go player go!  You can get them!";
+fightNylozCombat.checkAbort = function () {
+    if (killedNyloz)
+        return tutorialFinished;
+    if (damageControl.hasAnyDamage())
+        return fightNylozDamaged;
+    if (galaxy.getPlayerSectorContents() <= 0)
+        return fightNylozGalactic;
+    return null;
+};
+
+var fightNylozDamaged = new Node();
+fightNylozDamaged.text = [
+    "Oh no!  Your ships sustained damage.  You should dock at &diams; starbases to get your ship repaired.",
+    "You <em>could</em> keep fighting though, if your 'P'hotons are still OK."
+];
+fightNylozDamaged.nag = "Go player go!  You can get them!";
+fightNylozDamaged.checkAbort = function () {
+    if (killedNyloz)
+        return tutorialFinished;
+    if (!damageControl.hasAnyDamage())
+        return fightNylozGalactic;
+};
+
+var tutorialFinished = new Node();
+tutorialFinished.text = [
+    "Congrats on your first kill!  See the 'K:' indicator below.  " +
+        "Keep shooting down Nyloz ships!",
+    "Remember to repair and recharge at &diams; starbases, and have fun!  " +
+        "Tutorial out!  You are now in NOVICE mode."
+];
+tutorialFinished.terminal = true;
 
 /* The tutorial has been derailed.  */
 var derailed = new Node();
 derailed.text = [
-    "Okay, now you aren't following the tutorial anymore.",
-    "I assume you know what you're doing.  Entering NOVICE mode."
+    "Okay, now you aren't following the tutorial anymore.  " +
+        "I assume you know what you're doing.",
+    "Entering NOVICE mode.  Press [Esc]/[P] to get back to main menu."
 ];
 derailed.terminal = true;
 
@@ -579,6 +1012,7 @@ function Tutorial() {
 
     signal('update', this.update.bind(this));
     signal('mainMenu', this.mainMenu.bind(this));
+    signal('gameOver', this.gameOver.bind(this));
     signal('startTutorial', this.startTutorial.bind(this));
 }
 Tutorial.prototype.update = function (seconds) {
@@ -629,6 +1063,7 @@ Tutorial.prototype.mainMenu = function () {
     this._node = null;
     this._i = 0;
 };
+Tutorial.prototype.gameOver = Tutorial.prototype.mainMenu;
 Tutorial.prototype.startTutorial = function () {
     this._enabled = true;
     this._node = startNode;
