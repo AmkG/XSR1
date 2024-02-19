@@ -4,7 +4,7 @@
  * @licstart  The following is the entire license notice for the 
  *  JavaScript code in this page.
  *
- * Copyright (C) 2014  Alan Manuel K. Gloria
+ * Copyright (C) 2014, 2024  Alan Manuel K. Gloria
  *
  *
  * The JavaScript code in this page is free software: you can
@@ -146,7 +146,7 @@ Menu.prototype.render = function () {
             this._dom = createMainDom();
         }
         this._dom.style.display = 'block';
-        this._dom.style.fontSize = Math.floor(resize.height / 16) + 'px';
+        this._dom.style.fontSize = Math.floor(resize.height / 17) + 'px';
 
         // Center the menu
         this._dom.style.left = Math.floor(resize.cenx) + 'px';
