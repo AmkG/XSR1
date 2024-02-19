@@ -1,6 +1,6 @@
 /* xsr1-gtk.c - Wraps XSR1 in a WebKitGtk widget.  */
 /* XSR1, a clone of 1979 Atari Star Raiders
- * Copyright (C) 2022  Alan Manuel K. Gloria
+ * Copyright (C) 2022,2024  Alan Manuel K. Gloria
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -227,9 +227,10 @@ run_javascript_injection(WebKitWebView* browser,
 	if (0 != strcmp(start_url, curr_url))
 		return;
 
-	webkit_web_view_run_javascript(browser,
-				       "document.isWebKitGtk = true;",
-				       NULL, &ignore_javascript_result, NULL);
+	webkit_web_view_evaluate_javascript(browser,
+					    "document.isWebKitGtk = true;", -1,
+					    NULL, NULL, NULL,
+					    &ignore_javascript_result, NULL);
 }
 
 /* This is invoked whenever the title is changed.
@@ -271,7 +272,7 @@ int main(int argc, char** argv) {
 #else
 			printf("XSR1 Unknown version\n");
 #endif
-			printf("Copyright (C) 2014,2015,2022 Alan Manuel K. Gloria\n"
+			printf("Copyright (C) 2014,2015,2022,2024 Alan Manuel K. Gloria\n"
 			       "This is free software; see the source for copying conditions.  There is NO\n"
 			       "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n");
 			return 0;
